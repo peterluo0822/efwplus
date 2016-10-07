@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Books_Wcf.Winform", "Module
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Books_Wcf", "ModulePlugin\Books_Wcf\Books_Wcf.csproj", "{79168A48-52A6-4486-9CD1-C3E05F9BD94B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCFHosting", "WCFHosting\WCFHosting.csproj", "{1D01D246-E368-4278-9108-7137A4C31A83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -162,6 +164,14 @@ Global
 		{79168A48-52A6-4486-9CD1-C3E05F9BD94B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79168A48-52A6-4486-9CD1-C3E05F9BD94B}.Release|x86.ActiveCfg = Release|x86
 		{79168A48-52A6-4486-9CD1-C3E05F9BD94B}.Release|x86.Build.0 = Release|x86
+		{1D01D246-E368-4278-9108-7137A4C31A83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D01D246-E368-4278-9108-7137A4C31A83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D01D246-E368-4278-9108-7137A4C31A83}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1D01D246-E368-4278-9108-7137A4C31A83}.Debug|x86.Build.0 = Debug|Any CPU
+		{1D01D246-E368-4278-9108-7137A4C31A83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D01D246-E368-4278-9108-7137A4C31A83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D01D246-E368-4278-9108-7137A4C31A83}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D01D246-E368-4278-9108-7137A4C31A83}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

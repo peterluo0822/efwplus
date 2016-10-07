@@ -51,7 +51,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
         {
             hostwcfMsg(Color.Blue, DateTime.Now, "WCFHandlerService服务正在初始化...");
 
-            AppGlobal.AppStart();
+            WcfGlobal.Main();
 
             //初始化连接池,默认10分钟清理连接
             ClientLinkPoolCache.Init(true, 200, 30, 600, "wcfserver", 30);
