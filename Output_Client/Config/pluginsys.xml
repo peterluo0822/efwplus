@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<pluginsys>
+  <WebModulePlugin>
+  </WebModulePlugin>
+  <WinformModulePlugin EntryPlugin="MainFrame.UI" EntryController="wcfclientLoginController">
+    <Plugin name="MainFrame.UI" path="ModulePlugin/WcfMainUIFrame/plugin.xml" title="通用权限管理" isdevelopment="1" />
+    <Plugin name="Books.UI" path="ModulePlugin/Books_Wcf/plugin.xml" title="示列Demo" isdevelopment="1" />
+  </WinformModulePlugin>
+  <WcfModulePlugin>
+    
+  </WcfModulePlugin>
+</pluginsys>

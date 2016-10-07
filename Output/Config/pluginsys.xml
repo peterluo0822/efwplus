@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<pluginsys>
+  <WebModulePlugin>
+  </WebModulePlugin>
+  <WinformModulePlugin EntryPlugin="" EntryController="">
+  </WinformModulePlugin>
+  <WcfModulePlugin>
+    <Plugin name="MainFrame.Service" path="ModulePlugin/WcfMainUIFrame/plugin.xml" title="主框架服务插件" isdevelopment="1" />
+    <Plugin name="Books.Service" path="ModulePlugin/Books_Wcf/plugin.xml" title="Books服务插件" isdevelopment="1" />
+  </WcfModulePlugin>
+</pluginsys>

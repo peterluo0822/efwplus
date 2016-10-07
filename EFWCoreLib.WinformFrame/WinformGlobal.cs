@@ -17,6 +17,9 @@ namespace EFWCoreLib.WinformFrame
     {
         public static ILoading winfromMain;
 
+        /// <summary>
+        /// 启动程序
+        /// </summary>
         public static void Main()
         {
             AppGlobal.AppRootPath = System.Windows.Forms.Application.StartupPath + "\\";
@@ -70,7 +73,9 @@ namespace EFWCoreLib.WinformFrame
                 return false;
             }
         }
-
+        /// <summary>
+        /// 退出程序
+        /// </summary>
         public static void Exit()
         {
             (winfromMain as Form).Dispose();

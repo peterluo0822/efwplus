@@ -1,6 +1,6 @@
-﻿namespace efwplusClient
+﻿namespace EfwControls.CustomControl
 {
-    partial class Form1
+    partial class DataGrid
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -20,20 +20,17 @@
             base.Dispose(disposing);
         }
 
-        #region Windows 窗体设计器生成的代码
+        #region 组件设计器生成的代码
 
         /// <summary>
-        /// 设计器支持所需的方法 - 不要修改
+        /// 设计器支持所需的方法 - 不要
         /// 使用代码编辑器修改此方法的内容。
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "Form1";
+            components = new System.ComponentModel.Container();
         }
 
         #endregion
     }
 }
-

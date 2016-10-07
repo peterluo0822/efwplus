@@ -8,13 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace efwplusClient
+namespace EfwControls.CustomControl
 {
-    public partial class Form1 : Form
+    /// <summary>
+    /// Grid报表设计器
+    /// </summary>
+    public partial class GridDesignReport : UserControl
     {
-        public Form1()
+        public GridDesignReport()
         {
             InitializeComponent();
         }
+
+
     }
 }

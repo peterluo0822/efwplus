@@ -10,13 +10,32 @@ namespace EFWCoreLib.CoreFrame.Plugin
     public class PluginSysManage
     {
         private static System.Xml.XmlDocument xmlDoc = null;
-        public static string pluginsysFile = AppGlobal.AppRootPath + "Config/pluginsys.xml";
+        public static string pluginsysFile = System.Windows.Forms.Application.StartupPath + "\\Config\\pluginsys.xml";
 
         private static void InitConfig()
         {
             xmlDoc = new System.Xml.XmlDocument();
-            xmlDoc.Load(pluginsysFile);
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.IgnoreComments = true;//忽略文档里面的注释
+            XmlReader reader = XmlReader.Create(pluginsysFile, settings);
+            xmlDoc.Load(reader);
+            reader.Close();
         }
+
+        public static List<string> GetWinformPlugin()
+        {
+            if (xmlDoc == null) InitConfig();
+            List<string> plist = new List<string>();
+            XmlNodeList nl = null;
+
+            nl = xmlDoc.DocumentElement.SelectNodes("WinformModulePlugin/Plugin");
+            foreach (XmlNode n in nl)
+            {
+                plist.Add(n.Attributes["path"].Value);
+            }
+            return plist;
+        }
+
         /// <summary>
         /// 获取所有插件路径
         /// </summary>
