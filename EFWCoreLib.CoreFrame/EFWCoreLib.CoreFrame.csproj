@@ -73,6 +73,9 @@
     <Reference Include="Microsoft.Practices.Unity.Interception">
       <HintPath>..\Component\Microsoft.Practices.Unity.Interception.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Component\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NPOI">
       <HintPath>..\Component\NPOI.dll</HintPath>
     </Reference>
@@ -133,7 +136,6 @@
     <Compile Include="Common\DESEncryptor.cs" />
     <Compile Include="Common\ExcelHelper.cs" />
     <Compile Include="Common\ExtendMethod.cs" />
-    <Compile Include="Common\MiddlewareLogHelper.cs" />
     <Compile Include="Common\SpellAndWbCode.cs" />
     <Compile Include="Common\TemplateHelper.cs" />
     <Compile Include="Common\WindowsAPI.cs" />
@@ -190,11 +192,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SSO\AuthResult.cs" />
-    <Compile Include="SSO\ConvertHelper.cs" />
-    <Compile Include="SSO\TokenInfo.cs" />
-    <Compile Include="SSO\UserInfo.cs" />
-    <Compile Include="SSO\Utility.cs" />
     <Compile Include="TimingTask\CollectionConverter.cs" />
     <Compile Include="TimingTask\CollectionHelper.cs" />
     <Compile Include="TimingTask\Delegates.cs" />

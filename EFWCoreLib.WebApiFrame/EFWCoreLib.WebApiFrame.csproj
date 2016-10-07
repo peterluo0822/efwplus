@@ -110,6 +110,10 @@
       <Project>{b3f41c24-1a64-4995-9398-812789014bd7}</Project>
       <Name>EFWCoreLib.CoreFrame</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EFWCoreLib.WcfFrame\EFWCoreLib.WcfFrame.csproj">
+      <Project>{cacafdbf-9b17-403a-a3ca-c123a94e2c19}</Project>
+      <Name>EFWCoreLib.WcfFrame</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

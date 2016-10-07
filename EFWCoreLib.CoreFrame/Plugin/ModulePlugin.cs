@@ -13,7 +13,6 @@ using EFWCoreLib.CoreFrame.Init;
 using EFWCoreLib.CoreFrame.Init.AttributeManager;
 using EFWCoreLib.CoreFrame.Business;
 using System.IO;
-using EFWCoreLib.WcfFrame.DataSerialize;
 
 namespace EFWCoreLib.CoreFrame.Plugin
 {
@@ -103,12 +102,12 @@ namespace EFWCoreLib.CoreFrame.Plugin
             container = ZhyContainer.CreateUnity();
             plugin = new PluginConfig();
 
-            switch (appType)
-            {
-                case AppType.WCF:
-                    helper = new WcfFrame.ServerController.ControllerHelper();
-                    break;
-            }
+            //switch (appType)
+            //{
+            //    case AppType.WCF:
+            //        helper = new WcfFrame.ServerController.ControllerHelper();
+            //        break;
+            //}
 
             assemblyPath = new FileInfo(plugfile).Directory.FullName + "\\dll";
 
@@ -188,19 +187,19 @@ namespace EFWCoreLib.CoreFrame.Plugin
             }
         }
 
-        public Object WcfServerExecuteMethod(string controllername, string methodname, object[] paramValue, ClientRequestData requestData)
-        {
-            EFWCoreLib.WcfFrame.ServerController.WcfServerController wscontroller = helper.CreateController(plugin.name, controllername) as EFWCoreLib.WcfFrame.ServerController.WcfServerController;
-            wscontroller.requestData = requestData;
-            wscontroller.responseData = new ServiceResponseData(requestData.Iscompressjson,requestData.Isencryptionjson,requestData.Serializetype);
-            wscontroller.BindLoginRight(requestData.LoginRight);
-            MethodInfo methodinfo = helper.CreateMethodInfo(plugin.name, controllername, methodname, wscontroller);
-            return methodinfo.Invoke(wscontroller, paramValue);
-        }
+        //public Object WcfServerExecuteMethod(string controllername, string methodname, object[] paramValue, ClientRequestData requestData)
+        //{
+        //    EFWCoreLib.WcfFrame.ServerController.WcfServerController wscontroller = helper.CreateController(plugin.name, controllername) as EFWCoreLib.WcfFrame.ServerController.WcfServerController;
+        //    wscontroller.requestData = requestData;
+        //    wscontroller.responseData = new ServiceResponseData(requestData.Iscompressjson,requestData.Isencryptionjson,requestData.Serializetype);
+        //    wscontroller.BindLoginRight(requestData.LoginRight);
+        //    MethodInfo methodinfo = helper.CreateMethodInfo(plugin.name, controllername, methodname, wscontroller);
+        //    return methodinfo.Invoke(wscontroller, paramValue);
+        //}
 
-        public Object WcfClientExecuteMethod()
-        {
-            return null;
-        }
+        //public Object WcfClientExecuteMethod()
+        //{
+        //    return null;
+        //}
     }
 }

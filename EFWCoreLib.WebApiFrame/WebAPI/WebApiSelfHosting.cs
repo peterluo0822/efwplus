@@ -27,7 +27,7 @@ namespace EFWCoreLib.WebFrame.WebAPI
                 WebApiUri = "http://localhost:8088";
 
             //初始化连接池,默认10分钟清理连接
-            ClientLinkPoolCache.Init(true, 500, 30, 600, "webapi", 30);
+            WcfFrame.ClientLinkPoolCache.Init(true, 500, 30, 600, "webapi", 30);
 
             MiddlewareLogHelper.WriterLog(LogType.WebApiLog, true, Color.Blue, "WebAPI服务初始化完成");
         }

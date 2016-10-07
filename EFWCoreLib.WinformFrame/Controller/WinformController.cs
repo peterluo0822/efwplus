@@ -156,6 +156,12 @@ namespace EFWCoreLib.WinformFrame.Controller
                             AsynInitCompleted();
                         }
                         return true;
+                    case "MessageBoxShowSimple":
+                        if (objs.Length > 0)
+                        {
+                            MessageBoxShowSimple(objs[0].ToString());
+                        }
+                        return true;
                 }
 
                 MethodInfo meth = ControllerHelper.CreateMethodInfo(_pluginName + "@" + this.GetType().Name, eventname);

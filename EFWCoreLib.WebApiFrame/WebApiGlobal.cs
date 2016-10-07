@@ -7,6 +7,9 @@ using EFWCoreLib.WebFrame.WebAPI;
 
 namespace EFWCoreLib.WebApiFrame
 {
+    /// <summary>
+    /// WebApi服务启动程序
+    /// </summary>
     public class WebApiGlobal
     {
         static WebApiSelfHosting webapiHost = null;

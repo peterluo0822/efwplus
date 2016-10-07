@@ -30,8 +30,69 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Intelligencia.UrlRewriter">
+      <HintPath>..\Component\Intelligencia.UrlRewriter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Caching">
+      <HintPath>..\Component\Microsoft.Practices.EnterpriseLibrary.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=4.1.0.0, Culture=neutral, PublicKeyToken=e44a2bc38ed2c13c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Component\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Data">
+      <HintPath>..\Component\Microsoft.Practices.EnterpriseLibrary.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.ExceptionHandling">
+      <HintPath>..\Component\Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.Logging">
+      <HintPath>..\Component\Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Logging, Version=4.1.0.0, Culture=neutral, PublicKeyToken=e44a2bc38ed2c13c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Component\Microsoft.Practices.EnterpriseLibrary.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.PolicyInjection">
+      <HintPath>..\Component\Microsoft.Practices.EnterpriseLibrary.PolicyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\Component\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Component\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration">
+      <HintPath>..\Component\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception">
+      <HintPath>..\Component\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\Component\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Component\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\Component\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NVelocity">
+      <HintPath>..\Component\NVelocity.dll</HintPath>
+    </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\Component\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http">
+      <HintPath>..\Component\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,9 +101,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebGlobal.cs" />
+    <Compile Include="HttpHandler\APIHttpHandler.cs" />
+    <Compile Include="HttpHandler\Controller\ControllerHelper.cs" />
+    <Compile Include="HttpHandler\Controller\IToJqueryEasyUIJson.cs" />
+    <Compile Include="HttpHandler\Controller\JEasyUIController.cs" />
+    <Compile Include="HttpHandler\Controller\WebHttpController.cs" />
+    <Compile Include="HttpHandler\HttpHandlerInvoker.cs" />
+    <Compile Include="HttpHandler\Utility\DebugController.cs" />
+    <Compile Include="HttpHandler\Utility\ExcelHelper.cs" />
+    <Compile Include="HttpHandler\Utility\ImageUniqueCode.cs" />
+    <Compile Include="HttpHandler\Utility\kindeditorUpload.cs" />
+    <Compile Include="HttpHandler\Utility\TemplateHelper.cs" />
+    <Compile Include="HttpHandler\Utility\UploadifyController.cs" />
+    <Compile Include="HttpHandler\Utility\WebFusionChart.cs" />
+    <Compile Include="HttpHandler\Utility\WebReportAll.cs" />
+    <Compile Include="HttpHandler\WebRequstData.cs" />
+    <Compile Include="HttpHandler\WebResponseData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateHandler\AbstractViewComponent.cs" />
+    <Compile Include="TemplateHandler\TemplateController.cs" />
+    <Compile Include="WebForm\WebformPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebService\AbstractService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WebService\WebServiceInvoker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EFWCoreLib.CoreFrame\EFWCoreLib.CoreFrame.csproj">
+      <Project>{b3f41c24-1a64-4995-9398-812789014bd7}</Project>
+      <Name>EFWCoreLib.CoreFrame</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EFWCoreLib.WcfFrame\EFWCoreLib.WcfFrame.csproj">
+      <Project>{cacafdbf-9b17-403a-a3ca-c123a94e2c19}</Project>
+      <Name>EFWCoreLib.WcfFrame</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

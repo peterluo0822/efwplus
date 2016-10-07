@@ -18,6 +18,8 @@ using Microsoft.Practices.EnterpriseLibrary.Caching;
 using Microsoft.Practices.Unity;
 using System.Diagnostics;
 using System.Threading;
+using EFWCoreLib.WcfFrame;
+using EFWCoreLib.WcfFrame.DataSerialize;
 
 namespace EFWCoreLib.WebFrame.WebAPI
 {

@@ -99,9 +99,9 @@ namespace EFWCoreLib.CoreFrame.Init
                         //MultiTask.Init(container, taskList);//任务                       
                         //是否开启Web控制器请求权限认证
                         //扩展Global，网站程序启动、停止可自定义代码
-                        GlobalExtend.StartInit();
+                        //GlobalExtend.StartInit();
                         //初始化委托代码
-                        BaseDelegateCode.Init(container, codeList);//执行函数
+                        //BaseDelegateCode.Init(container, codeList);//执行函数
 
                         _isCalled = true;
                       
@@ -163,7 +163,7 @@ namespace EFWCoreLib.CoreFrame.Init
 
         public static void AppEnd()
         {
-            GlobalExtend.EndInit();
+            //GlobalExtend.EndInit();
             //EFWCoreLib.WcfFrame.ClientLinkManage.UnAllConnection();
         }
 

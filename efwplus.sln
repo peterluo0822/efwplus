@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "efwplus", "efwplus\efwplus.csproj", "{492960CE-8EEA-402C-990F-FEE541A446DE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFWCoreLib.CoreFrame", "EFWCoreLib.CoreFrame\EFWCoreLib.CoreFrame.csproj", "{B3F41C24-1A64-4995-9398-812789014BD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFWCoreLib.WcfFrame", "EFWCoreLib.WcfFrame\EFWCoreLib.WcfFrame.csproj", "{CACAFDBF-9B17-403A-A3CA-C123A94E2C19}"
@@ -17,16 +15,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFWCoreLib.WebApiFrame", "E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFWCoreLib.TestFrame", "EFWCoreLib.TestFrame\EFWCoreLib.TestFrame.csproj", "{9A4255ED-D431-4BE9-8E47-97A6770B3329}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "efwplusServer", "efwplusServer\efwplusServer.csproj", "{AC7B7A34-EE66-4983-A968-C3A4B3B713AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "efwplusClient", "efwplusClient\efwplusClient.csproj", "{C44C4A05-FDFF-4E07-A30E-8C1C153EE84C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{492960CE-8EEA-402C-990F-FEE541A446DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{492960CE-8EEA-402C-990F-FEE541A446DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{492960CE-8EEA-402C-990F-FEE541A446DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{492960CE-8EEA-402C-990F-FEE541A446DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B3F41C24-1A64-4995-9398-812789014BD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3F41C24-1A64-4995-9398-812789014BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3F41C24-1A64-4995-9398-812789014BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +49,14 @@ Global
 		{9A4255ED-D431-4BE9-8E47-97A6770B3329}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A4255ED-D431-4BE9-8E47-97A6770B3329}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A4255ED-D431-4BE9-8E47-97A6770B3329}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC7B7A34-EE66-4983-A968-C3A4B3B713AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC7B7A34-EE66-4983-A968-C3A4B3B713AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC7B7A34-EE66-4983-A968-C3A4B3B713AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC7B7A34-EE66-4983-A968-C3A4B3B713AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C44C4A05-FDFF-4E07-A30E-8C1C153EE84C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C44C4A05-FDFF-4E07-A30E-8C1C153EE84C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C44C4A05-FDFF-4E07-A30E-8C1C153EE84C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C44C4A05-FDFF-4E07-A30E-8C1C153EE84C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
