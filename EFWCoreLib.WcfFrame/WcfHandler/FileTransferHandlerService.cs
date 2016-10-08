@@ -6,7 +6,9 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.CoreFrame.Init;
+using EFWCoreLib.WcfFrame.DataSerialize;
 using EFWCoreLib.WcfFrame.ServerController;
 using EFWCoreLib.WcfFrame.WcfService.Contract;
 
@@ -20,19 +22,19 @@ namespace EFWCoreLib.WcfFrame.WcfService
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false, IncludeExceptionDetailInFaults = false)]
     public class FileTransferHandlerService : IFileTransfer
     {
-        public static HostWCFMsgHandler hostwcfMsg;
+        //public static HostWCFMsgHandler hostwcfMsg;
         private static string filebufferpath;
         private static Dictionary<string, int> progressDic_Up;
         private static Dictionary<string, int> progressDic_Down;
 
         public FileTransferHandlerService()
         {
-            hostwcfMsg(Color.Blue, DateTime.Now, "FileTransferHandlerService服务正在初始化...");
+            //hostwcfMsg(Color.Blue, DateTime.Now, "FileTransferHandlerService服务正在初始化...");
             //初始化操作
             filebufferpath = AppGlobal.AppRootPath + @"filebuffer\";
             progressDic_Up = new Dictionary<string, int>();
             progressDic_Down = new Dictionary<string, int>();
-            hostwcfMsg(Color.Blue, DateTime.Now, "FileTransferHandlerService服务初始化完成");
+            //hostwcfMsg(Color.Blue, DateTime.Now, "FileTransferHandlerService服务初始化完成");
         }
 
         #region IFileTransfer 成员
@@ -222,11 +224,7 @@ namespace EFWCoreLib.WcfFrame.WcfService
 
         private void ShowHostMsg(Color clr, DateTime time, string text)
         {
-            //lock (hostwcfMsg)
-            //{
-                hostwcfMsg.BeginInvoke(clr, time, text, null, null);//异步方式不影响后台数据请求
-                //hostwcfMsg(time, text);
-            //}
+            MiddlewareLogHelper.WriterLog(LogType.MidLog, true, clr, text);
         }
 
     }

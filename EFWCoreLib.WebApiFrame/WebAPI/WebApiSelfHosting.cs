@@ -19,7 +19,7 @@ namespace EFWCoreLib.WebFrame.WebAPI
 
         public WebApiSelfHosting(string _WebApiUri)
         {
-            MiddlewareLogHelper.WriterLog(LogType.WebApiLog,true,Color.Blue, "WebAPI服务正在初始化...");
+            //MiddlewareLogHelper.WriterLog(LogType.WebApiLog,true,Color.Blue, "WebAPI服务正在初始化...");
             //初始化操作
             if (_WebApiUri != null)
                 WebApiUri = _WebApiUri;
@@ -29,7 +29,7 @@ namespace EFWCoreLib.WebFrame.WebAPI
             //初始化连接池,默认10分钟清理连接
             WcfFrame.ClientLinkPoolCache.Init(true, 500, 30, 600, "webapi", 30);
 
-            MiddlewareLogHelper.WriterLog(LogType.WebApiLog, true, Color.Blue, "WebAPI服务初始化完成");
+            //MiddlewareLogHelper.WriterLog(LogType.WebApiLog, true, Color.Blue, "WebAPI服务初始化完成");
         }
 
         ~WebApiSelfHosting()

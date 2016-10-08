@@ -24,16 +24,16 @@ namespace EFWCoreLib.WcfFrame.ServerController
 
         public static IDictionary<int, RegistrationInfo> RegistrationList = new Dictionary<int, RegistrationInfo>();
         public static IDictionary<string, int> RoundRobinCount = new Dictionary<string, int>();
-        public static HostWCFMsgHandler hostwcfMsg;
+        //public static HostWCFMsgHandler hostwcfMsg;
         public static HostWCFRouterListHandler hostwcfRouter;
         public static string ns = "http://www.efwplus.cn/";
         public static string routerfile = System.Windows.Forms.Application.StartupPath + "\\Config\\RouterBill.xml";
 
         public static void Start()
         {
-            hostwcfMsg(Color.Blue, DateTime.Now, "RouterHandlerService服务正在初始化...");
+            //hostwcfMsg(Color.Blue, DateTime.Now, "RouterHandlerService服务正在初始化...");
             RegistrationInfo.LoadRouterBill();
-            hostwcfMsg(Color.Blue, DateTime.Now, "RouterHandlerService服务初始化完成");
+            //hostwcfMsg(Color.Blue, DateTime.Now, "RouterHandlerService服务初始化完成");
             hostwcfRouter(RegistrationList.Values.ToList());
         }
 

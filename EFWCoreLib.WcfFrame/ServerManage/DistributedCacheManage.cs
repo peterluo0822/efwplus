@@ -5,7 +5,9 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.CoreFrame.Init;
+using EFWCoreLib.WcfFrame.DataSerialize;
 using EFWCoreLib.WcfFrame.WcfService.Contract;
 using Microsoft.Practices.EnterpriseLibrary.Caching;
 
@@ -18,7 +20,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
     /// </summary>
     public class DistributedCacheManage
     {
-        public static HostWCFMsgHandler hostwcfMsg;
+        //public static HostWCFMsgHandler hostwcfMsg;
         //使用企业库中的缓存对象来进行分布式缓存管理
         private static ICacheManager _localCache
         {
@@ -375,67 +377,10 @@ namespace EFWCoreLib.WcfFrame.ServerController
 
         private static void ShowHostMsg(Color clr, DateTime time, string text)
         {
-            hostwcfMsg.BeginInvoke(clr, time, text, null, null);//异步方式不影响后台数据请求
+            //hostwcfMsg.BeginInvoke(clr, time, text, null, null);//异步方式不影响后台数据请求
             //hostwcfMsg(time, text);
+            MiddlewareLogHelper.WriterLog(LogType.MidLog, true, clr, text);
         }
     }
-    /// <summary>
-    /// 缓存对象
-    /// </summary>
-    [DataContract]
-    public class CacheObject
-    {
-        /// <summary>
-        /// 中间件标识
-        /// </summary>
-        [DataMember]
-        public string ServerIdentify { get; set; }
-        /// <summary>
-        /// 缓存名称
-        /// </summary>
-        [DataMember]
-        public string cachename { get; set; }
-        /// <summary>
-        /// 唯一标识
-        /// </summary>
-        [DataMember]
-        public double identify { get; set; }
-        /// <summary>
-        /// 缓存数据集合
-        /// </summary>
-        [DataMember]
-        public List<CacheData> cacheValue { get; set; }
-    }
-
-    /// <summary>
-    /// 缓存数据
-    /// </summary>
-    [DataContract]
-    public class CacheData
-    {
-
-        [DataMember]
-        public double timestamp { get; set; }
-        [DataMember]
-        public string key { get; set; }
-        [DataMember]
-        public string value { get; set; }
-        [DataMember]
-        public bool deleteflag { get; set; }
-    }
-    /// <summary>
-    /// 缓存标识
-    /// </summary>
-    [DataContract]
-    public class CacheIdentify
-    {
-        [DataMember]
-        public string ServerIdentify { get; set; }
-        [DataMember]
-        public string cachename { get; set; }
-        [DataMember]
-        public double identify { get; set; }
-        [DataMember]
-        public IDictionary<string,double> keytimestamps { get; set; }
-    }
+    
 }

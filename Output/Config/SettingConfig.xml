@@ -10,7 +10,7 @@
   </wcfservice>
   <router value="1">
   </router>
-  <filetransfer value="0">
+  <filetransfer value="1">
   </filetransfer>
   <webapi value="1">
   </webapi>

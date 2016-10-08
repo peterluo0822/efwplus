@@ -49,12 +49,11 @@ namespace EFWCoreLib.WcfFrame.ServerController
         /// </summary>
         public static void StartWCFHost()
         {
-            hostwcfMsg(Color.Blue, DateTime.Now, "WCFHandlerService服务正在初始化...");
+            //hostwcfMsg(Color.Blue, DateTime.Now, "WCFHandlerService服务正在初始化...");
 
-            WcfGlobal.Main();
+            //WcfGlobal.Main();
 
-            //初始化连接池,默认10分钟清理连接
-            ClientLinkPoolCache.Init(true, 200, 30, 600, "wcfserver", 30);
+           
 
             //初始化插件
             localPlugin = new LocalPlgin();
@@ -63,7 +62,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
             localPlugin.ServerIdentify = WcfServerManage.Identify;
             localPlugin.PluginDic = AppPluginManage.PluginDic;
 
-            hostwcfMsg(Color.Blue, DateTime.Now, "WCFHandlerService服务初始化完成");
+            //hostwcfMsg(Color.Blue, DateTime.Now, "WCFHandlerService服务初始化完成");
 
             if (IsHeartbeat == true)
             {
@@ -347,7 +346,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
 
         #region 界面显示
         public static HostWCFClientInfoListHandler hostwcfclientinfoList;
-        public static HostWCFMsgHandler hostwcfMsg;
+        //public static HostWCFMsgHandler hostwcfMsg;
         private static void AddClient(string sessionId, string clientId, string ipaddress, DateTime time, IClientService clientService, string plugin, string replyidentify)
         {
             WCFClientInfo info = new WCFClientInfo();
@@ -437,7 +436,8 @@ namespace EFWCoreLib.WcfFrame.ServerController
         private static void ShowHostMsg(Color clr, DateTime time, string text)
         {
             //hostwcfMsg.BeginInvoke(clr, time, text, null, null);//异步方式不影响后台数据请求
-            hostwcfMsg(clr, time, text);
+            //hostwcfMsg(clr, time, text);
+            MiddlewareLogHelper.WriterLog(LogType.MidLog, true, clr, text);
         }
         #endregion
 

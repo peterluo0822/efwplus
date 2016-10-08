@@ -21,7 +21,7 @@ namespace EFWCoreLib.CoreFrame.Common
     public class MiddlewareLogHelper
     {
         public static MiddlewareMsgHandler hostwcfMsg;
-        private static Dictionary<LogType, string> logNameDic = new Dictionary<LogType, string>();
+        private static Dictionary<LogType, string> LogNameDic = new Dictionary<LogType, string>();
         private static Dictionary<LogType, StringBuilder> LogSbDic = new Dictionary<LogType, StringBuilder>();
         /// <summary>
         /// 往中间件写入日志
@@ -30,24 +30,19 @@ namespace EFWCoreLib.CoreFrame.Common
         /// <param name="isShowMsg">是否显示</param>
         /// <param name="clr">颜色</param>
         /// <param name="text">内容</param>
-        public static void WriterLog(LogType logType,bool isShowMsg, Color clr, string text)
+        public static void WriterLog(LogType logType, bool isShowMsg, Color clr, string text)
         {
-            string logName = getLogName(logType);
-            if (logNameDic.ContainsKey(logType) == false)
-            {
-                logNameDic.Add(logType, logName);
-                LogSbDic.Add(logType, new StringBuilder());
-                LogSbDic[logType].AppendLine(text);
-            }
+            LogSbDic[logType].AppendLine("[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + text);
+
             if (isShowMsg && hostwcfMsg != null)
             {
                 hostwcfMsg(clr, DateTime.Now, text);
-                LogSbDic[logType].AppendLine(text);
             }
         }
+
         private static void WriterFile()
         {
-            foreach (var item in logNameDic)
+            foreach (var item in LogNameDic)
             {
                 string info = null;
                 lock (LogSbDic)
@@ -58,10 +53,10 @@ namespace EFWCoreLib.CoreFrame.Common
                 }
                 if (string.IsNullOrEmpty(info) == false)
                 {
-                    string filepath = AppGlobal.AppRootPath + logNameDic[item.Key] + "\\" + DateTime.Now.ToString("yyyyMM") + ".txt";
-                    if (System.IO.Directory.Exists(AppGlobal.AppRootPath + logNameDic[item.Key]) == false)
+                    string filepath = AppGlobal.AppRootPath + LogNameDic[item.Key] + "\\" + DateTime.Now.ToString("yyyyMM") + ".txt";
+                    if (System.IO.Directory.Exists(AppGlobal.AppRootPath + LogNameDic[item.Key]) == false)
                     {
-                        System.IO.Directory.CreateDirectory(AppGlobal.AppRootPath + logNameDic[item.Key]);
+                        System.IO.Directory.CreateDirectory(AppGlobal.AppRootPath + LogNameDic[item.Key]);
                     }
                     System.IO.File.AppendAllText(filepath, info);
                 }
@@ -72,10 +67,25 @@ namespace EFWCoreLib.CoreFrame.Common
         static System.Timers.Timer timer;
         public static void StartWriteFileLog()
         {
-            timer = new System.Timers.Timer();
-            timer.Interval = 1000;
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
-            timer.Start();
+            if (timer == null)
+            {
+                LogNameDic.Add(LogType.MidLog, getLogName(LogType.MidLog));
+                LogSbDic.Add(LogType.MidLog, new StringBuilder());
+
+                LogNameDic.Add(LogType.WebApiLog, getLogName(LogType.WebApiLog));
+                LogSbDic.Add(LogType.WebApiLog, new StringBuilder());
+
+                LogNameDic.Add(LogType.TimingTaskLog, getLogName(LogType.TimingTaskLog));
+                LogSbDic.Add(LogType.TimingTaskLog, new StringBuilder());
+
+                LogNameDic.Add(LogType.MILog, getLogName(LogType.MILog));
+                LogSbDic.Add(LogType.MILog, new StringBuilder());
+
+                timer = new System.Timers.Timer();
+                timer.Interval = 1000;
+                timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
+                timer.Start();
+            }
         }
         static Object syncObj = new Object();////定义一个静态对象用于线程部份代码块的锁定，用于lock操作
         static void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

@@ -51,7 +51,7 @@ namespace EFWCoreLib.CoreFrame.Common
                 taskmanager.TaskList = taskList;
                 taskmanager.Initialize();
 
-                MiddlewareLogHelper.WriterLog(LogType.TimingTaskLog, true, System.Drawing.Color.Blue, "定时任务已启动！");
+                //MiddlewareLogHelper.WriterLog(LogType.TimingTaskLog, true, System.Drawing.Color.Blue, "定时任务已启动！");
             }
             else
             {
@@ -66,7 +66,7 @@ namespace EFWCoreLib.CoreFrame.Common
             if (taskmanager != null)
             {
                 taskmanager.Dispose();
-                MiddlewareLogHelper.WriterLog(LogType.TimingTaskLog, true, System.Drawing.Color.Red, "定时任务已停止！");
+                
             }
         }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using EFWCoreLib.WcfFrame.DataSerialize;
 
 namespace EFWCoreLib.WcfFrame
 {
@@ -68,18 +69,18 @@ namespace EFWCoreLib.WcfFrame
         #region 分布式缓存同步
 
 
-        public ServerController.CacheIdentify DistributedCacheSyncIdentify(ServerController.CacheIdentify cacheId)
+        public CacheIdentify DistributedCacheSyncIdentify(CacheIdentify cacheId)
         {
             return EFWCoreLib.WcfFrame.ServerController.DistributedCacheManage.CompareCache(cacheId);
         }
 
-        public void DistributedCacheSync(ServerController.CacheObject cache)
+        public void DistributedCacheSync(CacheObject cache)
         {
             EFWCoreLib.WcfFrame.ServerController.DistributedCacheManage.SyncLocalCache(cache);
         }
 
 
-        public void DistributedAllCacheSync(List<ServerController.CacheObject> cachelist)
+        public void DistributedAllCacheSync(List<CacheObject> cachelist)
         {
             foreach (var cache in cachelist)
             {

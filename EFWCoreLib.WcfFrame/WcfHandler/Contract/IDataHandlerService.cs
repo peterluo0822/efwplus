@@ -5,6 +5,7 @@ using System.Text;
 using System.ServiceModel;
 using EFWCoreLib.WcfFrame.ServerController;
 using EFWCoreLib.WcfFrame.SDMessageHeader;
+using EFWCoreLib.WcfFrame.DataSerialize;
 
 namespace EFWCoreLib.WcfFrame.WcfService.Contract
 {

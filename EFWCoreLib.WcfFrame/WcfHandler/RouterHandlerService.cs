@@ -12,6 +12,7 @@ using EFWCoreLib.WcfFrame.WcfService.Contract;
 using EFWCoreLib.WcfFrame.ServerController;
 using System.Drawing;
 using EFWCoreLib.WcfFrame.SDMessageHeader;
+using EFWCoreLib.CoreFrame.Common;
 
 namespace EFWCoreLib.WcfFrame.WcfService
 {
@@ -87,7 +88,7 @@ namespace EFWCoreLib.WcfFrame.WcfService
                 double outtime = endtime();
                 // 请求消息记录
                 if (WcfServerManage.IsDebug)
-                    RouterServerManage.hostwcfMsg(Color.Black, DateTime.Now, String.Format("路由请求消息发送(耗时[" + outtime + "])：  {0}", requestMessage.Headers.Action));
+                    MiddlewareLogHelper.WriterLog(LogType.MidLog,true,Color.Black, String.Format("路由请求消息发送(耗时[" + outtime + "])：  {0}", requestMessage.Headers.Action));
 
 
                 return responseMessage;
@@ -169,7 +170,7 @@ namespace EFWCoreLib.WcfFrame.WcfService
                         // 请求消息记录
                         IClientChannel clientChannel = proxy as IClientChannel;
                         if (WcfServerManage.IsDebug)
-                            RouterServerManage.hostwcfMsg(Color.Black, DateTime.Now, String.Format("路由请求消息发送：  {0}", clientChannel.RemoteAddress.Uri.AbsoluteUri));
+                            MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Black, String.Format("路由请求消息发送：  {0}", clientChannel.RemoteAddress.Uri.AbsoluteUri));
                         // 调用绑定的终结点的服务方法
                         Message responseMessage = proxy.ProcessMessage(requestMessage);
 

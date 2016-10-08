@@ -86,7 +86,7 @@
             this.lbClientCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbRunTime = new System.Windows.Forms.ToolStripStatusLabel();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timerRun = new System.Windows.Forms.Timer(this.components);
             this.timermsg = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -624,10 +624,10 @@
             this.lbRunTime.Name = "lbRunTime";
             this.lbRunTime.Size = new System.Drawing.Size(110, 25);
             // 
-            // timer1
+            // timerRun
             // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timerRun.Interval = 1000;
+            this.timerRun.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // timermsg
             // 
@@ -706,7 +706,7 @@
         private System.Windows.Forms.ToolStripStatusLabel lsServerUrl;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
         private System.Windows.Forms.ToolStripStatusLabel lbRunTime;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timerRun;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel lbClientCount;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;

@@ -2,30 +2,22 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using EFWCoreLib.CoreFrame.Init;
-using System.ServiceModel;
-using System.ServiceModel.Description;
-using EFWCoreLib.WcfFrame.ServerController;
-using EFWCoreLib.WcfFrame.WcfService;
-using System.Diagnostics;
-using WCFHosting.PluginManage;
-using WCFHosting.RouterManage;
-using EFWCoreLib.WcfFrame.DataSerialize;
 using EFWCoreLib.CoreFrame.Common;
+using EFWCoreLib.WcfFrame;
+using EFWCoreLib.WcfFrame.ServerController;
+using EFWCoreLib.WebApiFrame;
+using WCFHosting.RouterManage;
 using WCFHosting.TimingTask;
 
 namespace WCFHosting
 {
     public partial class FrmHosting : Form
     {
-        ServiceHost mAppHost = null;
-        ServiceHost mRouterHost = null;
-        ServiceHost mFileRouterHost = null;
-        ServiceHost mFileHost = null;
         long timeCount = 0;//运行次数
         string identify;
         string expireDate;
@@ -45,8 +37,8 @@ namespace WCFHosting
                     停止ToolStripMenuItem.Enabled = false;
 
                     lbStatus.Text = "服务未启动";
-                    timer1.Enabled = false;
-                    timermsg.Enabled = false;
+                    timerRun.Enabled = false;
+                    //timermsg.Enabled = false;
                     暂停日志ToolStripMenuItem.Text = "开启日志";
                 }
                 else
@@ -58,8 +50,8 @@ namespace WCFHosting
 
                     lbStatus.Text = "服务已运行";
                     timeCount = 0;
-                    timer1.Enabled = true;
-                    timermsg.Enabled = true;
+                    timerRun.Enabled = true;
+                    //timermsg.Enabled = true;
                     暂停日志ToolStripMenuItem.Text = "暂停日志";
                 }
             }
@@ -71,171 +63,82 @@ namespace WCFHosting
             msgList = new Queue<msgobject>();
         }
 
-        private void GetSettingConfig()
+        private void StartAllHost()
         {
+            if (Convert.ToInt32(HostSettingConfig.GetValue("wcfservice")) == 1)
+            {
+                WcfServerManage.hostwcfclientinfoList = new HostWCFClientInfoListHandler(BindGridClient);
+                WcfServerManage.Identify = identify;
+                WcfGlobal.Main(StartType.BaseService);
+            }
+            if (Convert.ToInt32(HostSettingConfig.GetValue("filetransfer")) == 1)
+            {
+                WcfGlobal.Main(StartType.FileService);
+            }
+            if (Convert.ToInt32(HostSettingConfig.GetValue("router")) == 1)
+            {
+                RouterServerManage.hostwcfRouter = new HostWCFRouterListHandler(BindGridRouter);
+                WcfGlobal.Main(StartType.RouterBaseService);
+                WcfGlobal.Main(StartType.RouterFileService);
+            }
+            if (Convert.ToInt32(HostSettingConfig.GetValue("webapi")) == 1)
+            {
+                WebApiGlobal.Main();
+            }
+            if (Convert.ToInt32(HostSettingConfig.GetValue("timingtask")) == 1)
+                WcfGlobal.Main(StartType.MiddlewareTask);
 
-        }
-
-        private void StartAppHost()
-        {
-            WcfServerManage.hostwcfclientinfoList = new HostWCFClientInfoListHandler(BindGridClient);
-            WcfServerManage.hostwcfMsg = new HostWCFMsgHandler(AddMsg);
-            DistributedCacheManage.hostwcfMsg = new HostWCFMsgHandler(AddMsg);
-
-            mAppHost = new ServiceHost(typeof(WCFHandlerService));
-            
-
-            WcfServerManage.Identify = identify;
-            WcfServerManage.HostName = HostSettingConfig.GetValue("hostname");
-            WcfServerManage.IsDebug = HostSettingConfig.GetValue("debug") == "1" ? true : false;
-            WcfServerManage.IsHeartbeat = HostSettingConfig.GetValue("heartbeat") == "1" ? true : false;
-            WcfServerManage.HeartbeatTime = Convert.ToInt32(HostSettingConfig.GetValue("heartbeattime"));
-            WcfServerManage.IsMessage = HostSettingConfig.GetValue("message") == "1" ? true : false;
-            WcfServerManage.MessageTime = Convert.ToInt32(HostSettingConfig.GetValue("messagetime"));
-            WcfServerManage.IsCompressJson = HostSettingConfig.GetValue("compress") == "1" ? true : false;
-            WcfServerManage.IsEncryptionJson = HostSettingConfig.GetValue("encryption") == "1" ? true : false;
-            WcfServerManage.IsToken = HostSettingConfig.GetValue("token") == "1" ? true : false;
-            WcfServerManage.serializeType = (SerializeType)Convert.ToInt32(HostSettingConfig.GetValue("serializetype"));
-            WcfServerManage.IsOverTime = HostSettingConfig.GetValue("overtime") == "1" ? true : false;
-            WcfServerManage.OverTime = Convert.ToInt32(HostSettingConfig.GetValue("overtimetime"));
-            WcfServerManage.StartWCFHost();
-
-            mAppHost.Open();
-           
-
-            AddMsg(Color.Blue, DateTime.Now, "基础服务启动完成");
-        }
-        private void StartRouterHost()
-        {
-            RouterServerManage.hostwcfMsg = new HostWCFMsgHandler(AddMsg);
-            RouterServerManage.hostwcfRouter = new HostWCFRouterListHandler(BindGridRouter);
-
-            mRouterHost = new ServiceHost(typeof(RouterHandlerService));
-            mFileRouterHost = new ServiceHost(typeof(FileRouterHandlerService));
-           
-            RouterServerManage.Start();
-            mRouterHost.Open();
-            mFileRouterHost.Open();
-            AddMsg(Color.Blue,DateTime.Now, "路由服务启动完成");
-            
-        }
-        private void StartFileHost()
-        {
-            FileTransferHandlerService.hostwcfMsg = new HostWCFMsgHandler(AddMsg);
-
-            mFileHost = new ServiceHost(typeof(FileTransferHandlerService));
-            mFileHost.Open();
-
-
-            AddMsg(Color.Blue, DateTime.Now, "文件传输服务启动完成");
-        }
-        private void StartWebApiHost()
-        {
-            EFWCoreLib.WebApiFrame.WebApiGlobal.Main();
-
-            AddMsg(Color.Blue, DateTime.Now, "WebAPI服务启动完成");
+            WcfGlobal.Main(StartType.SuperClient);
+            RunState = HostState.Opened;
         }
 
         private void StopAllHost()
         {
-            try
-            {
-                if (mAppHost != null)
-                {
-                    WcfServerManage.StopWCFHost();
-                    WcfServerManage.UnCreateSuperClient();
-                    mAppHost.Close();
-                    //AddMsg(Color.Red, DateTime.Now, "基础服务已关闭");
-                    settext(Color.Red, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "基础服务已关闭！");
-                }
+            MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "正在准备关闭中间件服务，请等待...");
 
-                if (mRouterHost != null && mFileRouterHost != null)
-                {
-                    mRouterHost.Close();
-                    mFileRouterHost.Close();
-                    RouterServerManage.Stop();
-                    //AddMsg(Color.Red, DateTime.Now, "路由服务已关闭");
-                    settext(Color.Red, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "路由服务已关闭！");
-                }
-
-                if (mFileHost != null)
-                {
-                    mFileHost.Close();
-                    //AddMsg(Color.Red, DateTime.Now, "文件传输服务已关闭");
-                    settext(Color.Red, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "文件传输服务已关闭！");
-                }
-
-                EFWCoreLib.WebApiFrame.WebApiGlobal.Exit();
-                //AddMsg(Color.Red, DateTime.Now, "WebAPI服务已关闭");
-                settext(Color.Red, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "WebAPI服务已关闭！");
-                
-
-                MiddlewareTask.StopTask();//停止任务
-            }
-            catch
-            {
-                if (mAppHost != null)
-                    mAppHost.Abort();
-                if (mRouterHost != null)
-                    mRouterHost.Abort();
-                if (mFileHost != null)
-                    mFileHost.Abort();
-            }
+            WcfGlobal.Exit(StartType.MiddlewareTask);
+            WcfGlobal.Exit(StartType.SuperClient);
+            WcfGlobal.Exit(StartType.BaseService);
+            WcfGlobal.Exit(StartType.FileService);
+            WcfGlobal.Exit(StartType.RouterBaseService);
+            WcfGlobal.Exit(StartType.RouterFileService);
+            WebApiGlobal.Exit();
+    
             RunState = HostState.NoOpen;
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
             timermsg.Start();
+            MiddlewareLogHelper.hostwcfMsg = new MiddlewareMsgHandler(AddMsg);
+            MiddlewareLogHelper.StartWriteFileLog();//开放中间件日志
             int res = TimeCDKEY.InitRegedit(out expireDate,out identify);
             if (res == 0)
             {
-                MiddlewareLogHelper.hostwcfMsg = new MiddlewareMsgHandler(AddMsg);
-                MiddlewareLogHelper.StartWriteFileLog();//开放中间件日志
-
-
-                settext(Color.Green, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "软件已注册，到期时间【" + expireDate + "】");
-                if (Convert.ToInt32(HostSettingConfig.GetValue("wcfservice")) == 1)
-                    StartAppHost();
-                if (Convert.ToInt32(HostSettingConfig.GetValue("router")) == 1)
-                    StartRouterHost();
-                if (Convert.ToInt32(HostSettingConfig.GetValue("filetransfer")) == 1)
-                    StartFileHost();
-                if (Convert.ToInt32(HostSettingConfig.GetValue("webapi")) == 1)
-                    StartWebApiHost();
-                if (Convert.ToInt32(HostSettingConfig.GetValue("timingtask")) == 1)
-                    MiddlewareTask.StartTask();//开启定时任务
-
-                WcfServerManage.CreateSuperClient();
-                RunState = HostState.Opened;
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Green, "软件已注册，到期时间【" + expireDate + "】");
+                StartAllHost();
             }
             else if (res == 1)
             {
-                //AddMsg(Color.Red, DateTime.Now, "软件尚未注册，请注册软件！");
-                settext(Color.Red, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "软件尚未注册，请注册软件！");
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "软件尚未注册，请注册软件");
             }
             else if (res == 2)
             {
-                //AddMsg(Color.Red, DateTime.Now, "注册机器与本机不一致,请联系管理员！");
-                settext(Color.Red, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "注册机器与本机不一致,请联系管理员！");
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "注册机器与本机不一致,请联系管理员");
             }
             else if (res == 3)
             {
-                //AddMsg(Color.Red, DateTime.Now, "软件试用已到期！");
-                settext(Color.Red, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "软件试用已到期！");
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "软件试用已到期");
             }
             else
             {
-                //AddMsg(Color.Red, DateTime.Now, "软件运行出错，请重新启动！");
-                settext(Color.Red, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "软件运行出错，请重新启动！");
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "软件运行出错，请重新启动");
             }
         }
         private void btnStop_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("您确定要停止服务吗？", "询问窗", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                WcfServerManage.UnCreateSuperClient();
-                EFWCoreLib.WcfFrame.ClientLinkPoolCache.Dispose();
                 StopAllHost();
             }
         }
@@ -330,8 +233,7 @@ namespace WCFHosting
             {
                 try
                 {
-                    WcfServerManage.UnCreateSuperClient();
-                    EFWCoreLib.WcfFrame.ClientLinkPoolCache.Dispose();
+                    StopAllHost();
                 }
                 catch { }
                 this.Dispose(true);
@@ -476,10 +378,7 @@ namespace WCFHosting
             {
                 try
                 {
-                    //AddMsg(Color.Red, DateTime.Now, "正在准备重启中间件服务，请等待...");
-                    settext(Color.Red, "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] : " + "正在准备重启中间件服务，请等待...");
-                    WcfServerManage.UnCreateSuperClient();
-                    EFWCoreLib.WcfFrame.ClientLinkPoolCache.Dispose();
+                    MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "正在准备重启中间件服务，请等待...");
                     StopAllHost();
                     Application.Restart();
                 }

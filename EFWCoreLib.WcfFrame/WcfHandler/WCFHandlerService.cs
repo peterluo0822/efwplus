@@ -9,6 +9,7 @@ using EFWCoreLib.WcfFrame.ServerController;
 using System.Threading;
 using System.ServiceModel.Channels;
 using EFWCoreLib.WcfFrame.SDMessageHeader;
+using EFWCoreLib.WcfFrame.DataSerialize;
 
 namespace EFWCoreLib.WcfFrame.WcfService
 {
