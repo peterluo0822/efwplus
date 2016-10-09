@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.CoreFrame.Init;
 using EFWCoreLib.WcfFrame.DataSerialize;
-using EFWCoreLib.WcfFrame.WcfService.Contract;
+using EFWCoreLib.WcfFrame.WcfHandler;
 using Microsoft.Practices.EnterpriseLibrary.Caching;
 
-namespace EFWCoreLib.WcfFrame.ServerController
+namespace EFWCoreLib.WcfFrame.ServerManage
 {
     /// <summary>
     /// 分布式缓存管理
@@ -26,6 +26,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
         {
             get { return AppGlobal.cache; }
         }
+
         private static List<string> _cacheNameList = new List<string>();
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
                 else
                 {
                     CacheObject co = new CacheObject();
-                    co.ServerIdentify = WcfServerManage.Identify;
+                    co.ServerIdentify = WcfGlobal.Identify;
                     co.cachename = cacheName;
                     co.identify = DateTimeToTimestamp(DateTime.Now);
                     co.cacheValue = new List<CacheData>();
@@ -109,18 +110,18 @@ namespace EFWCoreLib.WcfFrame.ServerController
         /// <param name="cacheName"></param>
         public static void SyncCache(string cacheName)
         {
-            if (WcfServerManage.superclient != null)
+            if (RemotePluginManage.superclient != null)
             {
                 CacheIdentify cacheId = GetCacheIdentify(cacheName);
                 if (cacheId.keytimestamps != null && cacheId.keytimestamps.Count > 0)
                 {
-                    cacheId = WcfServerManage.superclient.DistributedCacheSyncIdentify(cacheId);
+                    cacheId = RemotePluginManage.superclient.DistributedCacheSyncIdentify(cacheId);
                 }
                 CacheObject cache = GetStayLocalCache(cacheId);
                 if (cache.cacheValue != null && cache.cacheValue.Count > 0)
                 {
                     //缓存同步到上级中间件
-                    WcfServerManage.superclient.DistributedCacheSync(cache);
+                    RemotePluginManage.superclient.DistributedCacheSync(cache);
                     //缓存还要同步到所有下级中间件
                     DistributedCacheManage.SyncCache(cache);
                 }
@@ -134,7 +135,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
         {
             List<CacheObject> cachelist = DistributedCacheManage.GetAllCache();
             if (cachelist.Count > 0)
-                WcfServerManage.superclient.DistributedAllCacheSync(cachelist);
+                RemotePluginManage.superclient.DistributedAllCacheSync(cachelist);
         }
 
 
@@ -145,18 +146,18 @@ namespace EFWCoreLib.WcfFrame.ServerController
         public static void SyncCache(CacheObject cache)
         {
             //异步执行同步缓存
-            List<WCFClientInfo> clist = WcfServerManage.wcfClientDic.Values.ToList().FindAll(x => (x.plugin == "SuperPlugin" && x.IsConnect == true));
+            List<ClientInfo> clist = ClientManage.ClientDic.Values.ToList().FindAll(x => (x.plugin == "SuperPlugin" && x.IsConnect == true));
             foreach (var client in clist)
             {
                 //排除自己给自己同步缓存
-                if (WcfServerManage.Identify == client.ServerIdentify)
+                if (WcfGlobal.Identify == client.ServerIdentify)
                 {
                     continue;
                 }
                 else
                 {
                     //将上级中间件的缓存同步到下级中间件
-                    client.callbackClient.DistributedCacheSync(cache);
+                    client.dataReply.DistributedCacheSync(cache);
                 }
             }
         }
@@ -165,7 +166,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
         /// 同步所有缓存给指定下级中间件
         /// </summary>
         /// <param name="cacheName"></param>
-        public static void SyncAllCache(IClientService mCallBack)
+        public static void SyncAllCache(IDataReply mCallBack)
         {
             List<CacheObject> cachelist = DistributedCacheManage.GetAllCache();
             if (cachelist.Count > 0)
@@ -208,7 +209,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
             cacheId.identify = _cacheId.identify;
             cacheId.keytimestamps = new Dictionary<string, double>();
             //自己跟自己比较返回空
-            if (_cacheId.ServerIdentify == WcfServerManage.Identify) return cacheId;
+            if (_cacheId.ServerIdentify == WcfGlobal.Identify) return cacheId;
 
             if (_localCache.Contains(_cacheId.cachename))
             {
@@ -282,7 +283,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
         public static bool SyncLocalCache(CacheObject cache)
         {
             //自己没必要同步到自己
-            if (cache.ServerIdentify == WcfServerManage.Identify) return true;
+            if (cache.ServerIdentify == WcfGlobal.Identify) return true;
             lock (_localCache)
             {
                 bool isChanged = false;
@@ -313,7 +314,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
                 }
                 else
                 {
-                    cache.ServerIdentify = WcfServerManage.Identify;
+                    cache.ServerIdentify = WcfGlobal.Identify;
                     _localCache.Add(cache.cachename, cache);
                     if (_cacheNameList.Contains(cache.cachename) == false)
                         _cacheNameList.Add(cache.cachename);
@@ -322,7 +323,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
                
                 if (isChanged == true)//同步缓存到下级中间件
                 {
-                    if (WcfServerManage.IsDebug)
+                    if (WcfGlobal.IsDebug)
                         ShowHostMsg(Color.Black, DateTime.Now, String.Format("分布式缓存同步完成，缓存名称：【{0}】，缓存记录：【{1}】", cache.cachename, (_localCache.GetData(cache.cachename) as CacheObject).cacheValue.Count));
 
                     new Action<CacheObject>(delegate(CacheObject _cache)

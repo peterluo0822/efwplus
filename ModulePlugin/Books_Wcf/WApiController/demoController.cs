@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Books_Wcf.Entity;
 using EFWCoreLib.CoreFrame.Business.AttributeInfo;
-using EFWCoreLib.WcfFrame.ServerController;
+using EFWCoreLib.WcfFrame.ServerManage;
 using EFWCoreLib.WebFrame.WebAPI;
 
 

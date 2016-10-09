@@ -3,51 +3,28 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.CoreFrame.Init;
 using EFWCoreLib.WcfFrame.DataSerialize;
-using EFWCoreLib.WcfFrame.ServerController;
-using EFWCoreLib.WcfFrame.WcfService.Contract;
 
-namespace EFWCoreLib.WcfFrame.WcfService
+namespace EFWCoreLib.WcfFrame.ServerManage
 {
-    //文件传输调用次数少，用Single这种方式即可
-    //文件流传输是按Read字节数传输的
-    /// <summary>
-    /// 文件传输服务，使用流模式
-    /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false, IncludeExceptionDetailInFaults = false)]
-    public class FileTransferHandlerService : IFileTransfer
+    public class FileManage
     {
-        //public static HostWCFMsgHandler hostwcfMsg;
-        private static string filebufferpath;
-        private static Dictionary<string, int> progressDic_Up;
-        private static Dictionary<string, int> progressDic_Down;
+        public static string filebufferpath= AppGlobal.AppRootPath + @"filebuffer\";
 
-        public FileTransferHandlerService()
-        {
-            //hostwcfMsg(Color.Blue, DateTime.Now, "FileTransferHandlerService服务正在初始化...");
-            //初始化操作
-            filebufferpath = AppGlobal.AppRootPath + @"filebuffer\";
-            progressDic_Up = new Dictionary<string, int>();
-            progressDic_Down = new Dictionary<string, int>();
-            //hostwcfMsg(Color.Blue, DateTime.Now, "FileTransferHandlerService服务初始化完成");
-        }
-
-        #region IFileTransfer 成员
-        private void getprogress(long filesize, long readnum, ref int progressnum)
+        private static void getprogress(long filesize, long readnum, ref int progressnum)
         {
             //decimal percent = Convert.ToDecimal(100 / Convert.ToDecimal(filesize / bufferlen));
             //progressnum = progressnum + percent > 100 ? 100 : progressnum + percent;
             decimal percent = Convert.ToDecimal(readnum) / Convert.ToDecimal(filesize) * 100;
             progressnum = Convert.ToInt32(Math.Ceiling(percent));
         }
-        private void getupdownprogress(Stream file, long flength, Action<int> action)
+        private static void getupdownprogress(Stream file, long flength, Action<int> action)
         {
-            new Action<Stream, long, Action<int>>(delegate(Stream _file, long _flength, Action<int> _action)
+            new Action<Stream, long, Action<int>>(delegate (Stream _file, long _flength, Action<int> _action)
             {
                 try
                 {
@@ -74,12 +51,12 @@ namespace EFWCoreLib.WcfFrame.WcfService
             }).BeginInvoke(file, flength, action, null, null);
         }
 
-        public UpFileResult UpLoadFile(UpFile filedata)
+        public static UpFileResult UpLoadFile(UpFile filedata)
         {
             FileStream fs = null;
             try
             {
-                if (WcfServerManage.IsDebug)
+                if (WcfGlobal.IsDebug)
                     ShowHostMsg(Color.Black, DateTime.Now, "客户端[" + filedata.clientId + "]准备上传文件...");
 
                 UpFileResult result = new UpFileResult();
@@ -91,10 +68,10 @@ namespace EFWCoreLib.WcfFrame.WcfService
                 string _filename = DateTime.Now.Ticks.ToString() + filedata.FileExt;//生成唯一文件名，防止文件名相同会覆盖
                 fs = new FileStream(filebufferpath + _filename, FileMode.Create, FileAccess.Write);
 
-                if (WcfServerManage.IsDebug)
+                if (WcfGlobal.IsDebug)
                 {
                     //获取进度
-                    getupdownprogress(filedata.FileStream, filedata.FileSize, (delegate(int _num)
+                    getupdownprogress(filedata.FileStream, filedata.FileSize, (delegate (int _num)
                     {
                         ShowHostMsg(Color.Black, DateTime.Now, "客户端[" + filedata.clientId + "]上传文件进度：%" + _num);
                     }));
@@ -134,7 +111,7 @@ namespace EFWCoreLib.WcfFrame.WcfService
                 //关闭流
                 fs.Close();
 
-                if (WcfServerManage.IsDebug)
+                if (WcfGlobal.IsDebug)
                     ShowHostMsg(Color.Green, DateTime.Now, "客户端[" + filedata.clientId + "]上传文件完成");
 
                 result.IsSuccess = true;
@@ -156,14 +133,14 @@ namespace EFWCoreLib.WcfFrame.WcfService
                 return result;
             }
         }
- 
+
         //下载文件
-        public DownFileResult DownLoadFile(DownFile filedata)
+        public static DownFileResult DownLoadFile(DownFile filedata)
         {
             FileStream fs = null;
             try
             {
-                if (WcfServerManage.IsDebug)
+                if (WcfGlobal.IsDebug)
                     ShowHostMsg(Color.Black, DateTime.Now, "客户端[" + filedata.clientId + "]准备下载文件...");
 
                 DownFileResult result = new DownFileResult();
@@ -186,20 +163,20 @@ namespace EFWCoreLib.WcfFrame.WcfService
                 result.FileSize = ms.Length;
                 result.FileStream = ms;
 
-                if (WcfServerManage.IsDebug)
+                if (WcfGlobal.IsDebug)
                 {
                     //获取进度
-                    getupdownprogress(result.FileStream, result.FileSize, (delegate(int _num)
+                    getupdownprogress(result.FileStream, result.FileSize, (delegate (int _num)
                     {
                         ShowHostMsg(Color.Black, DateTime.Now, "客户端[" + filedata.clientId + "]下载文件进度：%" + _num);
                     }));
                 }
-              
+
 
                 fs.Flush();
                 fs.Close();
 
-                if (WcfServerManage.IsDebug)
+                if (WcfGlobal.IsDebug)
                     ShowHostMsg(Color.Green, DateTime.Now, "客户端[" + filedata.clientId + "]下载文件完成");
 
                 return result;
@@ -213,19 +190,16 @@ namespace EFWCoreLib.WcfFrame.WcfService
                 }
                 //记录错误日志
                 EFWCoreLib.CoreFrame.EntLib.ZhyContainer.CreateException().HandleException(err, "HISPolicy");
-                
+
                 DownFileResult result = new DownFileResult();
                 result.IsSuccess = false;
                 return result;
             }
         }
 
-        #endregion
-
-        private void ShowHostMsg(Color clr, DateTime time, string text)
+        private static void ShowHostMsg(Color clr, DateTime time, string text)
         {
             MiddlewareLogHelper.WriterLog(LogType.MidLog, true, clr, text);
         }
-
     }
 }

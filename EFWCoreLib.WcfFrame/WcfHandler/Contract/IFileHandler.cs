@@ -1,20 +1,19 @@
-﻿using System;
+﻿using EFWCoreLib.WcfFrame.DataSerialize;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
-using EFWCoreLib.WcfFrame.DataSerialize;
 
-namespace EFWCoreLib.WcfFrame.WcfService.Contract
+namespace EFWCoreLib.WcfFrame.WcfHandler
 {
     /// <summary>
     /// 文件传输服务
     /// </summary>
     [ServiceKnownType(typeof(DBNull))]
-    [ServiceContract(Namespace = "http://www.efwplus.cn/", Name = "FileTransferHandlerService", SessionMode = SessionMode.Allowed)]
-    public interface IFileTransfer
+    [ServiceContract(Namespace = "http://www.efwplus.cn/", Name = "FileService", SessionMode = SessionMode.Allowed)]
+    public interface IFileHandler
     {
         /// <summary>
         /// 上传文件
@@ -32,6 +31,4 @@ namespace EFWCoreLib.WcfFrame.WcfService.Contract
         [OperationContract]
         DownFileResult DownLoadFile(DownFile downfile);
     }
-
-    
 }

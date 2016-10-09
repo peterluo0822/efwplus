@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using EFWCoreLib.WcfFrame.ServerController;
 using EFWCoreLib.WcfFrame.DataSerialize;
+using EFWCoreLib.WcfFrame.ServerManage;
 
 namespace EFWCoreLib.CoreFrame.SSO
 {

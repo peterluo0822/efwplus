@@ -8,23 +8,36 @@ using System.Threading.Tasks;
 using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.CoreFrame.Init;
 using EFWCoreLib.WcfFrame.DataSerialize;
-using EFWCoreLib.WcfFrame.ServerController;
-using EFWCoreLib.WcfFrame.WcfService;
+using EFWCoreLib.WcfFrame.ServerManage;
+using EFWCoreLib.WcfFrame.WcfHandler;
 
 namespace EFWCoreLib.WcfFrame
 {
     public class WcfGlobal
     {
+        /// <summary>
+        /// 调试模式
+        /// </summary>
+        public static bool IsDebug = false;
+        public static string Identify = "";//中间件唯一标识
+        public static string HostName = "";//中间件显示名称
+        public static bool IsToken = false;
+        public static string ns = "http://www.efwplus.cn/";
+
         static ServiceHost mAppHost = null;
         static ServiceHost mFileHost = null;
         static ServiceHost mRouterHost = null;
         static ServiceHost mFileRouterHost = null;
         public static void Main(StartType type)
         {
+            IsDebug= HostSettingConfig.GetValue("debug") == "1" ? true : false;
+            HostName = HostSettingConfig.GetValue("hostname");
+            IsToken= HostSettingConfig.GetValue("token") == "1" ? true : false;
+
             switch (type)
             {
                 case StartType.BaseService:
-                    mAppHost = new ServiceHost(typeof(WCFHandlerService));
+                    mAppHost = new ServiceHost(typeof(BaseService));
                     //初始化连接池,默认10分钟清理连接
                     ClientLinkPoolCache.Init(true, 200, 30, 600, "wcfserver", 30);
 
@@ -34,46 +47,46 @@ namespace EFWCoreLib.WcfFrame
                     AppGlobal.AppStart();
 
 
-                    WcfServerManage.HostName = HostSettingConfig.GetValue("hostname");
-                    WcfServerManage.IsDebug = HostSettingConfig.GetValue("debug") == "1" ? true : false;
-                    WcfServerManage.IsHeartbeat = HostSettingConfig.GetValue("heartbeat") == "1" ? true : false;
-                    WcfServerManage.HeartbeatTime = Convert.ToInt32(HostSettingConfig.GetValue("heartbeattime"));
-                    WcfServerManage.IsMessage = HostSettingConfig.GetValue("message") == "1" ? true : false;
-                    WcfServerManage.MessageTime = Convert.ToInt32(HostSettingConfig.GetValue("messagetime"));
-                    WcfServerManage.IsCompressJson = HostSettingConfig.GetValue("compress") == "1" ? true : false;
-                    WcfServerManage.IsEncryptionJson = HostSettingConfig.GetValue("encryption") == "1" ? true : false;
-                    WcfServerManage.IsToken = HostSettingConfig.GetValue("token") == "1" ? true : false;
-                    WcfServerManage.serializeType = (SerializeType)Convert.ToInt32(HostSettingConfig.GetValue("serializetype"));
-                    WcfServerManage.IsOverTime = HostSettingConfig.GetValue("overtime") == "1" ? true : false;
-                    WcfServerManage.OverTime = Convert.ToInt32(HostSettingConfig.GetValue("overtimetime"));
+                    ClientManage.IsHeartbeat = HostSettingConfig.GetValue("heartbeat") == "1" ? true : false;
+                    ClientManage.HeartbeatTime = Convert.ToInt32(HostSettingConfig.GetValue("heartbeattime"));
+                    ClientManage.IsMessage = HostSettingConfig.GetValue("message") == "1" ? true : false;
+                    ClientManage.MessageTime = Convert.ToInt32(HostSettingConfig.GetValue("messagetime"));
+                    ClientManage.IsCompressJson = HostSettingConfig.GetValue("compress") == "1" ? true : false;
+                    ClientManage.IsEncryptionJson = HostSettingConfig.GetValue("encryption") == "1" ? true : false;
+                    ClientManage.IsToken = HostSettingConfig.GetValue("token") == "1" ? true : false;
+                    ClientManage.serializeType = (SerializeType)Convert.ToInt32(HostSettingConfig.GetValue("serializetype"));
+                    ClientManage.IsOverTime = HostSettingConfig.GetValue("overtime") == "1" ? true : false;
+                    ClientManage.OverTime = Convert.ToInt32(HostSettingConfig.GetValue("overtimetime"));
 
-                    WcfServerManage.StartWCFHost();
+                    ClientManage.StartHost();
                     mAppHost.Open();
 
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "数据服务启动完成");
                     break;
 
                 case StartType.FileService:
-                    mFileHost = new ServiceHost(typeof(FileTransferHandlerService));
+                    AppGlobal.AppRootPath = System.Windows.Forms.Application.StartupPath + "\\";
+                    
+                    mFileHost = new ServiceHost(typeof(FileService));
                     mFileHost.Open();
 
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "文件服务启动完成");
                     break;
                 case StartType.RouterBaseService:
-                    mRouterHost = new ServiceHost(typeof(RouterHandlerService));
-                    RouterServerManage.Start();
+                    mRouterHost = new ServiceHost(typeof(RouterBaseService));
+                    RouterManage.Start();
                     mRouterHost.Open();
 
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "数据路由服务启动完成");
                     break;
                 case StartType.RouterFileService:
-                    mFileRouterHost = new ServiceHost(typeof(FileRouterHandlerService));
+                    mFileRouterHost = new ServiceHost(typeof(RouterFileService));
                     mFileRouterHost.Open();
 
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "文件路由服务启动完成");
                     break;
                 case StartType.SuperClient:
-                    WcfServerManage.CreateSuperClient();
+                    RemotePluginManage.CreateSuperClient();
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "超级客户端启动完成");
                     break;
                 case StartType.MiddlewareTask:
@@ -93,7 +106,7 @@ namespace EFWCoreLib.WcfFrame
                         if (mAppHost != null)
                         {
                             EFWCoreLib.WcfFrame.ClientLinkPoolCache.Dispose();
-                            WcfServerManage.StopWCFHost();
+                            ClientManage.StopHost();
                             mAppHost.Close();
                             MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "数据服务已关闭！");
                         }
@@ -151,7 +164,7 @@ namespace EFWCoreLib.WcfFrame
                     }
                     break;
                 case StartType.SuperClient:
-                    WcfServerManage.UnCreateSuperClient();
+                    RemotePluginManage.UnCreateSuperClient();
                     MiddlewareLogHelper.WriterLog(LogType.TimingTaskLog, true, System.Drawing.Color.Red, "超级客户端已关闭！");
                     break;
                 case StartType.MiddlewareTask:

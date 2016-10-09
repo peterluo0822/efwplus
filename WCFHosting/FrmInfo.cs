@@ -9,7 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EFWCoreLib.CoreFrame.Init;
+using EFWCoreLib.WcfFrame;
 using EFWCoreLib.WcfFrame.ServerController;
+using EFWCoreLib.WcfFrame.ServerManage;
 
 namespace WCFHosting
 {
@@ -24,21 +26,21 @@ namespace WCFHosting
         {
             StringBuilder text = new StringBuilder();
             text.AppendLine("[基本参数]");
-            text.AppendLine("中间件名称：【" + WcfServerManage.HostName + "】");
-            text.AppendLine("中间件唯一标识：【" + WcfServerManage.Identify + "】");
-            text.AppendLine("调试信息：\t\t" + (WcfServerManage.IsDebug ? "开启" : "关闭"));
+            text.AppendLine("中间件名称：【" + WcfGlobal.HostName + "】");
+            text.AppendLine("中间件唯一标识：【" + WcfGlobal.Identify + "】");
+            text.AppendLine("调试信息：\t\t" + (WcfGlobal.IsDebug ? "开启" : "关闭"));
 
             text.AppendLine("基础服务：\t\t" + (HostSettingConfig.GetValue("wcfservice") == "1" ? "开启" : "关闭"));
             text.AppendLine("文件传输：\t\t" + (HostSettingConfig.GetValue("filetransfer") == "1" ? "开启" : "关闭"));
             text.AppendLine("路由服务：\t\t" + (HostSettingConfig.GetValue("router") == "1" ? "开启" : "关闭"));
             text.AppendLine("WebAPI服务：\t\t" + (HostSettingConfig.GetValue("webapi") == "1" ? "开启" : "关闭"));
 
-            text.AppendLine("心跳检测：\t\t" + (WcfServerManage.IsHeartbeat ? "开启" : "关闭") + "\t" + "间隔时间(秒)：\t" + WcfServerManage.HeartbeatTime.ToString());
-            text.AppendLine("消息发送：\t\t" + (WcfServerManage.IsMessage ? "开启" : "关闭") + "\t" + "间隔时间(秒)：\t" + WcfServerManage.MessageTime.ToString());
-            text.AppendLine("耗时日志记录：\t\t" + (WcfServerManage.IsOverTime ? "开启" : "关闭") + "\t" + "超过时间(秒)：\t" + WcfServerManage.OverTime.ToString());
+            text.AppendLine("心跳检测：\t\t" + (ClientManage.IsHeartbeat ? "开启" : "关闭") + "\t" + "间隔时间(秒)：\t" + ClientManage.HeartbeatTime.ToString());
+            text.AppendLine("消息发送：\t\t" + (ClientManage.IsMessage ? "开启" : "关闭") + "\t" + "间隔时间(秒)：\t" + ClientManage.MessageTime.ToString());
+            text.AppendLine("耗时日志记录：\t\t" + (ClientManage.IsOverTime ? "开启" : "关闭") + "\t" + "超过时间(秒)：\t" + ClientManage.OverTime.ToString());
 
-            text.AppendLine("数据压缩：\t\t" + (WcfServerManage.IsCompressJson ? "开启" : "关闭"));
-            text.AppendLine("数据加密：\t\t" + (WcfServerManage.IsEncryptionJson ? "开启" : "关闭"));
+            text.AppendLine("数据压缩：\t\t" + (ClientManage.IsCompressJson ? "开启" : "关闭"));
+            text.AppendLine("数据加密：\t\t" + (ClientManage.IsEncryptionJson ? "开启" : "关闭"));
 
             text.AppendLine();
             text.AppendLine("[发布服务地址]");
@@ -74,7 +76,7 @@ namespace WCFHosting
 
             text.AppendLine();
             text.AppendLine("[远程插件]");
-            foreach (var p in EFWCoreLib.WcfFrame.ServerController.WcfServerManage.RemotePluginDic)
+            foreach (var p in RemotePluginManage.RemotePluginDic)
             {
                 text.AppendLine(p.ServerIdentify + "\t" + String.Join(",", p.plugin));
             }

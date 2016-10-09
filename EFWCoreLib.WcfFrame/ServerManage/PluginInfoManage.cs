@@ -3,25 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EFWCoreLib.CoreFrame.Init;
 using EFWCoreLib.CoreFrame.Init.AttributeManager;
 using Newtonsoft.Json;
 
-namespace EFWCoreLib.WcfFrame.ServerController
+namespace EFWCoreLib.WcfFrame.ServerManage
 {
     /// <summary>
-    /// 调试服务
+    /// 返回插件信息
     /// </summary>
-    public class DebugWcfServices
+    public class PluginInfoManage
     {
         /// <summary>
-        /// 获取所有的服务信息
+        /// 获取所有的插件服务信息
         /// </summary>
         /// <returns></returns>
-        public static string getWcfServicesAllInfo()
+        public static string GetAllPluginInfo()
         {
-            List<dwPlugin> pluginlist=new List<dwPlugin>();
-            foreach (var item in WcfServerManage.localPlugin.PluginDic)
+            List<dwPlugin> pluginlist = new List<dwPlugin>();
+            foreach (var item in CoreFrame.Init.AppPluginManage.PluginDic)
             {
                 dwPlugin p = new dwPlugin();
                 p.pluginname = item.Key;
@@ -44,6 +43,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
             return JsonConvert.SerializeObject(pluginlist);
         }
     }
+
     /// <summary>
     /// 服务插件对象
     /// </summary>

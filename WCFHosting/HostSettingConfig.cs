@@ -71,7 +71,7 @@ namespace WCFHosting
         {
             if (xmldoc_app == null) InitConfig();
             XmlNode node;
-            node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.WCFHandlerService']/host/baseAddresses/add");
+            node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.BaseService']/host/baseAddresses/add");
             if (node != null)
             {
                 return node.Attributes["baseAddress"].Value;
@@ -82,7 +82,7 @@ namespace WCFHosting
         public static void SetWcfAddress(string url)
         {
             if (xmldoc_app == null) InitConfig();
-            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.WCFHandlerService']/host/baseAddresses/add");
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.BaseService']/host/baseAddresses/add");
             if (node != null)
             {
                 node.Attributes["baseAddress"].Value = url;
@@ -92,7 +92,7 @@ namespace WCFHosting
         public static string GetFileAddress()
         {
             if (xmldoc_app == null) InitConfig();
-            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.FileTransferHandlerService']/host/baseAddresses/add");
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.FileService']/host/baseAddresses/add");
             if (node != null)
             {
                 return node.Attributes["baseAddress"].Value;
@@ -103,7 +103,7 @@ namespace WCFHosting
         public static void SetFileAddress(string url)
         {
             if (xmldoc_app == null) InitConfig();
-            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.FileTransferHandlerService']/host/baseAddresses/add");
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.FileService']/host/baseAddresses/add");
             if (node != null)
             {
                 node.Attributes["baseAddress"].Value = url;
@@ -113,7 +113,7 @@ namespace WCFHosting
         public static string GetRouterAddress()
         {
             if (xmldoc_app == null) InitConfig();
-            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.RouterHandlerService']/host/baseAddresses/add");
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.RouterBaseService']/host/baseAddresses/add");
             if (node != null)
             {
                 return node.Attributes["baseAddress"].Value;
@@ -124,7 +124,7 @@ namespace WCFHosting
         public static void SetRouterAddress(string url)
         {
             if (xmldoc_app == null) InitConfig();
-            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.RouterHandlerService']/host/baseAddresses/add");
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.RouterBaseService']/host/baseAddresses/add");
             if (node != null)
             {
                 node.Attributes["baseAddress"].Value = url;
@@ -134,7 +134,7 @@ namespace WCFHosting
         public static string GetfileRouterAddress()
         {
             if (xmldoc_app == null) InitConfig();
-            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.FileRouterHandlerService']/host/baseAddresses/add");
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.RouterFileService']/host/baseAddresses/add");
             if (node != null)
             {
                 return node.Attributes["baseAddress"].Value;
@@ -145,7 +145,7 @@ namespace WCFHosting
         public static void SetfileRouterAddress(string url)
         {
             if (xmldoc_app == null) InitConfig();
-            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.FileRouterHandlerService']/host/baseAddresses/add");
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.RouterFileService']/host/baseAddresses/add");
             if (node != null)
             {
                 node.Attributes["baseAddress"].Value = url;

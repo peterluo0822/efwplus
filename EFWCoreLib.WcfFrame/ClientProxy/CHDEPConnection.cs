@@ -1,9 +1,10 @@
-﻿using EFWCoreLib.WcfFrame.WcfService.Contract;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EFWCoreLib.WcfFrame.WcfHandler;
 
 namespace EFWCoreLib.WcfFrame
 {
@@ -15,11 +16,11 @@ namespace EFWCoreLib.WcfFrame
         /// <summary>
         /// 业务数据服务
         /// </summary>
-        public IWCFHandlerService WcfService { get; set; }
+        public IClientHandler WcfService { get; set; }
         /// <summary>
         /// 客户端回调服务
         /// </summary>
-        public IClientService ClientService { get; set; }
+        public IDataReply ClientService { get; set; }
         /// <summary>
         /// 客户端ID，服务端生成
         /// </summary>

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.WcfFrame;
 using EFWCoreLib.WcfFrame.ServerController;
+using EFWCoreLib.WcfFrame.ServerManage;
 using EFWCoreLib.WebApiFrame;
 using WCFHosting.RouterManage;
 using WCFHosting.TimingTask;
@@ -22,8 +23,8 @@ namespace WCFHosting
         string identify;
         string expireDate;
         Queue<msgobject> msgList=null;
-        List<WCFClientInfo> clientdic = null;
-        List<RegistrationInfo> routerdic = null;
+        //List<ClientInfo> clientdic = null;
+        //List<RegistrationInfo> routerdic = null;
 
         HostState RunState
         {
@@ -67,8 +68,8 @@ namespace WCFHosting
         {
             if (Convert.ToInt32(HostSettingConfig.GetValue("wcfservice")) == 1)
             {
-                WcfServerManage.hostwcfclientinfoList = new HostWCFClientInfoListHandler(BindGridClient);
-                WcfServerManage.Identify = identify;
+                ClientManage.clientinfoList = new ClientInfoListHandler(BindGridClient);
+                WcfGlobal.Identify = identify;
                 WcfGlobal.Main(StartType.BaseService);
             }
             if (Convert.ToInt32(HostSettingConfig.GetValue("filetransfer")) == 1)
@@ -77,7 +78,7 @@ namespace WCFHosting
             }
             if (Convert.ToInt32(HostSettingConfig.GetValue("router")) == 1)
             {
-                RouterServerManage.hostwcfRouter = new HostWCFRouterListHandler(BindGridRouter);
+                EFWCoreLib.WcfFrame.ServerManage.RouterManage.hostwcfRouter = new HostWCFRouterListHandler(BindGridRouter);
                 WcfGlobal.Main(StartType.RouterBaseService);
                 WcfGlobal.Main(StartType.RouterFileService);
             }
@@ -189,9 +190,8 @@ namespace WCFHosting
             }
         }
 
-        private void BindGridClient(List<WCFClientInfo> dic)
+        private void BindGridClient(List<ClientInfo> dic)
         {
-            clientdic = dic;
             setgrid(gridClientList, dic);
         }
         private void AddMsg(Color clr, DateTime time, string msg)
@@ -203,7 +203,6 @@ namespace WCFHosting
         }
         private void BindGridRouter(List<RegistrationInfo> dic)
         {
-            routerdic = dic;
             setgrid(gridRouter, dic);
         }
 

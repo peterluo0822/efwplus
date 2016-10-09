@@ -1,31 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.ServiceModel.Description;
 using System.Text;
-using System.Xml.Linq;
-using EFWCoreLib.WcfFrame.WcfService.Contract;
-using EFWCoreLib.WcfFrame.ServerController;
-using System.Drawing;
-using EFWCoreLib.WcfFrame.WcfService;
+using System.Threading.Tasks;
 using System.Xml;
 using EFWCoreLib.WcfFrame.SDMessageHeader;
+using EFWCoreLib.WcfFrame.WcfHandler;
 
-namespace EFWCoreLib.WcfFrame.ServerController
+namespace EFWCoreLib.WcfFrame.ServerManage
 {
-    public class RouterServerManage
+    public delegate void HostWCFRouterListHandler(List<RegistrationInfo> dic);
+
+    public class RouterManage
     {
-        public static IDictionary<string, IRouterService> routerDic = new Dictionary<string, IRouterService>();
+        public static HostWCFRouterListHandler hostwcfRouter;
+
+        public static IDictionary<string, IRouterBaseHandler> routerDic = new Dictionary<string, IRouterBaseHandler>();
         public static IDictionary<string, HeaderParameter> headParaDic = new Dictionary<string, HeaderParameter>();
 
         public static IDictionary<int, RegistrationInfo> RegistrationList = new Dictionary<int, RegistrationInfo>();
         public static IDictionary<string, int> RoundRobinCount = new Dictionary<string, int>();
-        //public static HostWCFMsgHandler hostwcfMsg;
-        public static HostWCFRouterListHandler hostwcfRouter;
+        
         public static string ns = "http://www.efwplus.cn/";
         public static string routerfile = System.Windows.Forms.Application.StartupPath + "\\Config\\RouterBill.xml";
 
@@ -46,22 +43,22 @@ namespace EFWCoreLib.WcfFrame.ServerController
 
         public static void RemoveClient(HeaderParameter para)
         {
-            if (RouterServerManage.routerDic.ContainsKey(para.routerid))
+            if (routerDic.ContainsKey(para.routerid))
             {
-                lock (RouterServerManage.routerDic)
+                lock (routerDic)
                 {
-                    (RouterServerManage.routerDic[para.routerid] as IContextChannel).Abort();
-                    RouterServerManage.routerDic.Remove(para.routerid);
-                    RouterServerManage.headParaDic.Remove(para.routerid);
+                    (routerDic[para.routerid] as IContextChannel).Abort();
+                    routerDic.Remove(para.routerid);
+                    headParaDic.Remove(para.routerid);
                 }
 
             }
-            if (RouterServerManage.RoundRobinCount.ContainsKey(para.routerid))
+            if (RoundRobinCount.ContainsKey(para.routerid))
             {
-                lock (RouterServerManage.RegistrationList)
+                lock (RegistrationList)
                 {
-                    int key = RouterServerManage.RoundRobinCount[para.routerid];
-                    RegistrationInfo regInfo = RouterServerManage.RegistrationList[key];
+                    int key = RoundRobinCount[para.routerid];
+                    RegistrationInfo regInfo = RegistrationList[key];
                     regInfo.ClientNum -= 1;
                 }
             }
@@ -149,33 +146,30 @@ namespace EFWCoreLib.WcfFrame.ServerController
             hostwcfRouter(RegistrationList.Values.ToList());
         }
 
-        
+
     }
 
-    public delegate void HostWCFRouterListHandler(List<RegistrationInfo> dic);
-
-    [DataContract]
+    
     public class RegistrationInfo
     {
-        [DataMember(IsRequired = true, Order = 1)]
         public string HostName { get; set; }
 
-        [DataMember(IsRequired = true, Order = 2)]
+        
         public string ServiceType { get; set; }
 
-        [DataMember(IsRequired = true, Order = 3)]
+        
         public string Address { get; set; }
 
-        [DataMember(IsRequired = true, Order = 4)]
+        
         public string ContractName { get; set; }
 
-        [DataMember(IsRequired = true, Order = 5)]
+        
         public string ContractNamespace { get; set; }
 
-        [DataMember(IsRequired = true, Order = 6)]
+        
         public List<PluginInfo> pluginList { get; set; }
 
-        [DataMember(IsRequired = true, Order = 7)]
+        
         public int ClientNum { get; set; }
 
         public override int GetHashCode()
@@ -194,10 +188,10 @@ namespace EFWCoreLib.WcfFrame.ServerController
             string _contractname = null;
             string _contractnamespace = null;
 
-            XmlDocument xmlDoc =new System.Xml.XmlDocument();
-            xmlDoc.Load(RouterServerManage.routerfile);
+            XmlDocument xmlDoc = new System.Xml.XmlDocument();
+            xmlDoc.Load(RouterManage.routerfile);
 
-            XmlNodeList rlist= xmlDoc.DocumentElement.SelectNodes("record");
+            XmlNodeList rlist = xmlDoc.DocumentElement.SelectNodes("record");
 
             foreach (XmlNode xe in rlist)
             {
@@ -222,26 +216,21 @@ namespace EFWCoreLib.WcfFrame.ServerController
                     registrationInfo.pluginList.Add(plugin);
                 }
 
-                if (!RouterServerManage.RegistrationList.ContainsKey(registrationInfo.GetHashCode()))
+                if (!RouterManage.RegistrationList.ContainsKey(registrationInfo.GetHashCode()))
                 {
-                    RouterServerManage.RegistrationList.Add(registrationInfo.GetHashCode(), registrationInfo);
+                    RouterManage.RegistrationList.Add(registrationInfo.GetHashCode(), registrationInfo);
                 }
             }
 
         }
     }
 
-    [DataContract]
     public class PluginInfo
     {
-        [DataMember(IsRequired = true, Order = 1)]
         public string name { get; set; }
 
-        [DataMember(IsRequired = true, Order = 2)]
         public string title { get; set; }
 
-        [DataMember(IsRequired = true, Order = 3)]
         public string replyidentify { get; set; }
     }
-
 }

@@ -100,7 +100,6 @@
     <Compile Include="ClientProxy\ClientLinkManage.cs" />
     <Compile Include="ClientProxy\ClientLinkPool.cs" />
     <Compile Include="ClientProxy\ClientLinkPoolCache.cs" />
-    <Compile Include="ClientProxy\ReplyClientCallBack.cs" />
     <Compile Include="DataSerialize\CacheObject.cs" />
     <Compile Include="DataSerialize\ClientRequestData.cs" />
     <Compile Include="DataSerialize\FileTransfer.cs" />
@@ -114,11 +113,14 @@
     <Compile Include="SDMessageHeader\HeaderOperater.cs" />
     <Compile Include="SDMessageHeader\HeaderParameter.cs" />
     <Compile Include="Controller\ControllerHelper.cs" />
-    <Compile Include="ServerManage\DebugWcfServices.cs" />
+    <Compile Include="ServerManage\ClientManage.cs" />
+    <Compile Include="ServerManage\DataManage.cs" />
+    <Compile Include="ServerManage\FileManage.cs" />
     <Compile Include="ServerManage\DistributedCacheManage.cs" />
-    <Compile Include="ServerManage\RouterServerManage.cs" />
     <Compile Include="Controller\WcfServerController.cs" />
-    <Compile Include="ServerManage\WcfServerManage.cs" />
+    <Compile Include="ServerManage\PluginInfoManage.cs" />
+    <Compile Include="ServerManage\RemotePluginManage.cs" />
+    <Compile Include="ServerManage\RouterManage.cs" />
     <Compile Include="SSO\AuthResult.cs" />
     <Compile Include="SSO\ConvertHelper.cs" />
     <Compile Include="SSO\SsoHelper.cs" />
@@ -126,14 +128,16 @@
     <Compile Include="SSO\TokenManager.cs" />
     <Compile Include="SSO\Utility.cs" />
     <Compile Include="WcfGlobal.cs" />
-    <Compile Include="WcfHandler\Contract\IDataHandlerService.cs" />
-    <Compile Include="WcfHandler\Contract\IDistributedCache.cs" />
-    <Compile Include="WcfHandler\Contract\IFileTransfer.cs" />
-    <Compile Include="WcfHandler\Contract\IHeartbeat.cs" />
-    <Compile Include="WcfHandler\Contract\IRouterService.cs" />
-    <Compile Include="WcfHandler\FileTransferHandlerService.cs" />
-    <Compile Include="WcfHandler\RouterHandlerService.cs" />
-    <Compile Include="WcfHandler\WCFHandlerService.cs" />
+    <Compile Include="WcfHandler\BaseService.cs" />
+    <Compile Include="WcfHandler\Callback\ReplyDataCallback.cs" />
+    <Compile Include="WcfHandler\Callback\ReplyRouterBaseCallback.cs" />
+    <Compile Include="WcfHandler\Contract\IClientHandler.cs" />
+    <Compile Include="WcfHandler\Contract\IHttpDataHandler.cs" />
+    <Compile Include="WcfHandler\Contract\IFileHandler.cs" />
+    <Compile Include="WcfHandler\Contract\IRouterHandler.cs" />
+    <Compile Include="WcfHandler\FileService.cs" />
+    <Compile Include="WcfHandler\RouterBaseService.cs" />
+    <Compile Include="WcfHandler\RouterFileService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EFWCoreLib.CoreFrame\EFWCoreLib.CoreFrame.csproj">

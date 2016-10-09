@@ -72,6 +72,9 @@ namespace EFWCoreLib.CoreFrame.Common
                 LogNameDic.Add(LogType.MidLog, getLogName(LogType.MidLog));
                 LogSbDic.Add(LogType.MidLog, new StringBuilder());
 
+                LogNameDic.Add(LogType.OverTimeLog, getLogName(LogType.OverTimeLog));
+                LogSbDic.Add(LogType.OverTimeLog, new StringBuilder());
+
                 LogNameDic.Add(LogType.WebApiLog, getLogName(LogType.WebApiLog));
                 LogSbDic.Add(LogType.WebApiLog, new StringBuilder());
 
@@ -111,6 +114,9 @@ namespace EFWCoreLib.CoreFrame.Common
                 case LogType.MidLog:
                     logName = "MidLog";
                     break;
+                case LogType.OverTimeLog:
+                    logName = "OverTimeLog";
+                    break;
                 case LogType.WebApiLog:
                     logName = "WebApiLog";
                     break;
@@ -138,6 +144,10 @@ namespace EFWCoreLib.CoreFrame.Common
         /// 中间件业务日志
         /// </summary>
         MidLog,
+        /// <summary>
+        /// 超时请求日志
+        /// </summary>
+        OverTimeLog,
         /// <summary>
         /// WebApi日志
         /// </summary>

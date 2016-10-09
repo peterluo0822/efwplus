@@ -6,17 +6,14 @@ using System.Net;
 using System.ServiceModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-
-
-using EFWCoreLib.WcfFrame.WcfService.Contract;
-using EFWCoreLib.CoreFrame.Common;
-using EFWCoreLib.WcfFrame.ServerController;
-using EFWCoreLib.WcfFrame.SDMessageHeader;
-using EFWCoreLib.WcfFrame.DataSerialize;
 using System.Threading;
+using System.Threading.Tasks;
 using EFWCoreLib.CoreFrame.Business;
+using EFWCoreLib.CoreFrame.Common;
+using EFWCoreLib.WcfFrame.DataSerialize;
+using EFWCoreLib.WcfFrame.SDMessageHeader;
+using EFWCoreLib.WcfFrame.WcfHandler;
+using Newtonsoft.Json;
 
 namespace EFWCoreLib.WcfFrame
 {
@@ -39,8 +36,8 @@ namespace EFWCoreLib.WcfFrame
         
         private string AppRootPath = System.Windows.Forms.Application.StartupPath + "\\";
         private readonly string myNamespace = "http://www.efwplus.cn/";
-        private DuplexChannelFactory<IWCFHandlerService> mChannelFactory;
-        private ChannelFactory<IFileTransfer> mfileChannelFactory = null;
+        private DuplexChannelFactory<IClientHandler> mChannelFactory;
+        private ChannelFactory<IFileHandler> mfileChannelFactory = null;
         private Action<bool, int> backConfig = null;//参数配置回调
         private Action createconnAction = null;//创建连接后回调
         /// <summary>
@@ -97,12 +94,12 @@ namespace EFWCoreLib.WcfFrame
             mConn.ClientName = clientname;
             mConn.RouterID = Guid.NewGuid().ToString();
             mConn.PluginName = pluginname;
-            mConn.ClientService = new ReplyClientCallBack();
+            mConn.ClientService = new ReplyDataCallback();
 
             if (mChannelFactory == null)
-                mChannelFactory = new DuplexChannelFactory<IWCFHandlerService>(mConn.ClientService, "wcfendpoint");
+                mChannelFactory = new DuplexChannelFactory<IClientHandler>(mConn.ClientService, "wcfendpoint");
             if (mfileChannelFactory == null)
-                mfileChannelFactory = new ChannelFactory<IFileTransfer>("fileendpoint");
+                mfileChannelFactory = new ChannelFactory<IFileHandler>("fileendpoint");
         }
 
         #region IDisposable 成员
@@ -210,18 +207,18 @@ namespace EFWCoreLib.WcfFrame
         /// </summary>
         public void CreateConnection()
         {
-            IWCFHandlerService wcfHandlerService = mChannelFactory.CreateChannel();
+            IClientHandler wcfHandlerService = mChannelFactory.CreateChannel();
             mConn.WcfService = wcfHandlerService;
             string serverConfig = null;
 
             AddMessageHeader(wcfHandlerService as IContextChannel, "", (() =>
             {
 
-                mConn.ClientID = wcfHandlerService.CreateDomain(mConn.ClientName);//创建连接获取ClientID
+                mConn.ClientID = wcfHandlerService.CreateClient(mConn.ClientName);//创建连接获取ClientID
                 if (ServerConfigRequestState == false)
                 {
                     //重新获取服务端配置，如：是否压缩Json、是否加密Json
-                    serverConfig = wcfHandlerService.ServerConfig();
+                    serverConfig = wcfHandlerService.MiddlewareConfig();
                     ServerConfigRequestState = true;
                 }
             }));
@@ -292,12 +289,12 @@ namespace EFWCoreLib.WcfFrame
                     jsondata = des.OutString;
                 }
 
-                IWCFHandlerService _wcfService = mConn.WcfService;
+                IClientHandler _wcfService = mConn.WcfService;
                 string retJson = "";
 
                 AddMessageHeader(_wcfService as IContextChannel, "", requestData.Iscompressjson, requestData.Isencryptionjson, requestData.Serializetype, requestData.LoginRight, (() =>
                    {
-                       retJson = _wcfService.ProcessRequest(mConn.ClientID, mConn.PluginName + "@" + controller, method, jsondata);
+                       retJson = _wcfService.ProcessRequest(mConn.ClientID, mConn.PluginName, controller, method, jsondata);
                    }));
 
                 if (requestData.Isencryptionjson)//解密结果
@@ -383,7 +380,7 @@ namespace EFWCoreLib.WcfFrame
                     jsondata = des.OutString;
                 }
 
-                IWCFHandlerService _wcfService = mConn.WcfService;
+                IClientHandler _wcfService = mConn.WcfService;
                 IAsyncResult result = null;
 
                 AddMessageHeader(_wcfService as IContextChannel, "", requestData.Iscompressjson, requestData.Isencryptionjson, requestData.Serializetype, requestData.LoginRight,  (() =>
@@ -425,7 +422,7 @@ namespace EFWCoreLib.WcfFrame
 
                         action(responsedata);
                     };
-                    result = _wcfService.BeginProcessRequest(mConn.ClientID, mConn.PluginName + "@" + controller, method, jsondata, callback, null);
+                    result = _wcfService.BeginProcessRequest(mConn.ClientID, mConn.PluginName , controller, method, jsondata, callback, null);
                 }));
 
                 new Action(delegate ()
@@ -455,14 +452,14 @@ namespace EFWCoreLib.WcfFrame
         {
             if (mConn == null) return;
             string mClientID = mConn.ClientID;
-            IWCFHandlerService mWcfService = mConn.WcfService;
+            IClientHandler mWcfService = mConn.WcfService;
             if (mClientID != null)
             {
                 try
                 {
                     AddMessageHeader(mWcfService as IContextChannel, "Quit", (() =>
                        {
-                           mWcfService.UnDomain(mClientID);
+                           mWcfService.UnClient(mClientID);
                        }));
 
 
@@ -492,7 +489,7 @@ namespace EFWCoreLib.WcfFrame
         {
             try
             {
-                IWCFHandlerService wcfHandlerService = mChannelFactory.CreateChannel();
+                IClientHandler wcfHandlerService = mChannelFactory.CreateChannel();
                 mConn.WcfService = wcfHandlerService;
                 if (isRequest == true)//避免死循环
                     Heartbeat();//重连之后必须再次调用心跳
@@ -509,7 +506,7 @@ namespace EFWCoreLib.WcfFrame
         /// <returns></returns>
         private bool Heartbeat()
         {
-            IWCFHandlerService _wcfService = mConn.WcfService;
+            IClientHandler _wcfService = mConn.WcfService;
             try
             {
                 bool ret = false;
@@ -520,7 +517,7 @@ namespace EFWCoreLib.WcfFrame
                     if (ServerConfigRequestState == false)
                     {
                         //重新获取服务端配置，如：是否压缩Json、是否加密Json
-                        serverConfig = _wcfService.ServerConfig();
+                        serverConfig = _wcfService.MiddlewareConfig();
                         ServerConfigRequestState = true;
                     }
                 }));
@@ -599,7 +596,7 @@ namespace EFWCoreLib.WcfFrame
                 para.routerid = mConn.RouterID;
                 para.pluginname = mConn.PluginName;
                 //ReplyIdentify如果客户端创建连接为空，如果中间件连接上级中间件那就是本地中间件标识
-                para.replyidentify = WcfServerManage.Identify;
+                para.replyidentify = WcfGlobal.Identify;
                 para.token = mConn.Token;
                 para.iscompressjson = iscompressjson;
                 para.isencryptionjson = isencryptionjson;
@@ -639,14 +636,14 @@ namespace EFWCoreLib.WcfFrame
         /// 获取所有服务插件的控制器和方法
         /// </summary>
         /// <returns></returns>
-        public List<EFWCoreLib.WcfFrame.ServerController.dwPlugin> GetWcfServicesAllInfo()
+        public List<ServerManage.dwPlugin> GetWcfServicesAllInfo()
         {
-            IWCFHandlerService _wcfService = mConn.WcfService;
-            List<EFWCoreLib.WcfFrame.ServerController.dwPlugin> list = new List<EFWCoreLib.WcfFrame.ServerController.dwPlugin>();
+            IClientHandler _wcfService = mConn.WcfService;
+            List<ServerManage.dwPlugin> list = new List<ServerManage.dwPlugin>();
             AddMessageHeader(_wcfService as IContextChannel, "", (() =>
             {
-                string ret = _wcfService.WcfServicesAllInfo();
-                list = JsonConvert.DeserializeObject<List<EFWCoreLib.WcfFrame.ServerController.dwPlugin>>(ret);
+                string ret = _wcfService.GetAllPluginInfo();
+                list = JsonConvert.DeserializeObject<List<ServerManage.dwPlugin>>(ret);
             }));
 
             return list;
@@ -671,7 +668,7 @@ namespace EFWCoreLib.WcfFrame
         public string UpLoadFile(string filepath, Action<int> action)
         {
 
-            IFileTransfer fileHandlerService = null;
+            IFileHandler fileHandlerService = null;
             try
             {
                 FileInfo finfo = new FileInfo(filepath);
@@ -729,7 +726,7 @@ namespace EFWCoreLib.WcfFrame
         /// <returns>下载成功后返回存储在本地文件路径</returns>
         public string DownLoadFile(string filename, Action<int> action)
         {
-            IFileTransfer fileHandlerService = null;
+            IFileHandler fileHandlerService = null;
             try
             {
                 if (string.IsNullOrEmpty(filename))
@@ -838,13 +835,13 @@ namespace EFWCoreLib.WcfFrame
         /// </summary>
         /// <param name="ServerIdentify"></param>
         /// <param name="plugin"></param>
-        public void RegisterReplyPlugin(string ServerIdentify, string[] plugin)
+        public void RegisterRemotePlugin(string ServerIdentify, string[] plugin)
         {
             if (mConn == null) throw new Exception("还没有创建连接！");
             try
             {
-                IWCFHandlerService _wcfService = mConn.WcfService;
-                _wcfService.RegisterReplyPlugin(ServerIdentify, plugin);
+                IClientHandler _wcfService = mConn.WcfService;
+                _wcfService.RegisterRemotePlugin(ServerIdentify, plugin);
             }
             catch (Exception e)
             {
@@ -860,7 +857,7 @@ namespace EFWCoreLib.WcfFrame
             if (mConn == null) throw new Exception("还没有创建连接！");
             try
             {
-                IWCFHandlerService _wcfService = mConn.WcfService;
+                IClientHandler _wcfService = mConn.WcfService;
                 return _wcfService.DistributedCacheSyncIdentify(cacheId);
             }
             catch (Exception e)
@@ -874,7 +871,7 @@ namespace EFWCoreLib.WcfFrame
             if (mConn == null) throw new Exception("还没有创建连接！");
             try
             {
-                IWCFHandlerService _wcfService = mConn.WcfService;
+                IClientHandler _wcfService = mConn.WcfService;
                 _wcfService.DistributedCacheSync(cache);
             }
             catch (Exception e)
@@ -888,7 +885,7 @@ namespace EFWCoreLib.WcfFrame
             if (mConn == null) throw new Exception("还没有创建连接！");
             try
             {
-                IWCFHandlerService _wcfService = mConn.WcfService;
+                IClientHandler _wcfService = mConn.WcfService;
                 _wcfService.DistributedAllCacheSync(cachelist);
             }
             catch (Exception e)
