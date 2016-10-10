@@ -6,6 +6,7 @@ using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.WcfFrame.SDMessageHeader;
 using EFWCoreLib.WcfFrame.WcfHandler;
 
@@ -17,14 +18,15 @@ namespace EFWCoreLib.WcfFrame.ServerManage
     {
         public static HostWCFRouterListHandler hostwcfRouter;
 
-        public static IDictionary<string, IRouterBaseHandler> routerDic = new Dictionary<string, IRouterBaseHandler>();
-        public static IDictionary<string, HeaderParameter> headParaDic = new Dictionary<string, HeaderParameter>();
+        public static Dictionary<string, IRouterBaseHandler> routerDic = new Dictionary<string, IRouterBaseHandler>();
+        public static Dictionary<string, HeaderParameter> headParaDic = new Dictionary<string, HeaderParameter>();
 
-        public static IDictionary<int, RegistrationInfo> RegistrationList = new Dictionary<int, RegistrationInfo>();
-        public static IDictionary<string, int> RoundRobinCount = new Dictionary<string, int>();
+        public static Dictionary<int, RegistrationInfo> RegistrationList = new Dictionary<int, RegistrationInfo>();
+        public static Dictionary<string, int> RoundRobinCount = new Dictionary<string, int>();
         
         public static string ns = "http://www.efwplus.cn/";
         public static string routerfile = System.Windows.Forms.Application.StartupPath + "\\Config\\RouterBill.xml";
+        private static Object syncObj = new Object();//定义一个静态对象用于线程部份代码块的锁定，用于lock操作
 
         public static void Start()
         {
@@ -45,7 +47,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
         {
             if (routerDic.ContainsKey(para.routerid))
             {
-                lock (routerDic)
+                lock (syncObj)
                 {
                     (routerDic[para.routerid] as IContextChannel).Abort();
                     routerDic.Remove(para.routerid);
@@ -55,7 +57,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             }
             if (RoundRobinCount.ContainsKey(para.routerid))
             {
-                lock (RegistrationList)
+                lock (syncObj)
                 {
                     int key = RoundRobinCount[para.routerid];
                     RegistrationInfo regInfo = RegistrationList[key];
@@ -79,14 +81,15 @@ namespace EFWCoreLib.WcfFrame.ServerManage
 
             RegistrationInfo regInfo = null;
 
-            lock (RegistrationList)
+
+            List<KeyValuePair<int, RegistrationInfo>> krlist = RegistrationList.OrderBy(x => x.Value.ClientNum).ToList().FindAll(x => x.Value.ContractNamespace.Contains(contractNamespace));
+            if (krlist.Count > 0)
             {
-                List<KeyValuePair<int, RegistrationInfo>> krlist = RegistrationList.OrderBy(x => x.Value.ClientNum).ToList().FindAll(x => x.Value.ContractNamespace.Contains(contractNamespace));
-                if (krlist.Count > 0)
+                foreach (var r in krlist)
                 {
-                    foreach (var r in krlist)
+                    if (r.Value.pluginList.FindIndex(x => x.name == para.pluginname) > -1)
                     {
-                        if (r.Value.pluginList.FindIndex(x => x.name == para.pluginname) > -1)
+                        lock (syncObj)
                         {
                             RoundRobinCount[para.routerid] = r.Key;
                             r.Value.ClientNum += 1;
@@ -121,10 +124,11 @@ namespace EFWCoreLib.WcfFrame.ServerManage
 
             RegistrationInfo regInfo = null;
 
-            lock (RegistrationList)
+
+            List<KeyValuePair<int, RegistrationInfo>> krlist = RegistrationList.OrderBy(x => x.Value.ClientNum).ToList().FindAll(x => x.Value.ContractNamespace.Contains(contractNamespace));
+            if (krlist.Count > 0)
             {
-                List<KeyValuePair<int, RegistrationInfo>> krlist = RegistrationList.OrderBy(x => x.Value.ClientNum).ToList().FindAll(x => x.Value.ContractNamespace.Contains(contractNamespace));
-                if (krlist.Count > 0)
+                lock (syncObj)
                 {
                     regInfo = krlist.First().Value;
                     regInfo.ClientNum += 1;

@@ -84,6 +84,7 @@ namespace WCFHosting
             }
             if (Convert.ToInt32(HostSettingConfig.GetValue("webapi")) == 1)
             {
+                WebApiGlobal.IsToken = HostSettingConfig.GetValue("token") == "1" ? true : false;
                 WebApiGlobal.Main();
             }
             if (Convert.ToInt32(HostSettingConfig.GetValue("timingtask")) == 1)

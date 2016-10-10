@@ -45,7 +45,7 @@ namespace EFWCoreLib.CoreFrame.Common
             foreach (var item in LogNameDic)
             {
                 string info = null;
-                lock (LogSbDic)
+                lock (syncObj)
                 {
                     info = LogSbDic[item.Key].ToString();
                     if (info != null)//清空

@@ -30,16 +30,19 @@ namespace EFWCoreLib.WcfFrame
         /// 平台连接对象
         /// </summary>
         public CHDEPConnection mConn { get; set; }
+
         /// <summary>
-        /// 客户端是否忙
+        /// 文件下载存放路径
         /// </summary>
-        
-        private string AppRootPath = System.Windows.Forms.Application.StartupPath + "\\";
+        private string filebufferpath = System.Windows.Forms.Application.StartupPath + "\\filebuffer\\";
         private readonly string myNamespace = "http://www.efwplus.cn/";
         private DuplexChannelFactory<IClientHandler> mChannelFactory;
         private ChannelFactory<IFileHandler> mfileChannelFactory = null;
         private Action<bool, int> backConfig = null;//参数配置回调
         private Action createconnAction = null;//创建连接后回调
+        private string wcfendpoint = "wcfendpoint";//服务地址
+        private string fileendpoint = "fileendpoint";//文件服务地址
+
         /// <summary>
         /// 初始化通讯连接
         /// </summary>
@@ -66,6 +69,13 @@ namespace EFWCoreLib.WcfFrame
         public ClientLink(string clientname, string pluginname, Action<bool, int> actionConfig)
         {
             backConfig = actionConfig;
+            InitComm(clientname, pluginname);
+        }
+
+        public ClientLink(string clientname, string pluginname, Action<bool, int> actionConfig,string _wcfendpoint)
+        {
+            backConfig = actionConfig;
+            wcfendpoint = _wcfendpoint;
             InitComm(clientname, pluginname);
         }
 
@@ -97,9 +107,9 @@ namespace EFWCoreLib.WcfFrame
             mConn.ClientService = new ReplyDataCallback();
 
             if (mChannelFactory == null)
-                mChannelFactory = new DuplexChannelFactory<IClientHandler>(mConn.ClientService, "wcfendpoint");
+                mChannelFactory = new DuplexChannelFactory<IClientHandler>(mConn.ClientService, wcfendpoint);
             if (mfileChannelFactory == null)
-                mfileChannelFactory = new ChannelFactory<IFileHandler>("fileendpoint");
+                mfileChannelFactory = new ChannelFactory<IFileHandler>(fileendpoint);
         }
 
         #region IDisposable 成员
@@ -732,7 +742,7 @@ namespace EFWCoreLib.WcfFrame
                 if (string.IsNullOrEmpty(filename))
                     throw new Exception("文件名不为空！");
 
-                string filebufferpath = AppRootPath + @"filebuffer\";
+                //string filebufferpath = AppRootPath + @"filebuffer\";
                 if (!Directory.Exists(filebufferpath))
                 {
                     Directory.CreateDirectory(filebufferpath);

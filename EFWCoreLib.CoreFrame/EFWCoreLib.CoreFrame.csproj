@@ -133,6 +133,7 @@
     <Compile Include="Common\BarCodeHook.cs" />
     <Compile Include="Common\CodeBarInput.cs" />
     <Compile Include="Common\ConvertExtend.cs" />
+    <Compile Include="Common\CustomDictionary.cs" />
     <Compile Include="Common\DESEncryptor.cs" />
     <Compile Include="Common\ExcelHelper.cs" />
     <Compile Include="Common\ExtendMethod.cs" />

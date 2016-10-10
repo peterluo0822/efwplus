@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
         public static ClientInfoListHandler clientinfoList;
         //客户端列表
         public static Dictionary<string, ClientInfo> ClientDic = new Dictionary<string, ClientInfo>();
+
 
         private static Object syncObj = new Object();//定义一个静态对象用于线程部份代码块的锁定，用于lock操作
         /// <summary>
@@ -307,4 +309,6 @@ namespace EFWCoreLib.WcfFrame.ServerManage
 
         #endregion
     }
+
+    
 }

@@ -194,6 +194,27 @@ namespace WCFHosting
             }
         }
 
+        public static string GetClientLocalAddress()
+        {
+            if (xmldoc_app == null) InitConfig();
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/client/endpoint[@name='localendpoint']");
+            if (node != null)
+            {
+                return node.Attributes["address"].Value;
+            }
+            return null;
+        }
+
+        public static void SetClientLocalAddress(string url)
+        {
+            if (xmldoc_app == null) InitConfig();
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/client/endpoint[@name='localendpoint']");
+            if (node != null)
+            {
+                node.Attributes["address"].Value = url;
+            }
+        }
+
         public static string GetWebapiAddress()
         {
             if (xmldoc_app == null) InitConfig();

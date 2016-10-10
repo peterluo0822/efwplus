@@ -49,6 +49,7 @@
             this.ckovertime = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cktask = new System.Windows.Forms.CheckBox();
             this.cktoken = new System.Windows.Forms.CheckBox();
             this.cbSerializeType = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -74,7 +75,8 @@
             this.txtwcfurl = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cktask = new System.Windows.Forms.CheckBox();
+            this.txtlocalurl = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -316,6 +318,17 @@
             this.tabPage1.Text = "基本参数";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // cktask
+            // 
+            this.cktask.AutoSize = true;
+            this.cktask.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cktask.Location = new System.Drawing.Point(238, 51);
+            this.cktask.Name = "cktask";
+            this.cktask.Size = new System.Drawing.Size(99, 21);
+            this.cktask.TabIndex = 23;
+            this.cktask.Text = "开启定时任务";
+            this.cktask.UseVisualStyleBackColor = true;
+            // 
             // cktoken
             // 
             this.cktoken.AutoSize = true;
@@ -520,6 +533,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.txtlocalurl);
+            this.tabPage4.Controls.Add(this.label14);
             this.tabPage4.Controls.Add(this.txtfileurl);
             this.tabPage4.Controls.Add(this.label11);
             this.tabPage4.Controls.Add(this.txtwcfurl);
@@ -546,9 +561,9 @@
             this.label11.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label11.Location = new System.Drawing.Point(6, 72);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(92, 17);
+            this.label11.Size = new System.Drawing.Size(152, 17);
             this.label11.TabIndex = 7;
-            this.label11.Text = "文件传输地址：";
+            this.label11.Text = "上级中间件文件传输地址：";
             // 
             // txtwcfurl
             // 
@@ -564,9 +579,9 @@
             this.label12.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label12.Location = new System.Drawing.Point(6, 20);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(92, 17);
+            this.label12.Size = new System.Drawing.Size(152, 17);
             this.label12.TabIndex = 5;
-            this.label12.Text = "业务请求地址：";
+            this.label12.Text = "上级中间件业务请求地址：";
             // 
             // panel1
             // 
@@ -579,16 +594,23 @@
             this.panel1.Size = new System.Drawing.Size(430, 61);
             this.panel1.TabIndex = 19;
             // 
-            // cktask
+            // txtlocalurl
             // 
-            this.cktask.AutoSize = true;
-            this.cktask.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.cktask.Location = new System.Drawing.Point(238, 51);
-            this.cktask.Name = "cktask";
-            this.cktask.Size = new System.Drawing.Size(99, 21);
-            this.cktask.TabIndex = 23;
-            this.cktask.Text = "开启定时任务";
-            this.cktask.UseVisualStyleBackColor = true;
+            this.txtlocalurl.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtlocalurl.Location = new System.Drawing.Point(9, 141);
+            this.txtlocalurl.Name = "txtlocalurl";
+            this.txtlocalurl.Size = new System.Drawing.Size(405, 23);
+            this.txtlocalurl.TabIndex = 10;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label14.Location = new System.Drawing.Point(6, 121);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(152, 17);
+            this.label14.TabIndex = 9;
+            this.label14.Text = "本地中间件业务请求地址：";
             // 
             // FrmSetting
             // 
@@ -668,5 +690,7 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.CheckBox cktoken;
         private System.Windows.Forms.CheckBox cktask;
+        private System.Windows.Forms.TextBox txtlocalurl;
+        private System.Windows.Forms.Label label14;
     }
 }

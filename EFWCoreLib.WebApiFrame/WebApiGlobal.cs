@@ -14,6 +14,7 @@ namespace EFWCoreLib.WebApiFrame
     /// </summary>
     public class WebApiGlobal
     {
+        public static bool IsToken = false;
         static WebApiSelfHosting webapiHost = null;
         public static void Main()
         {

@@ -142,7 +142,7 @@ namespace EFWCoreLib.CoreFrame.Common
 
         private ServiceResponseData InvokeWcfService(string wcfpluginname, string wcfcontroller, string wcfmethod, Action<ClientRequestData> requestAction)
         {
-            ClientLink wcfClientLink = ClientLinkManage.CreateConnection(wcfpluginname);
+            ClientLink wcfClientLink = ClientLinkManage.CreateConnection("localendpoint", wcfpluginname);
             //绑定LoginRight
             Action<ClientRequestData> _requestAction = ((ClientRequestData request) =>
             {

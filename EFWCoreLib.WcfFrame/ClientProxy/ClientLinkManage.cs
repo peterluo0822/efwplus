@@ -59,7 +59,34 @@ namespace EFWCoreLib.WcfFrame
                 throw new Exception(err.Message);
             }
         }
+        public static ClientLink CreateConnection(string wcfendpoint, string pluginname)
+        {
+            try
+            {
+                ClientLink link;
+                lock (ClientLinkDic)
+                {
+                    if (ClientLinkDic.ContainsKey(pluginname))
+                    {
+                        return ClientLinkDic[pluginname];
+                    }
 
+                    link = new ClientLink(null, pluginname, ((ism, met) =>
+                    {
+                        IsMessage = ism;
+                        MessageTime = met;
+                    }), wcfendpoint);
+                    link.mConn.Token = Token;//赋值令牌
+                    ClientLinkDic.Add(pluginname, link);
+                }
+                link.CreateConnection();
+                return link;
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+        }
         /// <summary>
         /// 卸载连接
         /// </summary>

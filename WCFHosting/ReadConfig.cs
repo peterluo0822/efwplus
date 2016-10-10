@@ -21,7 +21,7 @@ namespace WCFHosting
         public static string GetWcfServerUrl()
         {
             XmlDocument xmldoc_app = init();
-            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.WCFHandlerService']/host/baseAddresses/add");
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.BaseService']/host/baseAddresses/add");
             if (node != null)
             {
                 return node.Attributes["baseAddress"].Value;
@@ -32,7 +32,7 @@ namespace WCFHosting
         public static string GetRouterUrl()
         {
             XmlDocument xmldoc_app = init();
-            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfService.RouterHandlerService']/host/baseAddresses/add");
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("system.serviceModel/services/service[@name='EFWCoreLib.WcfFrame.WcfHandler.RouterBaseService']/host/baseAddresses/add");
             if (node != null)
             {
                 return node.Attributes["baseAddress"].Value;

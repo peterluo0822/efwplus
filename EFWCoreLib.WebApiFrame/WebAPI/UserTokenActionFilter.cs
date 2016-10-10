@@ -17,7 +17,7 @@ namespace EFWCoreLib.WebFrame.WebAPI
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
              
-            if (WcfFrame.WcfGlobal.IsToken == true)
+            if (WebApiFrame.WebApiGlobal.IsToken == true)
             {
                 //登陆之外的请求验证token
                 if (actionContext.Request.RequestUri.AbsolutePath.ToLower().IndexOf("/efwplusApi/coresys/login/userlogin".ToLower()) == -1)
