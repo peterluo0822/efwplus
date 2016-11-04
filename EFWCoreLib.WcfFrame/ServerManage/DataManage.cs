@@ -45,9 +45,10 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                 #region 执行插件控制器的核心算法
                 object[] paramValue = null;//jsondata?
                 ServiceResponseData retObj = null;
-                if (string.IsNullOrEmpty(para.replyidentify) || RemotePluginManage.localPlugin.ServerIdentify == para.replyidentify)
+                LocalPlugin localPlugin = RemotePluginManage.GetLocalPlugin();
+                if (string.IsNullOrEmpty(para.replyidentify) || localPlugin.ServerIdentify == para.replyidentify)
                 {
-                    if (RemotePluginManage.localPlugin.PluginDic.ContainsKey(plugin) == true)
+                    if (localPlugin.PluginDic.ContainsKey(plugin) == true)
                     {
                         //先解密再解压
                         string _jsondata = jsondata;
@@ -69,7 +70,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                         requestData.SetJsonData(_jsondata);
                         requestData.LoginRight = para.LoginRight;
 
-                        EFWCoreLib.CoreFrame.Plugin.ModulePlugin moduleplugin = RemotePluginManage.localPlugin.PluginDic[plugin];
+                        EFWCoreLib.CoreFrame.Plugin.ModulePlugin moduleplugin = localPlugin.PluginDic[plugin];
                         retObj = (ServiceResponseData)moduleplugin.WcfServerExecuteMethod(controller, method, paramValue, requestData);
 
                         if (retObj != null)
@@ -188,9 +189,10 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                 #region 执行插件控制器的核心算法
                 object[] paramValue = null;//jsondata?
                 ServiceResponseData retObj = null;
-                if (string.IsNullOrEmpty(para.replyidentify) || RemotePluginManage.localPlugin.ServerIdentify == para.replyidentify)
+                LocalPlugin localPlugin = RemotePluginManage.GetLocalPlugin();
+                if (string.IsNullOrEmpty(para.replyidentify) || localPlugin.ServerIdentify == para.replyidentify)
                 {
-                    if (RemotePluginManage.localPlugin.PluginDic.ContainsKey(plugin) == true)
+                    if (localPlugin.PluginDic.ContainsKey(plugin) == true)
                     {
                         //先解密再解压
                         string _jsondata = jsondata;
@@ -212,7 +214,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                         requestData.SetJsonData(_jsondata);
                         requestData.LoginRight = para.LoginRight;
 
-                        EFWCoreLib.CoreFrame.Plugin.ModulePlugin moduleplugin = RemotePluginManage.localPlugin.PluginDic[plugin];
+                        EFWCoreLib.CoreFrame.Plugin.ModulePlugin moduleplugin = localPlugin.PluginDic[plugin];
                         retObj = (ServiceResponseData)moduleplugin.WcfServerExecuteMethod(controller, method, paramValue, requestData);
 
                         if (retObj != null)

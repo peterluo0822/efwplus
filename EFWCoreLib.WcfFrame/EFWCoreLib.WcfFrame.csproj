@@ -119,8 +119,10 @@
     <Compile Include="ServerManage\DistributedCacheManage.cs" />
     <Compile Include="Controller\WcfServerController.cs" />
     <Compile Include="ServerManage\PluginInfoManage.cs" />
+    <Compile Include="ServerManage\PublishServiceManage.cs" />
     <Compile Include="ServerManage\RemotePluginManage.cs" />
     <Compile Include="ServerManage\RouterManage.cs" />
+    <Compile Include="ServerManage\SuperClient.cs" />
     <Compile Include="SSO\AuthResult.cs" />
     <Compile Include="SSO\ConvertHelper.cs" />
     <Compile Include="SSO\SsoHelper.cs" />

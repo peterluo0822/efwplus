@@ -140,12 +140,16 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
             frmForm1.Clear();
         }
 
+        TreeNode selectNode;
         private void BtnSaveMenu_Click(object sender, EventArgs e)
         {
             if (frmForm1.Validate())
             {
+                selectNode = treeMenu.SelectedNode;
                 InvokeController("SaveMenu");
                 MessageBoxEx.Show("保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (selectNode != null)
+                    treeMenu.SelectedNode = selectNode;
             }
         }
 
@@ -200,6 +204,23 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
             }
         }
 
+        private void btnRef_Click(object sender, EventArgs e)
+        {
+            InvokeController("InitMenuData");
+        }
 
+        bool isExpand = true;
+        private void btnExpand_Click(object sender, EventArgs e)
+        {
+            if (isExpand)
+            {
+                isExpand = false;
+                treeMenu.CollapseAll();
+            }
+            else {
+                isExpand = true;
+                treeMenu.ExpandAll();
+            }
+        }
     }
 }

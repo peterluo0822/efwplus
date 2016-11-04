@@ -30,6 +30,9 @@ namespace WinMainUIFrame.Winform.Controller
             frmaddgroup = (IfrmAddGroup)iBaseView["frmAddGroup"];
             frmaddmodule = (IfrmAddmodule)iBaseView["frmAddModule"];
         }
+
+        #region 菜单维护
+
         [WinformMethod]
         public void InitMenuData()
         {
@@ -74,10 +77,26 @@ namespace WinMainUIFrame.Winform.Controller
             InitMenuData();
         }
 
+        #endregion
+
+        #region 角色权限设置
+
+        [WinformMethod]
+        public void InitWorkersData()
+        {
+            ServiceResponseData retdata = InvokeWcfService("MainFrame.Service", "RightController", "GetWorkerData");
+            DataTable workers = retdata.GetData<DataTable>(0);
+            frmgroupmenu.loadWorkers(workers, LoginUserInfo.WorkId);
+        }
+
         [WinformMethod]
         public void InitGroupData()
         {
-            ServiceResponseData retdata = InvokeWcfService("MainFrame.Service", "RightController", "InitGroupData");
+            ServiceResponseData retdata = InvokeWcfService("MainFrame.Service", "RightController", "InitGroupData",
+                (request) =>
+                {
+                    request.AddData(frmgroupmenu.CurrWorkId);
+                });
             List<BaseGroup> grouplist = retdata.GetData<List<BaseGroup>>(0);
             frmgroupmenu.loadGroupGrid(grouplist);
         }
@@ -108,6 +127,8 @@ namespace WinMainUIFrame.Winform.Controller
 
             Object retdata = InvokeWcfService("MainFrame.Service", "RightController", "SetGroupMenu", requestAction);
         }
+
+        #endregion
 
         #region 页面权限
         [WinformMethod]
@@ -176,6 +197,8 @@ namespace WinMainUIFrame.Winform.Controller
         }
         #endregion
 
+        #region 角色维护
+
         [WinformMethod]
         public void NewGroup()
         {
@@ -232,13 +255,16 @@ namespace WinMainUIFrame.Winform.Controller
             BaseGroup group = frmaddgroup.currGroup;
             Action<ClientRequestData> requestAction = ((ClientRequestData request) =>
             {
+                request.AddData(frmgroupmenu.CurrWorkId);
                 request.AddData(group);
             });
             InvokeWcfService("MainFrame.Service", "RightController", "SaveGroup", requestAction);
 
             InitGroupData();
         }
+        #endregion
 
+        #region 子系统模块维护
         [WinformMethod]
         public void NewModule()
         {
@@ -291,5 +317,6 @@ namespace WinMainUIFrame.Winform.Controller
 
             InitMenuData();
         }
+        #endregion
     }
 }

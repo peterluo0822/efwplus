@@ -131,8 +131,7 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
 
         private void frmGroupMenu_Load(object sender, EventArgs e)
         {
-            panelPage.Enabled = false;
-            InvokeController("InitGroupData");
+            
         }
 
         private void dataGrid1_CurrentCellChanged(object sender, EventArgs e)
@@ -144,6 +143,11 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
                 InvokeController("LoadGroupMenuData",groupId);
 
                 InvokeController("GetPageMenuData");
+            }
+            else
+            {
+                treeView1.Nodes.Clear();
+                gridPageMenu.DataSource = null;
             }
         }
 
@@ -205,6 +209,7 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
         }
 
         #endregion
+
         #region IfrmGroupMenu 成员
 
 
@@ -243,6 +248,8 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
             set { panelPage.Enabled = value; }
         }
 
+       
+
         #endregion
 
         private void tsbtnNew_Click(object sender, EventArgs e)
@@ -278,6 +285,52 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
                     MessageBoxEx.Show("此角色已使用，不能删除！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void btnExpand_Click(object sender, EventArgs e)
+        {
+            treeView1.ExpandAll();
+        }
+
+        private void btnFold_Click(object sender, EventArgs e)
+        {
+            treeView1.CollapseAll();
+        }
+
+        public int CurrWorkId
+        {
+            get
+            {
+                return Convert.ToInt32(cbwork.SelectedValue);
+            }
+        }
+
+        public void loadWorkers(DataTable dt, int defaultWorkID)
+        {
+            cbwork.DisplayMember = "WorkName";
+            cbwork.ValueMember = "WorkId";
+            cbwork.DataSource = dt;
+            cbwork.SelectedValue = defaultWorkID;
+
+            if ((InvokeController("this") as AbstractController).LoginUserInfo.IsAdmin == 2)//超级用户
+            {
+                cbwork.Enabled = true;
+            }
+            else
+            {
+                cbwork.Enabled = false;
+            }
+        }
+        //更改医疗机构
+        private void cbWorkers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            InvokeController("InitGroupData");
+        }
+
+        private void frmGroupMenu_OpenWindowBefore(object sender, EventArgs e)
+        {
+            panelPage.Enabled = false;
+            InvokeController("InitWorkersData");
         }
     }
 }

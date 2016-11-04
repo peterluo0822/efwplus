@@ -49,9 +49,9 @@ namespace WinMainUIFrame.Dao
 
         public List<BaseModule> GetModuleList(int userId)
         {
-            string strsql = @"select distinct c.* from BaseGroupUser a left join BaseGroupMenu b on a.GroupId=b.GroupId
-                                            left join BaseModule c on b.ModuleId=c.ModuleId
-                                            where a.UserId=" +userId;
+            string strsql = @"select distinct c.* from BaseGroupUser a INNER join BaseGroupMenu b on a.GroupId=b.GroupId
+                                            INNER join BaseModule c on b.ModuleId=c.ModuleId
+                                            where a.UserId=" + userId;
 
             DataTable dt = oleDb.GetDataTable(strsql);
             if (dt.Rows.Count > 0)

@@ -48,7 +48,7 @@ namespace EFWCoreLib.WcfFrame
                         IsMessage = ism;
                         MessageTime = met;
                     }));
-                    link.mConn.Token = Token;//赋值令牌
+                    link.clientObj.Token = Token;//赋值令牌
                     ClientLinkDic.Add(pluginname, link);
                 }
                 link.CreateConnection();
@@ -76,7 +76,7 @@ namespace EFWCoreLib.WcfFrame
                         IsMessage = ism;
                         MessageTime = met;
                     }), wcfendpoint);
-                    link.mConn.Token = Token;//赋值令牌
+                    link.clientObj.Token = Token;//赋值令牌
                     ClientLinkDic.Add(pluginname, link);
                 }
                 link.CreateConnection();

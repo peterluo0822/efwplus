@@ -340,9 +340,46 @@ namespace EfwControls.HISControl.BedCard.Controls
             }
         }
 
+        private string _patTypeName;
+        //病人类型
+        public string PatTypeName
+        {
+            get
+            {
+                return _patTypeName;
+            }
+            set
+            {
+                _patTypeName = value;
+            }
+        }
+        private string _nursingLever;
+        //护理级别
+        public string NursingLever
+        {
+            get
+            {
+                return _nursingLever;
+            }
+            set
+            {
+                _nursingLever = value;
+            }
+        }
 
-
-
+        private string _dietType;
+        //饮食种类
+        public string DietType
+        {
+            get
+            {
+                return _dietType;
+            }
+            set
+            {
+                _dietType = value;
+            }
+        }
         #endregion
 
         #endregion

@@ -14,7 +14,7 @@ namespace EfwControls.CustomControl
     /// <summary>
     /// 弹出面板
     /// </summary>
-    internal partial class Popup : Component
+    public partial class Popup : Component
     {
         List<PopupContent> popupList;
         Rectangle rect_close;//画关闭按钮

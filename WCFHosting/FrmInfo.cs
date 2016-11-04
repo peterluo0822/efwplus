@@ -75,10 +75,23 @@ namespace WCFHosting
             }
 
             text.AppendLine();
-            text.AppendLine("[远程插件]");
-            foreach (var p in RemotePluginManage.RemotePluginDic)
+            text.AppendLine("[订阅者列表]");
+            if (PublishServiceManage.subscriberList != null)
             {
-                text.AppendLine(p.ServerIdentify + "\t" + String.Join(",", p.plugin));
+                foreach (var p in PublishServiceManage.subscriberList)
+                {
+                    text.AppendLine(p.clientId + "\t" + p.publishServiceName);
+                }
+            }
+
+            text.AppendLine();
+            text.AppendLine("[远程插件]");
+            if (RemotePluginManage.RemotePluginDic != null)
+            {
+                foreach (var p in RemotePluginManage.RemotePluginDic)
+                {
+                    text.AppendLine(p.ServerIdentify + "\t" + String.Join(",", p.plugin));
+                }
             }
 
             text.AppendLine();

@@ -14,6 +14,7 @@ namespace WinMainUIFrame.WcfController
     [WCFController]
     public class RightController : WcfServerController
     {
+        #region 菜单维护
         [WCFMethod]
         public ServiceResponseData InitMenuData()
         {
@@ -56,12 +57,31 @@ namespace WinMainUIFrame.WcfController
             responseData.AddData(true);
             return responseData;
         }
+        #endregion
+
+        #region 角色权限
+        /// <summary>
+        /// 获取机构数据
+        /// </summary>
+        /// <returns></returns>
+        [WCFMethod]
+        public ServiceResponseData GetWorkerData()
+        {
+            //机构
+            DataTable workers = NewObject<BaseWorkers>().gettable(" DelFlag = 0 ");
+            responseData.AddData(workers);
+            return responseData;
+        }
 
         [WCFMethod]
         public ServiceResponseData InitGroupData()
         {
+            int workid = requestData.GetData<int>(0);
+            SetWorkId(workid);
+
             List<BaseGroup> grouplist = NewObject<BaseGroup>().getlist<BaseGroup>();
             responseData.AddData(grouplist);
+
             return responseData;
         }
         [WCFMethod]
@@ -88,7 +108,7 @@ namespace WinMainUIFrame.WcfController
             responseData.AddData(true);
             return responseData;
         }
-
+        #endregion
 
         #region 页面权限
         [WCFMethod]
@@ -203,7 +223,9 @@ namespace WinMainUIFrame.WcfController
         [WCFMethod]
         public void SaveGroup()
         {
-            BaseGroup group = requestData.GetData<BaseGroup>(0);
+            int workid = requestData.GetData<int>(0);
+            BaseGroup group = requestData.GetData<BaseGroup>(1);
+            SetWorkId(workid);
             this.BindDb(group);
             group.save();
         }

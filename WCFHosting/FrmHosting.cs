@@ -90,6 +90,7 @@ namespace WCFHosting
             if (Convert.ToInt32(HostSettingConfig.GetValue("timingtask")) == 1)
                 WcfGlobal.Main(StartType.MiddlewareTask);
 
+            WcfGlobal.Main(StartType.PublishService);
             WcfGlobal.Main(StartType.SuperClient);
             RunState = HostState.Opened;
         }
@@ -98,6 +99,7 @@ namespace WCFHosting
         {
             MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "正在准备关闭中间件服务，请等待...");
 
+            WcfGlobal.Exit(StartType.PublishService);
             WcfGlobal.Exit(StartType.MiddlewareTask);
             WcfGlobal.Exit(StartType.SuperClient);
             WcfGlobal.Exit(StartType.BaseService);

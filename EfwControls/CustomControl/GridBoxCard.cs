@@ -1496,7 +1496,10 @@ namespace EfwControls.CustomControl
             if (selectionCards.Length > 0 && selectionCards.Length>index)
             {
                 selectionCards[index].DataSource = DataSource;
-
+                if (cardDataGrids[index]!=null && cardDataGrids[index].textdataGrid != null && cardDataGrids[index].textdataGrid.Columns != null)
+                {
+                    cardDataGrids[index].textdataGrid.Columns.Clear();
+                }
                 cardDataGrids[index]=new CardDataGrid();
                 InitShowCard(selectionCards[index].BindColumnIndex, cardDataGrids[index]);
             }

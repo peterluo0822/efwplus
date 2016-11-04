@@ -233,6 +233,12 @@ namespace WinMainUIFrame.Winform.Controller
         }
 
         [WinformMethod]
+        public void ShowBalloonMessage(string CaptionText, string Text)
+        {
+            frmmain.ShowBalloon(CaptionText, Text);
+        }
+
+        [WinformMethod]
         public void CloseForm(string tabId)
         {
             frmmain.CloseForm(tabId);

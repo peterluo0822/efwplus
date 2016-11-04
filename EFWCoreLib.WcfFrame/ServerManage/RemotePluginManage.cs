@@ -12,38 +12,15 @@ namespace EFWCoreLib.WcfFrame.ServerManage
 {
     public class RemotePluginManage
     {
-        public static ClientLink superclient;//连接上级中间件的连接
-        public static LocalPlgin localPlugin;//本地插件
         public static List<RemotePlugin> RemotePluginDic;//远程注册插件
 
-        public static void CreateSuperClient()
+        public static LocalPlugin GetLocalPlugin()
         {
-            localPlugin = new LocalPlgin();
+            LocalPlugin localPlugin = new LocalPlugin();
             localPlugin.ServerIdentify = WcfGlobal.Identify;
             localPlugin.PluginDic = CoreFrame.Init.AppPluginManage.PluginDic;
 
-            //就算上级中间件重启了，下级中间件创建链接的时候会重新注册本地插件
-            superclient = new ClientLink(WcfGlobal.HostName, (() =>
-            {
-                //注册本地插件到上级中间件
-                superclient.RegisterRemotePlugin(WcfGlobal.Identify, localPlugin.PluginDic.Keys.ToArray());
-                //同步缓存到上级中间件
-                DistributedCacheManage.SyncAllCache();
-            }));
-            try
-            {
-                superclient.CreateConnection();
-            }
-            catch
-            {
-                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "连接上级中间件失败！");
-            }
-        }
-
-        public static void UnCreateSuperClient()
-        {
-            if (superclient != null)
-                superclient.Dispose();
+            return localPlugin;
         }
 
         public static void RegisterRemotePlugin(IDataReply callback, string ServerIdentify, string[] plugin)
@@ -94,10 +71,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             if (isChanged == true)
             {
                 //重新注册远程插件
-                foreach (var p in RemotePluginDic)
-                {
-                    superclient.RegisterRemotePlugin(p.ServerIdentify, p.plugin);
-                }
+                //?
             }
         }
     }
@@ -105,7 +79,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
     /// <summary>
     /// 本地插件
     /// </summary>
-    public class LocalPlgin
+    public class LocalPlugin
     {
         public string ServerIdentify { get; set; }
         public Dictionary<string, ModulePlugin> PluginDic { get; set; }

@@ -551,6 +551,26 @@ namespace WinMainUIFrame.Winform.ViewForm
             
         }
 
+        public void ShowBalloon(string CaptionText, string Text)
+        {
+            DevComponents.DotNetBar.Balloon b = new DevComponents.DotNetBar.Balloon();
+            Rectangle r = Screen.GetWorkingArea(this);
+            b.Size = new Size(280, 120);
+            b.Location = new Point(r.Right - b.Width, r.Bottom - b.Height);
+            b.AlertAnimation = eAlertAnimation.BottomToTop;
+            b.Style = eBallonStyle.Office2007Alert;
+            //b.CaptionImage = balloonTipFocus.CaptionImage.Clone() as Image;
+            b.CaptionText = CaptionText;
+            b.Text = Text;
+            //b.AlertAnimation=eAlertAnimation.TopToBottom;
+            //b.AutoResize();
+            b.AutoClose = true;
+            b.AutoCloseTimeOut = 3;
+            //b.Owner=this;
+
+            b.Show(false);
+        }
+
         #region IBaseViewBusiness 成员
 
         public string frmName

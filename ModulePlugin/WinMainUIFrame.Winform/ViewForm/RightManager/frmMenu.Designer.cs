@@ -64,6 +64,8 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
             this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.frmForm1 = new EfwControls.CustomControl.frmForm(this.components);
+            this.btnRef = new System.Windows.Forms.ToolStripButton();
+            this.btnExpand = new System.Windows.Forms.ToolStripButton();
             this.BasepanelEx.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -163,7 +165,9 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbtnAdd,
             this.tsbtnAlter,
-            this.tsbtnDelete});
+            this.tsbtnDelete,
+            this.btnRef,
+            this.btnExpand});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(496, 25);
@@ -175,8 +179,8 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
             this.tsbtnAdd.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnAdd.Image")));
             this.tsbtnAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbtnAdd.Name = "tsbtnAdd";
-            this.tsbtnAdd.Size = new System.Drawing.Size(76, 22);
-            this.tsbtnAdd.Text = "新增模块";
+            this.tsbtnAdd.Size = new System.Drawing.Size(88, 22);
+            this.tsbtnAdd.Text = "新增子系统";
             this.tsbtnAdd.Click += new System.EventHandler(this.tsbtnAdd_Click);
             // 
             // tsbtnAlter
@@ -184,8 +188,8 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
             this.tsbtnAlter.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnAlter.Image")));
             this.tsbtnAlter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbtnAlter.Name = "tsbtnAlter";
-            this.tsbtnAlter.Size = new System.Drawing.Size(76, 22);
-            this.tsbtnAlter.Text = "修改模块";
+            this.tsbtnAlter.Size = new System.Drawing.Size(88, 22);
+            this.tsbtnAlter.Text = "修改子系统";
             this.tsbtnAlter.Click += new System.EventHandler(this.tsbtnAlter_Click);
             // 
             // tsbtnDelete
@@ -193,8 +197,8 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
             this.tsbtnDelete.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnDelete.Image")));
             this.tsbtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbtnDelete.Name = "tsbtnDelete";
-            this.tsbtnDelete.Size = new System.Drawing.Size(76, 22);
-            this.tsbtnDelete.Text = "删除模块";
+            this.tsbtnDelete.Size = new System.Drawing.Size(88, 22);
+            this.tsbtnDelete.Text = "删除子系统";
             this.tsbtnDelete.Click += new System.EventHandler(this.tsbtnDelete_Click);
             // 
             // BtnSaveMenu
@@ -402,6 +406,25 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
             // 
             this.frmForm1.IsSkip = true;
             // 
+            // btnRef
+            // 
+            this.btnRef.Image = ((System.Drawing.Image)(resources.GetObject("btnRef.Image")));
+            this.btnRef.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRef.Name = "btnRef";
+            this.btnRef.Size = new System.Drawing.Size(76, 22);
+            this.btnRef.Text = "刷新菜单";
+            this.btnRef.Click += new System.EventHandler(this.btnRef_Click);
+            // 
+            // btnExpand
+            // 
+            this.btnExpand.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnExpand.Image = ((System.Drawing.Image)(resources.GetObject("btnExpand.Image")));
+            this.btnExpand.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnExpand.Name = "btnExpand";
+            this.btnExpand.Size = new System.Drawing.Size(65, 22);
+            this.btnExpand.Text = "展开/折叠";
+            this.btnExpand.Click += new System.EventHandler(this.btnExpand_Click);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -452,5 +475,7 @@ namespace WinMainUIFrame.Winform.ViewForm.RightManager
         private System.Windows.Forms.ToolStripButton tsbtnAlter;
         private System.Windows.Forms.ToolStripButton tsbtnDelete;
         public DevComponents.DotNetBar.PanelEx BasepanelEx;
+        private System.Windows.Forms.ToolStripButton btnRef;
+        private System.Windows.Forms.ToolStripButton btnExpand;
     }
 }

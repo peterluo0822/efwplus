@@ -31,7 +31,6 @@ namespace Books_Wcf.WApiController
         public Books GetBook(int id)
         {
             DistributedCacheManage.SetCache("test", id.ToString(), "kakake");
-            DistributedCacheManage.SyncCache("test");
             return NewObject<Books>().getmodel(id) as Books;
         }
 

@@ -11,7 +11,7 @@ namespace EFWCoreLib.WcfFrame
     /// <summary>
     /// 平台连接对象
     /// </summary>
-    public class CHDEPConnection
+    public class ClientObject
     {
         /// <summary>
         /// 业务数据服务
@@ -20,7 +20,7 @@ namespace EFWCoreLib.WcfFrame
         /// <summary>
         /// 客户端回调服务
         /// </summary>
-        public IDataReply ClientService { get; set; }
+        public IDataReply ReplyService { get; set; }
         /// <summary>
         /// 客户端ID，服务端生成
         /// </summary>

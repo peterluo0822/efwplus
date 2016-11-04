@@ -135,7 +135,7 @@ namespace EfwControls.HISControl.UCPayMode
             if (m_PayConfigs != null)
             {
                 m_PayThreads = null;//清空线程
-                SetCashValue(CostFee.ChangeFee);
+                //SetCashValue(CostFee.ChangeFee);
                 for (int i = 0; i < m_PayConfigs.Count; i++)
                 {
                     PayMethod_Config m_PayConfig = m_PayConfigs[i];
@@ -206,18 +206,13 @@ namespace EfwControls.HISControl.UCPayMode
         /// </summary>
         public static void ArrearageCost()
         {
+            defaultCash = true;
             decimal val = CostFee.ChangeFee;//找零
+            SetCashValue(val);
+
+            //设置所有支付控件只读
             for (int i = 0; i < m_UCPayModes.Count; i++)
             {
-                if (m_UCPayModes[i]._config.PayMethodID == 1002)//现金
-                {
-                    val = val < 0 ? (Convert.ToDecimal(m_UCPayModes[i].diPayMoney.Value) - val) : (Convert.ToDecimal(m_UCPayModes[i].diPayMoney.Value) - val);
-                    val = val < 0 ? 0 : val;
-                    m_UCPayModes[i].PayValue = Convert.ToDecimal(val);
-                    m_UCPayModes[i].diPayMoney.Focus();
-                    //break;
-                }
-
                 if (m_UCPayModes[i]._config.PayMethodID > 0 && m_UCPayModes[i]._config.InputFrom == PAY_FEE_FROM.pffManualInput)
                 {
                     m_UCPayModes[i].SetControlEnabled(false);
@@ -240,11 +235,11 @@ namespace EfwControls.HISControl.UCPayMode
                 if (paythread.Succeed)
                 {
                     //m_PayConfig.ProcStep = paythread.ProcStep;
-                    uPayMode.PayValue = paythread.PayFee;//显示在控件上
+                    uPayMode.PayValue = decimal.Round(paythread.PayFee, 2);//显示在控件上
                     uPayMode.TicketNo = paythread.TicketNo;
-                    CostFee.SetPayModeFee(m_PayConfig.PayMethodID, paythread.TicketNo, paythread.PayFee);
+                    CostFee.SetPayModeFee(m_PayConfig.PayMethodID, paythread.TicketNo, decimal.Round(paythread.PayFee, 2));
 
-
+                    //CostFee.ChangeValue(m_UCPayModes);//测试
                     SetCashValue(CostFee.ChangeFee);
 
 
@@ -578,7 +573,7 @@ namespace EfwControls.HISControl.UCPayMode
             decimal _roundFee;
             CostFeeStyle.ChangeFeeRoun(ChangeFee, out _needPayFee, out _roundFee);
             ChangeFee = _needPayFee;
-            RoundFee = -_roundFee;
+            RoundFee = _roundFee;//update zh 20160927
 
             ChangeValue(m_UCPayModes);//重新计算
 
@@ -628,7 +623,7 @@ namespace EfwControls.HISControl.UCPayMode
             //这里把支付方式为POS的减掉,当作了现金所以补收金额没变
             //AccountTotalFee里面包含了PosFee，因为Pos金额不能影响补收，所以要减去POS
             //decimal ret = zyDepositFee - PayTotalFee + AccountTotalFee - PosFee;//押金减去总金额 加上 记账 减去 pos
-            decimal ret = zyDepositFee - PayTotalFee + AccountTotalFee;//
+            decimal ret = zyDepositFee - PayTotalFee + AccountTotalFee + FavorableTotalFee;//
             zyRefundFee = 0;
             zyChargeFee = 0;
             if (ret >= 0)//应退
@@ -647,7 +642,7 @@ namespace EfwControls.HISControl.UCPayMode
 
             CostFeeStyle.ChangeFeeRoun(ChangeFee, out _needPayFee, out _roundFee);//计算凑整_roundFee=_needPayFee-fee
             ChangeFee = _needPayFee;//找零（凑整后）
-            RoundFee = -_roundFee;//凑整
+            RoundFee = _roundFee;//凑整费 update zh 20160927
 
             CashFee = CashFee - ChangeFee;//现金
             SetPayModeFee(1002, "", CashFee);//设置现金金额
@@ -834,23 +829,36 @@ namespace EfwControls.HISControl.UCPayMode
                 int strLen = TotalAmt.ToString("0.00").IndexOf(".");
                 if (RoundedWayFee == 0)
                 {
-                    point = Convert.ToDecimal(TotalAmt.ToString("0.00").Substring(strLen + 2, 1));
+                    if (TotalAmt == Convert.ToDecimal(0.05))
+                    {
+                        o_FinalPayAmt = 0;
+                    }
+                    else {
+                        point = Convert.ToDecimal(TotalAmt.ToString("0.00").Substring(strLen + 2, 1));
 
-                    if (point > 0 && point < 5)
-                        TotalAmt -= 0.05M;
-                    o_FinalPayAmt = Convert.ToDecimal(Math.Round(Convert.ToDecimal(TotalAmt), 1, MidpointRounding.AwayFromZero).ToString("0.00"));
-                    //计算转换后的差额
-                    //o_Difference = o_FinalPayAmt - oldTotalAmt;
+                        if (point > 0 && point < 5)
+                            TotalAmt -= 0.05M;
+                        o_FinalPayAmt = Convert.ToDecimal(Math.Round(Convert.ToDecimal(TotalAmt), 1, MidpointRounding.AwayFromZero).ToString("0.00"));
+                        //计算转换后的差额
+                        //o_Difference = o_FinalPayAmt - oldTotalAmt;
+                    }
                 }
                 else if (RoundedWayFee == 1)
                 {
-                    point = Convert.ToDecimal(TotalAmt.ToString("0.00").Substring(strLen + 1, 1));
+                    if (TotalAmt == Convert.ToDecimal(0.5))
+                    {
+                        o_FinalPayAmt = 0;
+                    }
+                    else {
 
-                    if (point > 0 && point < 5)
-                        TotalAmt -= 0.5M;
-                    o_FinalPayAmt = Convert.ToDecimal(Math.Round(Convert.ToDecimal(TotalAmt), 0, MidpointRounding.AwayFromZero).ToString("0.00"));
-                    //计算转换后的差额
-                    //o_Difference = o_FinalPayAmt - oldTotalAmt;
+                        point = Convert.ToDecimal(TotalAmt.ToString("0.00").Substring(strLen + 1, 1));
+
+                        if (point > 0 && point < 5)
+                            TotalAmt -= 0.5M;
+                        o_FinalPayAmt = Convert.ToDecimal(Math.Round(Convert.ToDecimal(TotalAmt), 0, MidpointRounding.AwayFromZero).ToString("0.00"));
+                        //计算转换后的差额
+                        //o_Difference = o_FinalPayAmt - oldTotalAmt;
+                    }
                 }
             }
 

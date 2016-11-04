@@ -29,7 +29,7 @@ namespace WinMainUIFrame.ObjectModel.UserLogin
         public bool IsAdmin(int userId)
         {
              BaseUser user=(BaseUser)NewObject<BaseUser>().getmodel(userId);
-             return user.IsAdmin == 1 ? true : false;
+             return user.IsAdmin >= 1 ? true : false;
         }
 
         public bool AlterPassWrod(int userId, string oldpassword, string password)

@@ -11,6 +11,7 @@ using EFWCoreLib.WinformFrame.Controller;
 using EfwControls.CustomControl;
 using WinMainUIFrame.Entity;
 using EFWCoreLib.CoreFrame.Business;
+using DevComponents.DotNetBar;
 
 namespace WinMainUIFrame.Winform.ViewForm
 {
@@ -54,7 +55,15 @@ namespace WinMainUIFrame.Winform.ViewForm
 
         public BaseDept getDept()
         {
-            return (BaseDept)this.comboBoxDepts.SelectedItem;
+            if ((BaseDept)this.comboBoxDepts.SelectedItem != null)
+            {
+                return (BaseDept)this.comboBoxDepts.SelectedItem;
+            }
+            else
+            {
+                MessageBoxEx.Show("请先配置科室");
+                return new BaseDept();
+            }
         }
 
         #endregion

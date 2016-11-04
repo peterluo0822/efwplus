@@ -32,7 +32,7 @@ namespace WinMainUIFrame.Winform.ViewForm
             InitializeComponent();
             //InitBarCode();
             ribbonTabItem1.Visible = false;
-            ribbonControl1.Height = 120;
+            //ribbonControl1.Height = 120;
         }
 
         #region 扫描条码
@@ -151,12 +151,14 @@ namespace WinMainUIFrame.Winform.ViewForm
 
         public void showSysMenu()
         {
-
+            //清理模块菜单
             int ritemCount = ribbonControl1.Items.Count - 1;
             for (int i = 0; i < ritemCount; i++)
             {
                 ribbonControl1.Items.Remove(0);
             }
+            //清理打开的界面
+            CloseAllForm();
 
             for (int i = 0; i < modules.Count; i++)
             {
@@ -192,7 +194,9 @@ namespace WinMainUIFrame.Winform.ViewForm
                     //List<RibbonBar> listbar = new List<RibbonBar>();
                     for (int j = 0; j < _menus.Count; j++)
                     {
-                        if (string.IsNullOrEmpty(_menus[j].DllName) && string.IsNullOrEmpty(_menus[j].UrlId))
+                        string dllname= _menus[j].DllName == null ? "" : _menus[j].DllName.Trim();
+                        string urlid = _menus[j].UrlId == null ? "" : _menus[j].UrlId.Trim();
+                        if (string.IsNullOrEmpty(dllname) && string.IsNullOrEmpty(urlid))
                         {
                             //为二级分类菜单
                             DevComponents.DotNetBar.RibbonBar menuClass = new RibbonBar();
@@ -200,7 +204,7 @@ namespace WinMainUIFrame.Winform.ViewForm
                             menuClass.Dock = System.Windows.Forms.DockStyle.Left;
                             menuClass.ContainerControlProcessDialogKey = true;
                             menuClass.Text = _menus[j].Name;
-                            menuClass.TitleVisible = false;
+                            //menuClass.TitleVisible = false;
                             //三级菜单
                             List<BaseMenu> mainMenu = menus.FindAll(x => x.PMenuId == _menus[j].MenuId).OrderByDescending(x => x.SortId).ToList();
                             foreach (BaseMenu menu in mainMenu)
@@ -468,6 +472,24 @@ namespace WinMainUIFrame.Winform.ViewForm
                 catch { }
             }
         }
+        /// <summary>
+        /// 关闭所有打开界面
+        /// </summary>
+        public void CloseAllForm()
+        {
+            List<BaseItem> formlist = new List<BaseItem>();
+            for(int i = 0; i < this.barMainContainer.Items.Count; i++)
+            {
+                formlist.Add(this.barMainContainer.Items[i]);
+            }
+
+            foreach(var item in formlist)
+            {
+                this.barMainContainer.Items.Remove(item);
+            }
+
+            AppPluginManageExtension.InitAllWinformController();//初始化所有控制器
+        }
 
         #endregion
 
@@ -489,7 +511,7 @@ namespace WinMainUIFrame.Winform.ViewForm
 
         private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBoxEx.Show("您确定要退出系统吗？", "询问窗", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show("您确定要退出系统吗？", "询问窗", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 InvokeController("Exit");
                 //方式一
@@ -525,8 +547,21 @@ namespace WinMainUIFrame.Winform.ViewForm
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = true;
-            this.Hide();
+            //e.Cancel = true;
+            //this.Hide();
+            if (MessageBox.Show("您确定要退出系统吗？", "询问窗", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            {
+                InvokeController("Exit");
+                //方式一
+                if (BarCode != null)
+                    BarCode.Stop();
+                //方式二
+                CodeBarInput.DisabledAllCodeBarInput();
+            }
+            else
+            {
+                e.Cancel = true;
+            }
         }
 
         private void FrmMainRibbon_Load(object sender, EventArgs e)
@@ -765,6 +800,27 @@ namespace WinMainUIFrame.Winform.ViewForm
         {
             this.btnMessage.ForeColor = Color.White;
             this.btnMessage.Cursor = Cursors.Default;
+        }
+
+        public void ShowBalloon(string CaptionText, string Text)
+        {
+            DevComponents.DotNetBar.Balloon b = new DevComponents.DotNetBar.Balloon();
+            Rectangle r = Screen.GetWorkingArea(this);
+            b.Size = new Size(280, 120);
+            b.Location = new Point(r.Right - b.Width, r.Bottom - b.Height);
+            b.AlertAnimation = eAlertAnimation.BottomToTop;
+            b.Style = eBallonStyle.Office2007Alert;
+            b.CaptionText = CaptionText;
+            b.Font = new Font("宋体", 11f);
+            //b.Padding = new System.Windows.Forms.Padding(5);
+            b.Text = Text;
+            //b.AlertAnimation=eAlertAnimation.TopToBottom;
+            //b.AutoResize();
+            b.AutoClose = true;
+            b.AutoCloseTimeOut = 3;
+            //b.Owner=this;
+
+            b.Show(false);
         }
     }
 }

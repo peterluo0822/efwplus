@@ -27,6 +27,8 @@ namespace WinMainUIFrame.Winform.IView
         void showDebugMenu();
         //void InitMessageForm();
         //void ShowMessageForm();
+
+        void ShowBalloon(string CaptionText, string Text);
     }
 
     public class WinMenu

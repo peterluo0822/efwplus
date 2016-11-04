@@ -13,30 +13,20 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
     [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
     public class ReplyDataCallback : IDataReply
     {
+        private ClientLink clientLink;
+        public ReplyDataCallback(ClientLink _clientLink)
+        {
+            clientLink = _clientLink;
+        }
 
         public string ReplyProcessRequest(HeaderParameter para, string plugin, string controller, string method, string jsondata)
         {
             return DataManage.ReplyProcessRequest(plugin, controller, method, jsondata, para);
         }
 
-        public CacheIdentify DistributedCacheSyncIdentify(CacheIdentify cacheId)
+        public void Notify(string publishServiceName)
         {
-            return DistributedCacheManage.CompareCache(cacheId);
+            PublishServiceManage.ReceiveNotify(publishServiceName, clientLink);
         }
-
-        public void DistributedCacheSync(CacheObject cache)
-        {
-            DistributedCacheManage.SyncLocalCache(cache);
-        }
-
-
-        public void DistributedAllCacheSync(List<CacheObject> cachelist)
-        {
-            foreach (var cache in cachelist)
-            {
-                DistributedCacheManage.SyncLocalCache(cache);
-            }
-        }
-
     }
 }

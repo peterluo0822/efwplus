@@ -9,7 +9,7 @@ namespace WinMainUIFrame.Entity
 {
     [Serializable]
     [ProtoContract]
-    [Table(TableName = "BaseGroup", EntityType = EntityType.Table, IsGB = true)]
+    [Table(TableName = "BaseGroup", EntityType = EntityType.Table, IsGB = false)]
     public class BaseGroup:EFWCoreLib.CoreFrame.Business.AbstractEntity
     {
         private int  _groupid;

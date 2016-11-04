@@ -14,6 +14,7 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
     [ServiceContract(Namespace = "http://www.efwplus.cn/", Name = "BaseService", SessionMode = SessionMode.Required, CallbackContract = typeof(IDataReply))]
     public interface IClientHandler
     {
+        #region 客户端连接
         /// <summary>
         /// 创建客户端
         /// </summary>
@@ -48,6 +49,7 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
         /// <returns></returns>
         [OperationContract(IsOneWay = false)]
         string GetAllPluginInfo();
+        #endregion
 
         #region 数据请求
         /// <summary>
@@ -92,24 +94,32 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
         #endregion
 
         #region 分布式缓存
+
         /// <summary>
-        /// 分布式缓存同步标识
+        /// 获取缓存数据
         /// </summary>
+        /// <param name="cacheIdList"></param>
+        /// <returns></returns>
         [OperationContract(IsOneWay = false)]
-        CacheIdentify DistributedCacheSyncIdentify(CacheIdentify cacheId);
+        List<CacheObject> GetDistributedCacheData(List<CacheIdentify> cacheIdList);
+        #endregion
 
+        #region 发布订阅
         /// <summary>
-        /// 分布式缓存同步
+        /// 订阅
         /// </summary>
-        /// <param name="cache"></param>
-        [OperationContract]
-        void DistributedCacheSync(CacheObject cache);
-
+        /// <param name="ServerIdentify">中间件标识</param>
+        /// <param name="clientId"></param>
+        /// <param name="publishServiceName">发布服务名称</param>
+        [OperationContract(IsOneWay = true)]
+        void Subscribe(string ServerIdentify, string clientId, string publishServiceName);
         /// <summary>
-        /// 分布式缓存同步
+        /// 取消订阅
         /// </summary>
-        [OperationContract]
-        void DistributedAllCacheSync(List<CacheObject> cachelist);
+        /// <param name="clientId"></param>
+        /// <param name="publishServiceName">发布服务名称</param>
+        [OperationContract(IsOneWay = true)]
+        void UnSubscribe(string clientId, string publishServiceName);
         #endregion
     }
 
@@ -129,23 +139,14 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
         [OperationContract(IsOneWay = false)]
         string ReplyProcessRequest(HeaderParameter para, string plugin, string controller, string method, string jsondata);
 
-        /// <summary>
-        /// 分布式缓存同步标识
-        /// </summary>
-        [OperationContract(IsOneWay = false)]
-        CacheIdentify DistributedCacheSyncIdentify(CacheIdentify cacheId);
 
+        #region 订阅通知
         /// <summary>
-        /// 分布式缓存同步
+        /// 通知
         /// </summary>
-        /// <param name="cache"></param>
-        [OperationContract]
-        void DistributedCacheSync(CacheObject cache);
-
-        /// <summary>
-        /// 分布式缓存同步
-        /// </summary>
-        [OperationContract]
-        void DistributedAllCacheSync(List<CacheObject> cachelist);
+        /// <param name="publishServiceName">服务名称</param>
+        [OperationContract(IsOneWay = true)]
+        void Notify(string publishServiceName);
+        #endregion
     }
 }

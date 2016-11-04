@@ -169,7 +169,7 @@
             this.ribbonControl1.CaptionVisible = true;
             this.ribbonControl1.Controls.Add(this.ribbonPanel1);
             this.ribbonControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ribbonControl1.ForeColor = System.Drawing.Color.Black;
+            this.ribbonControl1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ribbonControl1.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
             this.ribbonTabItem1,
             this.buttonChangeStyle,
@@ -816,7 +816,7 @@
             this.dockSite9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dockSite9.DocumentDockContainer = new DevComponents.DotNetBar.DocumentDockContainer(new DevComponents.DotNetBar.DocumentBaseContainer[] {
             ((DevComponents.DotNetBar.DocumentBaseContainer)(new DevComponents.DotNetBar.DocumentBarContainer(this.barMainContainer, 745, 531)))}, DevComponents.DotNetBar.eOrientation.Horizontal);
-            this.dockSite9.ForeColor = System.Drawing.Color.Black;
+            this.dockSite9.ForeColor = System.Drawing.SystemColors.ControlText;
             this.dockSite9.Location = new System.Drawing.Point(5, 135);
             this.dockSite9.Name = "dockSite9";
             this.dockSite9.Size = new System.Drawing.Size(745, 531);

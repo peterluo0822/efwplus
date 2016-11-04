@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\AppPluginManageExtension.cs" />
     <Compile Include="Controller\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>

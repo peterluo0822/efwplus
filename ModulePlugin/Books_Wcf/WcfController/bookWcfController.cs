@@ -8,6 +8,7 @@ using Books_Wcf.Entity;
 using System.Data;
 using Books_Wcf.Dao;
 using EFWCoreLib.WcfFrame.DataSerialize;
+using EFWCoreLib.WcfFrame.ServerManage;
 
 namespace Books_Wcf.WcfController
 {
@@ -29,7 +30,7 @@ namespace Books_Wcf.WcfController
         {
             DataTable dt = NewDao<IBookDao>().GetBooks("", 0);
 
-            
+            DistributedCacheManage.SetCache("test", "kakake", "kakake123");
             responseData.AddData(dt);
             return responseData;
         }

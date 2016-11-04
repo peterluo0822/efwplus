@@ -100,7 +100,7 @@
             this.labelX1.Name = "labelX1";
             this.labelX1.Size = new System.Drawing.Size(75, 23);
             this.labelX1.TabIndex = 4;
-            this.labelX1.Text = "角色名称：";
+            this.labelX1.Text = "系统名称：";
             // 
             // frmAddModule
             // 

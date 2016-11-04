@@ -108,6 +108,10 @@ namespace EfwControls.CustomControl
                 }
             }
         }
+        /// <summary>
+        /// 分组线
+        /// </summary>
+        public PaintGroupLineHandle GroupLine;
 
         public DataGrid()
         {
@@ -230,6 +234,88 @@ namespace EfwControls.CustomControl
                     }
                 }
             }
+
+            IsPaintGroupLine(e.Graphics);
+        }
+
+        //绘制组线和删除线
+        private void IsPaintGroupLine(Graphics graphics)
+        {
+            if (this.RowCount == 0) return;
+            int penWidth = 2;
+            if (GroupLine != null)
+            {
+                //循环遍历所有记录
+                for (int index = 0; index < this.Rows.Count; index++)
+                {
+                    Color penColer = Color.Black;
+                    int groupFlag;
+                    int colIndex;
+                    GroupLine(index,out colIndex,out groupFlag);
+                    if (groupFlag > 0)
+                    {
+                        PaintGroupLine(groupFlag, graphics, new Pen(penColer, penWidth), index, colIndex);
+                    }
+                }
+            }
+        }
+        //绘制组线
+        private void PaintGroupLine(int groupFlag, Graphics graphics, System.Drawing.Pen pen, int rowIndex,int colIndex)
+        {
+            //定义坐标变量
+            int startPointX, startPointY, endPointX, endPointY;
+            int firstLineWidth = 6;
+            int firstLineHeight = GridCellBounds(rowIndex,colIndex).Height / 2;
+            switch (groupFlag)
+            {
+                case 1:
+                    //小横线
+                    startPointX = GridCellBounds(rowIndex,colIndex).Left - firstLineWidth;
+                    startPointY = GridCellBounds(rowIndex,colIndex).Bottom - firstLineHeight;
+                    endPointX = GridCellBounds(rowIndex,colIndex).Left;
+                    endPointY = GridCellBounds(rowIndex,colIndex).Bottom - firstLineHeight;
+                    graphics.DrawLine(pen, startPointX, startPointY, endPointX, endPointY);
+                    //小竖线
+                    startPointX = GridCellBounds(rowIndex,colIndex).Left - firstLineWidth;
+                    startPointY = GridCellBounds(rowIndex,colIndex).Bottom - firstLineHeight;
+                    endPointX = GridCellBounds(rowIndex,colIndex).Left - firstLineWidth;
+                    endPointY = GridCellBounds(rowIndex,colIndex).Bottom;
+                    graphics.DrawLine(pen, startPointX, startPointY, endPointX, endPointY);
+                    break;
+                case 2:
+                    startPointX = GridCellBounds(rowIndex,colIndex).Left - firstLineWidth;
+                    startPointY = GridCellBounds(rowIndex,colIndex).Top;
+                    endPointX = GridCellBounds(rowIndex,colIndex).Left - firstLineWidth;
+                    endPointY = GridCellBounds(rowIndex,colIndex).Bottom;
+                    graphics.DrawLine(pen, startPointX, startPointY, endPointX, endPointY);
+                    break;
+                case 3:
+                    //小竖线
+                    startPointX = GridCellBounds(rowIndex,colIndex).Left - firstLineWidth;
+                    startPointY = GridCellBounds(rowIndex,colIndex).Top;
+                    endPointX = GridCellBounds(rowIndex,colIndex).Left - firstLineWidth;
+                    endPointY = GridCellBounds(rowIndex,colIndex).Top + firstLineHeight;
+                    graphics.DrawLine(pen, startPointX, startPointY, endPointX, endPointY);
+                    //小横线
+                    startPointX = GridCellBounds(rowIndex,colIndex).Left - firstLineWidth;
+                    startPointY = GridCellBounds(rowIndex,colIndex).Top + firstLineHeight;
+                    endPointX = GridCellBounds(rowIndex,colIndex).Left;
+                    endPointY = GridCellBounds(rowIndex,colIndex).Top + firstLineHeight;
+                    graphics.DrawLine(pen, startPointX, startPointY, endPointX, endPointY);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private Rectangle GridCellBounds(int rowIndex,int colIndex)
+        {
+            Rectangle rectangle = new Rectangle(this.GetCellDisplayRectangle(colIndex, rowIndex, false).X,
+                    this.GetCellDisplayRectangle(colIndex, rowIndex, false).Y,
+                    this.GetCellDisplayRectangle(colIndex, rowIndex, false).Width + this.GetCellDisplayRectangle(colIndex, rowIndex, false).Width,
+                    this.GetCellDisplayRectangle(colIndex, rowIndex, false).Height);
+
+            return rectangle;
         }
 
         protected override void OnRowPostPaint(DataGridViewRowPostPaintEventArgs e)
@@ -394,6 +480,9 @@ namespace EfwControls.CustomControl
             }
         }
     }
+
+    //分组线处理
+    public delegate void PaintGroupLineHandle(int rowIndex,out int colIndex,out int groupFlag);
 
     /// <summary>
     /// 网格画线所需的信息

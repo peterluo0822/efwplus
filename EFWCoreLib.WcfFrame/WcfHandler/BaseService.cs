@@ -23,16 +23,6 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
             IDataReply mCallBack = OperationContext.Current.GetCallbackChannel<IDataReply>();
             HeaderParameter para = HeaderOperater.GetHeaderValue(OperationContext.Current.RequestContext.RequestMessage);
             string ClientID = ClientManage.CreateClient(clientName, DateTime.Now, mCallBack, para.pluginname, para.replyidentify);
-            if (para.pluginname == "SuperPlugin")
-            {
-                //异步执行同步缓存
-                new Action(delegate ()
-                {
-                    //创建连接时候会将上级中间件的缓存同步到下级中间件
-                    DistributedCacheManage.SyncAllCache(mCallBack);
-
-                }).BeginInvoke(null, null);
-            }
             return ClientID;
         }
 
@@ -79,59 +69,9 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
             throw new NotImplementedException();
         }
 
-        public CacheIdentify DistributedCacheSyncIdentify(CacheIdentify cacheId)
+        public List<CacheObject> GetDistributedCacheData(List<CacheIdentify> cacheIdList)
         {
-            return DistributedCacheManage.CompareCache(cacheId);
-        }
-
-        public void DistributedCacheSync(CacheObject cache)
-        {
-            DistributedCacheManage.SyncLocalCache(cache);
-            //异步执行同步缓存
-            new Action<CacheObject>(delegate (CacheObject _cache)
-            {
-                List<ClientInfo> clist = ClientManage.ClientDic.Values.ToList().FindAll(x => (x.plugin == "SuperPlugin" && x.IsConnect == true));
-                foreach (var client in clist)
-                {
-                    //排除自己给自己同步缓存
-                    if (WcfGlobal.Identify == client.ServerIdentify)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        //将上级中间件的缓存同步到下级中间件
-                        client.dataReply.DistributedCacheSync(_cache);
-                    }
-                }
-            }).BeginInvoke(cache, null, null);
-        }
-
-        public void DistributedAllCacheSync(List<CacheObject> cachelist)
-        {
-            foreach (var cache in cachelist)
-            {
-                DistributedCacheManage.SyncLocalCache(cache);
-            }
-
-            //异步执行同步缓存
-            new Action<List<CacheObject>>(delegate (List<CacheObject> _cachelist)
-            {
-                List<ClientInfo> clist = ClientManage.ClientDic.Values.ToList().FindAll(x => (x.plugin == "SuperPlugin" && x.IsConnect == true));
-                foreach (var client in clist)
-                {
-                    //排除自己给自己同步缓存
-                    if (WcfGlobal.Identify == client.ServerIdentify)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        //将上级中间件的缓存同步到下级中间件
-                        client.dataReply.DistributedAllCacheSync(_cachelist);
-                    }
-                }
-            }).BeginInvoke(cachelist, null, null);
+            return DistributedCacheManage.GetCacheObjectList(cacheIdList);
         }
 
         public void RegisterRemotePlugin(string ServerIdentify, string[] plugin)
@@ -141,6 +81,17 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
             RemotePluginManage.RegisterRemotePlugin(callback, ServerIdentify, plugin);
         }
 
-       
+        public void Subscribe(string ServerIdentify, string clientId, string publishServiceName)
+        {
+            IDataReply callback = OperationContext.Current.GetCallbackChannel<IDataReply>();
+            PublishServiceManage.Subscribe(ServerIdentify,clientId, publishServiceName, callback);
+        }
+
+        public void UnSubscribe(string clientId, string publishServiceName)
+        {
+            PublishServiceManage.UnSubscribe(clientId, publishServiceName);
+        }
+
+        
     }
 }

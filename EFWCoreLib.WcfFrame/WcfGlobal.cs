@@ -30,9 +30,9 @@ namespace EFWCoreLib.WcfFrame
         static ServiceHost mFileRouterHost = null;
         public static void Main(StartType type)
         {
-            IsDebug= HostSettingConfig.GetValue("debug") == "1" ? true : false;
+            IsDebug = HostSettingConfig.GetValue("debug") == "1" ? true : false;
             HostName = HostSettingConfig.GetValue("hostname");
-            IsToken= HostSettingConfig.GetValue("token") == "1" ? true : false;
+            IsToken = HostSettingConfig.GetValue("token") == "1" ? true : false;
 
             switch (type)
             {
@@ -66,7 +66,7 @@ namespace EFWCoreLib.WcfFrame
 
                 case StartType.FileService:
                     AppGlobal.AppRootPath = System.Windows.Forms.Application.StartupPath + "\\";
-                    
+
                     mFileHost = new ServiceHost(typeof(FileService));
                     mFileHost.Open();
 
@@ -86,12 +86,17 @@ namespace EFWCoreLib.WcfFrame
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "文件路由服务启动完成");
                     break;
                 case StartType.SuperClient:
-                    RemotePluginManage.CreateSuperClient();
+                    SuperClient.CreateSuperClient();
+
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "超级客户端启动完成");
                     break;
                 case StartType.MiddlewareTask:
                     MiddlewareTask.StartTask();//开启定时任务
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "定时任务启动完成");
+                    break;
+                case StartType.PublishService://订阅
+                    PublishServiceManage.InitPublishService();
+                    MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "发布订阅服务完成");
                     break;
             }
 
@@ -102,7 +107,8 @@ namespace EFWCoreLib.WcfFrame
             switch (type)
             {
                 case StartType.BaseService:
-                    try {
+                    try
+                    {
                         if (mAppHost != null)
                         {
                             EFWCoreLib.WcfFrame.ClientLinkPoolCache.Dispose();
@@ -164,12 +170,15 @@ namespace EFWCoreLib.WcfFrame
                     }
                     break;
                 case StartType.SuperClient:
-                    RemotePluginManage.UnCreateSuperClient();
+                    SuperClient.UnCreateSuperClient();
                     MiddlewareLogHelper.WriterLog(LogType.TimingTaskLog, true, System.Drawing.Color.Red, "超级客户端已关闭！");
                     break;
                 case StartType.MiddlewareTask:
                     MiddlewareTask.StopTask();//停止任务
                     MiddlewareLogHelper.WriterLog(LogType.TimingTaskLog, true, System.Drawing.Color.Red, "定时任务已停止！");
+                    break;
+                case StartType.PublishService://订阅
+                    MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "订阅服务已停止");
                     break;
             }
         }
@@ -177,6 +186,6 @@ namespace EFWCoreLib.WcfFrame
 
     public enum StartType
     {
-        BaseService, FileService, RouterBaseService, RouterFileService, MiddlewareTask, SuperClient
+        BaseService, FileService, RouterBaseService, RouterFileService, MiddlewareTask, SuperClient, PublishService
     }
 }

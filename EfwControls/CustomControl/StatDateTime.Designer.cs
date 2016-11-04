@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.bdate = new DevComponents.Editors.DateTimeAdv.DateTimeInput();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.edate = new DevComponents.Editors.DateTimeAdv.DateTimeInput();
@@ -36,17 +35,17 @@
             this.tabControl1 = new DevComponents.DotNetBar.TabControl();
             this.tabControlPanel1 = new DevComponents.DotNetBar.TabControlPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tabItem1 = new DevComponents.DotNetBar.TabItem(this.components);
+            this.tabItem1 = new DevComponents.DotNetBar.TabItem();
             this.tabControlPanel4 = new DevComponents.DotNetBar.TabControlPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.tabItem4 = new DevComponents.DotNetBar.TabItem(this.components);
+            this.tabItem4 = new DevComponents.DotNetBar.TabItem();
             this.tabControlPanel3 = new DevComponents.DotNetBar.TabControlPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.tabItem3 = new DevComponents.DotNetBar.TabItem(this.components);
+            this.tabItem3 = new DevComponents.DotNetBar.TabItem();
             this.tabControlPanel2 = new DevComponents.DotNetBar.TabControlPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.tabItem2 = new DevComponents.DotNetBar.TabItem(this.components);
-            this.popup1 = new EfwControls.CustomControl.Popup(this.components);
+            this.tabItem2 = new DevComponents.DotNetBar.TabItem();
+            this.popup1 = new EfwControls.CustomControl.Popup();
             ((System.ComponentModel.ISupportInitialize)(this.bdate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edate)).BeginInit();
             this.panelEx1.SuspendLayout();

@@ -52,7 +52,7 @@
             // 
             // 
             this.buttonX15.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX15.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX15.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX15.Location = new System.Drawing.Point(97, 134);
             this.buttonX15.Name = "buttonX15";
             this.buttonX15.Size = new System.Drawing.Size(42, 28);
@@ -68,7 +68,7 @@
             // 
             // 
             this.buttonX16.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX16.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX16.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX16.Location = new System.Drawing.Point(3, 134);
             this.buttonX16.Name = "buttonX16";
             this.buttonX16.Size = new System.Drawing.Size(88, 28);
@@ -84,7 +84,7 @@
             // 
             // 
             this.buttonX10.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX10.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX10.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX10.Location = new System.Drawing.Point(97, 102);
             this.buttonX10.Name = "buttonX10";
             this.buttonX10.Size = new System.Drawing.Size(42, 28);
@@ -100,7 +100,7 @@
             // 
             // 
             this.buttonX11.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX11.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX11.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX11.Location = new System.Drawing.Point(50, 102);
             this.buttonX11.Name = "buttonX11";
             this.buttonX11.Size = new System.Drawing.Size(42, 28);
@@ -127,7 +127,7 @@
             this.panelEx1.Controls.Add(this.buttonX3);
             this.panelEx1.Controls.Add(this.buttonX4);
             this.panelEx1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelEx1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.panelEx1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.panelEx1.Location = new System.Drawing.Point(0, 0);
             this.panelEx1.Name = "panelEx1";
             this.panelEx1.Size = new System.Drawing.Size(143, 165);
@@ -147,7 +147,7 @@
             // 
             // 
             this.buttonX12.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX12.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX12.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX12.Location = new System.Drawing.Point(3, 102);
             this.buttonX12.Name = "buttonX12";
             this.buttonX12.Size = new System.Drawing.Size(42, 28);
@@ -164,7 +164,7 @@
             // 
             this.btnClear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.btnClear.CausesValidation = false;
-            this.btnClear.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnClear.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnClear.Location = new System.Drawing.Point(3, 4);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(42, 28);
@@ -180,7 +180,7 @@
             // 
             // 
             this.buttonX6.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX6.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX6.Location = new System.Drawing.Point(97, 70);
             this.buttonX6.Name = "buttonX6";
             this.buttonX6.Size = new System.Drawing.Size(42, 28);
@@ -196,7 +196,7 @@
             // 
             // 
             this.buttonX7.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX7.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX7.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX7.Location = new System.Drawing.Point(50, 70);
             this.buttonX7.Name = "buttonX7";
             this.buttonX7.Size = new System.Drawing.Size(42, 28);
@@ -213,7 +213,7 @@
             // 
             this.buttonX17.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.buttonX17.CausesValidation = false;
-            this.buttonX17.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX17.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX17.Location = new System.Drawing.Point(51, 4);
             this.buttonX17.Name = "buttonX17";
             this.buttonX17.Size = new System.Drawing.Size(88, 28);
@@ -229,7 +229,7 @@
             // 
             // 
             this.buttonX8.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX8.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX8.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX8.Location = new System.Drawing.Point(3, 70);
             this.buttonX8.Name = "buttonX8";
             this.buttonX8.Size = new System.Drawing.Size(42, 28);
@@ -245,7 +245,7 @@
             // 
             // 
             this.buttonX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX2.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX2.Location = new System.Drawing.Point(97, 38);
             this.buttonX2.Name = "buttonX2";
             this.buttonX2.Size = new System.Drawing.Size(42, 28);
@@ -261,7 +261,7 @@
             // 
             // 
             this.buttonX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.buttonX3.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX3.Location = new System.Drawing.Point(50, 38);
             this.buttonX3.Name = "buttonX3";
             this.buttonX3.Size = new System.Drawing.Size(42, 28);
@@ -278,7 +278,7 @@
             // 
             this.buttonX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.buttonX4.CausesValidation = false;
-            this.buttonX4.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX4.Location = new System.Drawing.Point(3, 38);
             this.buttonX4.Name = "buttonX4";
             this.buttonX4.Size = new System.Drawing.Size(42, 28);
