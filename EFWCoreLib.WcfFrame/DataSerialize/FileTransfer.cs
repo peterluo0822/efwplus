@@ -26,6 +26,8 @@ namespace EFWCoreLib.WcfFrame.DataSerialize
         public string FileExt { get; set; }//带.
         [MessageBodyMember]
         public Stream FileStream { get; set; }
+        [MessageHeader]
+        public int FileType { get; set; }//文件类型 0：filebuffer目录  1：Upgrade升级包 2：Mongodb
     }
     /// <summary>
     /// 上传文件后返回结果数据
@@ -50,6 +52,8 @@ namespace EFWCoreLib.WcfFrame.DataSerialize
         public string DownKey { get; set; }
         [MessageHeader]
         public string FileName { get; set; }
+        [MessageHeader]
+        public int FileType { get; set; }//文件类型 0：filebuffer目录  1：Upgrade升级包 2：Mongodb
     }
     /// <summary>
     /// 下载文件后返回结果数据

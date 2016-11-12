@@ -107,7 +107,7 @@
     <Compile Include="DataSerialize\ServiceResponseData.cs" />
     <Compile Include="HostSettingConfig.cs" />
     <Compile Include="MiddlewareLogHelper.cs" />
-    <Compile Include="MiddlewareTask.cs" />
+    <Compile Include="Utility\MiddlewareTask.cs" />
     <Compile Include="Controller\ModulePluginExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SDMessageHeader\HeaderOperater.cs" />
@@ -123,12 +123,12 @@
     <Compile Include="ServerManage\RemotePluginManage.cs" />
     <Compile Include="ServerManage\RouterManage.cs" />
     <Compile Include="ServerManage\SuperClient.cs" />
-    <Compile Include="SSO\AuthResult.cs" />
-    <Compile Include="SSO\ConvertHelper.cs" />
-    <Compile Include="SSO\SsoHelper.cs" />
-    <Compile Include="SSO\TokenInfo.cs" />
-    <Compile Include="SSO\TokenManager.cs" />
-    <Compile Include="SSO\Utility.cs" />
+    <Compile Include="Utility\SSO\AuthResult.cs" />
+    <Compile Include="Utility\SSO\ConvertHelper.cs" />
+    <Compile Include="Utility\SSO\SsoHelper.cs" />
+    <Compile Include="Utility\SSO\TokenInfo.cs" />
+    <Compile Include="Utility\SSO\TokenManager.cs" />
+    <Compile Include="Utility\SSO\Utility.cs" />
     <Compile Include="WcfGlobal.cs" />
     <Compile Include="WcfHandler\BaseService.cs" />
     <Compile Include="WcfHandler\Callback\ReplyDataCallback.cs" />
@@ -150,6 +150,10 @@
       <Project>{03596414-2345-4bba-994b-90eef4dec428}</Project>
       <Name>EFWCoreLib.WinformFrame</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utility\Mongodb\" />
+    <Folder Include="Utility\Upgrade\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

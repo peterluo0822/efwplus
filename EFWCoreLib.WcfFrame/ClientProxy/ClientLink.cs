@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -22,6 +23,7 @@ namespace EFWCoreLib.WcfFrame
     /// </summary>
     public class ClientLink : IDisposable
     {
+        #region 变量
         /// <summary>
         /// 服务插件名称
         /// </summary>
@@ -39,10 +41,12 @@ namespace EFWCoreLib.WcfFrame
         private DuplexChannelFactory<IClientHandler> mClientChannelFactory;
         private ChannelFactory<IFileHandler> mfileChannelFactory = null;
         private Action<bool, int> backConfig = null;//参数配置回调
-        //private Action createconnAction = null;//创建连接后回调
+        private Action createconnAction = null;//创建连接后回调
         private string wcfendpoint = "wcfendpoint";//服务地址
         private string fileendpoint = "fileendpoint";//文件服务地址
+        #endregion
 
+        #region 初始化
         /// <summary>
         /// 初始化通讯连接
         /// </summary>
@@ -60,26 +64,18 @@ namespace EFWCoreLib.WcfFrame
         {
             InitComm(clientname, pluginname);
         }
+
         /// <summary>
         /// 初始化通讯连接
         /// </summary>
         /// <param name="clientname">客户端名称</param>
         /// <param name="pluginname">插件名称</param>
-        /// <param name="actionConfig">获取消息配置</param>
-        public ClientLink(string clientname, string pluginname, Action<bool, int> actionConfig)
+        /// <param name="_wcfendpoint">终结结配置名称</param>
+        public ClientLink(string clientname, string pluginname, string _wcfendpoint)
         {
-            backConfig = actionConfig;
-            InitComm(clientname, pluginname);
-        }
-
-        public ClientLink(string clientname, string pluginname, Action<bool, int> actionConfig, string _wcfendpoint)
-        {
-            backConfig = actionConfig;
             wcfendpoint = _wcfendpoint;
             InitComm(clientname, pluginname);
         }
-
-
 
         private void InitComm(string clientname, string pluginname)
         {
@@ -101,6 +97,7 @@ namespace EFWCoreLib.WcfFrame
             if (mfileChannelFactory == null)
                 mfileChannelFactory = new ChannelFactory<IFileHandler>(fileendpoint);
         }
+        #endregion
 
         #region IDisposable 成员
         /// <summary>
@@ -249,8 +246,23 @@ namespace EFWCoreLib.WcfFrame
             }
 
             if (backConfig != null)
+            {
                 backConfig(IsMessage, MessageTime);
-
+            }
+            if (createconnAction != null)
+            {
+                createconnAction();
+            }
+        }
+        /// <summary>
+        /// 创建连接带回调的
+        /// </summary>
+        /// <param name="_createconnAction"></param>
+        public void CreateConnection(Action _createconnAction, Action<bool, int> actionConfig)
+        {
+            backConfig = actionConfig;
+            createconnAction = _createconnAction;
+            CreateConnection();
         }
 
         /// <summary>
@@ -491,6 +503,13 @@ namespace EFWCoreLib.WcfFrame
                 clientObj.WcfService = wcfHandlerService;
                 if (isRequest == true)//避免死循环
                     Heartbeat();//重连之后必须再次调用心跳
+
+                if (createconnAction != null)
+                {
+                    createconnAction();
+                }
+
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "重新连接上级中间件成功！");
             }
             catch
             {
@@ -553,11 +572,13 @@ namespace EFWCoreLib.WcfFrame
                     //mChannelFactory.Abort();//关闭原来通道
                     (_wcfService as IContextChannel).Abort();
                     CreateConnection();
+                    MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "上级中间件已丢失客户端信息，重新创建客户端连接成功！");
                 }
                 return ret;
             }
             catch
             {
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "上级中间件失去连接！");
                 ServerConfigRequestState = false;
                 ReConnection(false);//连接服务主机失败，重连
                 return false;
@@ -630,6 +651,7 @@ namespace EFWCoreLib.WcfFrame
         }
         #endregion
 
+        #region 测试服务程序调用
         /// <summary>
         /// 获取所有服务插件的控制器和方法
         /// </summary>
@@ -646,6 +668,7 @@ namespace EFWCoreLib.WcfFrame
 
             return list;
         }
+        #endregion
 
         #region 上传下载文件
         /// <summary>
@@ -665,24 +688,85 @@ namespace EFWCoreLib.WcfFrame
         /// <returns>上传成功后返回的文件名</returns>
         public string UpLoadFile(string filepath, Action<int> action)
         {
+            FileInfo finfo = new FileInfo(filepath);
+            if (finfo.Exists == false)
+                throw new Exception("文件不存在！");
+
+            UpFile uf = new UpFile();
+            uf.clientId = clientObj == null ? "" : clientObj.ClientID;
+            uf.UpKey = Guid.NewGuid().ToString();
+            uf.FileExt = finfo.Extension;
+            uf.FileName = finfo.Name;
+            uf.FileSize = finfo.Length;
+            uf.FileStream = finfo.OpenRead();
+            uf.FileType = 0;
+
+            return UpLoadFile(uf, action);
+        }
+        
+        /// <summary>
+        /// 下载文件
+        /// </summary>
+        /// <param name="filename">下载文件名</param>
+        /// <returns>下载成功后返回存储在本地文件路径</returns>
+        public string DownLoadFile(string filename)
+        {
+            return DownLoadFile(filename, null);
+        }
+        /// <summary>
+        /// 下载文件，有进度显示
+        /// </summary>
+        /// <param name="filename">下载文件名</param>
+        /// <param name="action">进度0-100</param>
+        /// <returns>下载成功后返回存储在本地文件路径</returns>
+        public string DownLoadFile(string filename, Action<int> action)
+        {
+            if (string.IsNullOrEmpty(filename))
+                throw new Exception("文件名不为空！");
+
+            //string filebufferpath = AppRootPath + @"filebuffer\";
+            if (!Directory.Exists(filebufferpath))
+            {
+                Directory.CreateDirectory(filebufferpath);
+            }
+            string filepath = filebufferpath + filename;
+            if (File.Exists(filepath))
+            {
+                File.Delete(filepath);
+            }
+
+            DownFile df = new DownFile();
+            df.clientId = clientObj == null ? "" : clientObj.ClientID;
+            df.DownKey = Guid.NewGuid().ToString();
+            df.FileName = filename;
+            df.FileType = 0;
+
+            DownLoadFile(df, filepath, action);
+            //MemoryStream ms = DownLoadFile(df, action);
+            //FileStream  fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
+            //BinaryWriter bw = new BinaryWriter(fs);
+            //bw.Write(ms.ToArray());
+            //fs.Close();
+            //ms.Close();
+
+            return filepath;
+        }
+
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        /// <param name="uf">上传文件对象</param>
+        /// <param name="action">进度条委托</param>
+        /// <returns>返回上传的结果</returns>
+        public string UpLoadFile(UpFile uf, Action<int> action)
+        {
+            if (uf == null) throw new Exception("上传文件对象不能为空！");
 
             IFileHandler fileHandlerService = null;
             try
             {
-                FileInfo finfo = new FileInfo(filepath);
-                if (finfo.Exists == false)
-                    throw new Exception("文件不存在！");
-
 
                 fileHandlerService = mfileChannelFactory.CreateChannel();
-
-                UpFile uf = new UpFile();
-                uf.clientId = clientObj == null ? "" : clientObj.ClientID;
-                uf.UpKey = Guid.NewGuid().ToString();
-                uf.FileExt = finfo.Extension;
-                uf.FileName = finfo.Name;
-                uf.FileSize = finfo.Length;
-                uf.FileStream = finfo.OpenRead();
 
                 if (action != null)
                     getupdownprogress(uf.FileStream, uf.FileSize, action);//获取进度条
@@ -710,38 +794,17 @@ namespace EFWCoreLib.WcfFrame
         /// <summary>
         /// 下载文件
         /// </summary>
-        /// <param name="filename">下载文件名</param>
-        /// <returns>下载成功后返回存储在本地文件路径</returns>
-        public string DownLoadFile(string filename)
+        /// <param name="df">下载文件对象</param>
+        /// <param name="ms">接收下载文件的内存流对象</param>
+        /// <param name="action">进度条委托</param>
+        public void DownLoadFile(DownFile df, MemoryStream ms, Action<int> action)
         {
-            return DownLoadFile(filename, null);
-        }
-        /// <summary>
-        /// 下载文件，有进度显示
-        /// </summary>
-        /// <param name="filename">下载文件名</param>
-        /// <param name="action">进度0-100</param>
-        /// <returns>下载成功后返回存储在本地文件路径</returns>
-        public string DownLoadFile(string filename, Action<int> action)
-        {
+            if (df == null) throw new Exception("下载文件对象不能为空！");
+
             IFileHandler fileHandlerService = null;
             try
             {
-                if (string.IsNullOrEmpty(filename))
-                    throw new Exception("文件名不为空！");
-
-                //string filebufferpath = AppRootPath + @"filebuffer\";
-                if (!Directory.Exists(filebufferpath))
-                {
-                    Directory.CreateDirectory(filebufferpath);
-                }
-
                 fileHandlerService = mfileChannelFactory.CreateChannel();
-                DownFile df = new DownFile();
-                df.clientId = clientObj == null ? "" : clientObj.ClientID;
-                df.DownKey = Guid.NewGuid().ToString();
-                df.FileName = filename;
-
 
                 DownFileResult result = new DownFileResult();
 
@@ -749,13 +812,8 @@ namespace EFWCoreLib.WcfFrame
 
                 if (result.IsSuccess)
                 {
-                    string filepath = filebufferpath + filename;
-                    if (File.Exists(filepath))
-                    {
-                        File.Delete(filepath);
-                    }
-
-                    FileStream fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
+                    if (ms == null)
+                        ms = new MemoryStream();
 
                     int bufferlen = 4096;
                     int count = 0;
@@ -767,13 +825,8 @@ namespace EFWCoreLib.WcfFrame
 
                     while ((count = result.FileStream.Read(buffer, 0, bufferlen)) > 0)
                     {
-                        fs.Write(buffer, 0, count);
+                        ms.Write(buffer, 0, count);
                     }
-                    //清空缓冲区
-                    fs.Flush();
-                    //关闭流
-                    fs.Close();
-                    return filepath;
                 }
                 else
                     throw new Exception("下载文件失败！");
@@ -788,7 +841,60 @@ namespace EFWCoreLib.WcfFrame
                     (fileHandlerService as IContextChannel).Abort();
             }
         }
+        /// <summary>
+        /// 下载文件
+        /// </summary>
+        /// <param name="df">下载文件对象</param>
+        /// <param name="filepath">存放下载文件的路径</param>
+        /// <param name="action">进度条委托</param>
+        public void DownLoadFile(DownFile df, string filepath, Action<int> action)
+        {
+            if (df == null) throw new Exception("下载文件对象不能为空！");
 
+            IFileHandler fileHandlerService = null;
+            try
+            {
+                fileHandlerService = mfileChannelFactory.CreateChannel();
+
+                DownFileResult result = new DownFileResult();
+
+                result = fileHandlerService.DownLoadFile(df);
+
+                if (result.IsSuccess)
+                {
+                    FileStream fs = new FileStream(filepath,FileMode.Create, FileAccess.Write);
+
+                    int bufferlen = 4096;
+                    int count = 0;
+                    byte[] buffer = new byte[bufferlen];
+
+                    if (action != null)
+                        getupdownprogress(result.FileStream, result.FileSize, action);//获取进度条
+
+
+                    while ((count = result.FileStream.Read(buffer, 0, bufferlen)) > 0)
+                    {
+                        fs.Write(buffer, 0, count);
+                    }
+
+                    //清空缓冲区
+                    fs.Flush();
+                    //关闭流
+                    fs.Close();
+                }
+                else
+                    throw new Exception("下载文件失败！");
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message + "\n下载文件失败！");
+            }
+            finally
+            {
+                if (fileHandlerService != null)
+                    (fileHandlerService as IContextChannel).Abort();
+            }
+        }
         private void getprogress(long filesize, long readnum, ref int progressnum)
         {
             //decimal percent = Convert.ToDecimal(100 / Convert.ToDecimal(filesize / bufferlen));

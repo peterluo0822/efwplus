@@ -21,12 +21,14 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             superclient = new ClientLink(WcfGlobal.HostName);
             try
             {
-                superclient.CreateConnection();
-                //以后可以做成配置方式
-                foreach (var item in PublishServiceManage.serviceDic.Keys)
+                superclient.CreateConnection((() =>
                 {
-                    superclient.Subscribe(item);//订阅服务?
-                }
+                    //以后可以做成配置方式
+                    foreach (var item in PublishServiceManage.serviceDic.Keys)
+                    {
+                        superclient.Subscribe(item);//订阅服务?
+                    }
+                }), null);
             }
             catch
             {

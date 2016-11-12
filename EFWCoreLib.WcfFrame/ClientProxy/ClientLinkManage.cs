@@ -43,15 +43,15 @@ namespace EFWCoreLib.WcfFrame
                         return ClientLinkDic[pluginname];
                     }
 
-                    link = new ClientLink(null, pluginname, ((ism, met) =>
-                    {
-                        IsMessage = ism;
-                        MessageTime = met;
-                    }));
+                    link = new ClientLink(null, pluginname);
                     link.clientObj.Token = Token;//赋值令牌
                     ClientLinkDic.Add(pluginname, link);
                 }
-                link.CreateConnection();
+                link.CreateConnection(null, ((ism, met) =>
+                {
+                    IsMessage = ism;
+                    MessageTime = met;
+                }));
                 return link;
             }
             catch (Exception err)
@@ -71,15 +71,15 @@ namespace EFWCoreLib.WcfFrame
                         return ClientLinkDic[pluginname];
                     }
 
-                    link = new ClientLink(null, pluginname, ((ism, met) =>
-                    {
-                        IsMessage = ism;
-                        MessageTime = met;
-                    }), wcfendpoint);
+                    link = new ClientLink(null, pluginname, wcfendpoint);
                     link.clientObj.Token = Token;//赋值令牌
                     ClientLinkDic.Add(pluginname, link);
                 }
-                link.CreateConnection();
+                link.CreateConnection(null, ((ism, met) =>
+                 {
+                     IsMessage = ism;
+                     MessageTime = met;
+                 }));
                 return link;
             }
             catch (Exception err)

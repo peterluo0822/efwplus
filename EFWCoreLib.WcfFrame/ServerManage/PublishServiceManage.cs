@@ -4,8 +4,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EFWCoreLib.CoreFrame.Business.AttributeInfo;
 using EFWCoreLib.CoreFrame.Common;
+using EFWCoreLib.WcfFrame.ClientController;
 using EFWCoreLib.WcfFrame.DataSerialize;
+using EFWCoreLib.WcfFrame.ServerController;
 using EFWCoreLib.WcfFrame.WcfHandler;
 
 namespace EFWCoreLib.WcfFrame.ServerManage
@@ -33,9 +36,17 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             serviceObj = new PublishServiceObject();
             serviceObj.publishServiceName = "RemotePlugin";//远程插件服务
             serviceDic.Add("RemotePlugin", serviceObj);
+
+            serviceObj = new PublishServiceObject();
+            serviceObj.publishServiceName = "Upgrade";//文件升级服务
+            serviceDic.Add("Upgrade", serviceObj);
+
+            serviceObj = new PublishServiceObject();
+            serviceObj.publishServiceName = "MongodbSync";//Mongodb数据同步
+            serviceDic.Add("MongodbSync", serviceObj);
         }
 
-        public static void Subscribe(string ServerIdentify,string clientId, string publishServiceName, IDataReply callback)
+        public static void Subscribe(string ServerIdentify, string clientId, string publishServiceName, IDataReply callback)
         {
             if (ServerIdentify == WcfGlobal.Identify) return;//不能订阅自己
 
@@ -74,7 +85,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
         public static void SendNotify(string publishServiceName)
         {
             List<Subscriber> list = subscriberList.FindAll(x => x.publishServiceName == publishServiceName);
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 item.callback.Notify(publishServiceName);
             }
@@ -159,7 +170,32 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                     if (localPlugin.PluginDic.Count > 0)
                         _clientLink.RegisterRemotePlugin(WcfGlobal.Identify, localPlugin.PluginDic.Keys.ToArray());
                     break;
+                default://
+                    ICustomSubscriber sub = new CustomSubscriber();
+                    sub.StartProcess(_clientLink);
+                    break;
             }
         }
     }
+    public interface ICustomSubscriber
+    {
+        void StartProcess(ClientLink _superClient);
+    }
+    /// <summary>
+    /// 自定义订阅者
+    /// </summary>
+    public class CustomSubscriber : WcfClientController, ICustomSubscriber
+    {
+        /// <summary>
+        /// 开始处理订阅
+        /// </summary>
+        /// <param name="_superClient">超级客户端</param>
+        public void StartProcess(ClientLink _superClient)
+        {
+            //读取配置文件，直接调用后台服务
+            //to do
+            return;
+        }
+    }
+
 }

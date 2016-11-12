@@ -122,6 +122,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
         {
             foreach(var co in coList)
             {
+
                 SyncLocalCache(co);
             }
         }
@@ -130,8 +131,8 @@ namespace EFWCoreLib.WcfFrame.ServerManage
         public static List<CacheIdentify> GetCacheIdentifyList()
         {
             List<CacheIdentify> ciList = new List<CacheIdentify>();
-            
-                foreach (string cn in _cacheNameList)
+
+            foreach (string cn in _cacheNameList)
             {
                 ciList.Add(GetCacheIdentify(cn));
             }
@@ -172,7 +173,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             return cacheId;
         }
         /// <summary>
-        /// 比较后不同的标识
+        /// 比较后不同的标识（下级的CacheIdentify与上级的对比）
         /// </summary>
         /// <returns></returns>
         private static CacheIdentify CompareCache(CacheIdentify _cacheId)
@@ -188,24 +189,25 @@ namespace EFWCoreLib.WcfFrame.ServerManage
 
             if (_localCache.Contains(_cacheId.cachename))
             {
-                CacheObject co = _localCache.GetData(_cacheId.cachename) as CacheObject;
-                if (_cacheId.identify != co.identify)
+                CacheIdentify ci = GetCacheIdentify(_cacheId.cachename);
+                if (_cacheId.identify != ci.identify)
                 {
                     //循环判断待同步的新增和修改，本地时间搓小于远程时间搓就修改
-                    foreach (var t in _cacheId.keytimestamps)
+                    foreach (var t in ci.keytimestamps)
                     {
                         //新增的
-                        if (co.cacheValue.FindIndex(x => (x.key == t.Key)) == -1)
+                        if (_cacheId.keytimestamps.ContainsKey(t.Key) == false)
                         {
                             cacheId.keytimestamps.Add(t);
+                            continue;
                         }
                         //修改的
-                        if (co.cacheValue.FindIndex(x => (x.key == t.Key && t.Value > x.timestamp)) > -1)
+                        if (_cacheId.keytimestamps[t.Key] < t.Value)
                         {
                             cacheId.keytimestamps.Add(t);
+                            continue;
                         }
                     }
-
                     //循环判断本地的删除，本地时间搓小于远程identify的就会删除
                     //删除是打删除标记，所以不存在移除，都进入修改列表
                 }
@@ -213,7 +215,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             }
             else
             {
-                return _cacheId;
+                return cacheId;
             }
         }
         /// <summary>
