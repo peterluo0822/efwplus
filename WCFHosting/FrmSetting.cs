@@ -97,6 +97,12 @@ namespace WCFHosting
             txtconnstr.Text = HostDataBaseConfig.GetConnString();
         }
 
+        private void btnSvcConfig_Click(object sender, EventArgs e)
+        {
+            string appconfig = AppGlobal.AppRootPath + "efwplusServer.exe.config";
+            string svcconfigExe = AppGlobal.AppRootPath + "SvcConfigEditor.exe";
 
+            System.Diagnostics.Process.Start(svcconfigExe,appconfig);
+        }
     }
 }

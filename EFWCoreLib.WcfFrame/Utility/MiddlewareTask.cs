@@ -23,7 +23,7 @@ namespace EFWCoreLib.CoreFrame.Common
         /// <summary>
         /// 导入任务
         /// </summary>
-        private static void LoadTask()
+        private static void LoadTask(List<TimingTask> _taskList)
         {
             TaskConfigList = LoadXML();
             foreach (var item in TaskConfigList)
@@ -33,7 +33,7 @@ namespace EFWCoreLib.CoreFrame.Common
                 timing.TimingTaskExcuter = task;
                 timing.TimingTaskType = item.execfrequency;
                 timing.ExcuteTime = item.shorttime;
-                taskList.Add(timing);
+                _taskList.Add(timing);
             }
         }
         /// <summary>
@@ -44,7 +44,8 @@ namespace EFWCoreLib.CoreFrame.Common
             taskList = new List<TimingTask>();
             taskmanager = new TimingTaskManager();
 
-            LoadTask();
+            LoadTask(taskList);//加载配置的定时任务
+            WcfFrame.Utility.Upgrade.ClientUpgradeManager.LoadTask(taskList);//加载升级定时任务
 
             if (taskList.Count > 0)
             {

@@ -16,7 +16,9 @@ namespace EFWCoreLib.WcfFrame.ServerManage
     /// </summary>
     public class FileManage
     {
-        public static string filebufferpath= AppGlobal.AppRootPath + @"filebuffer\";
+        public static string filebufferpath= AppGlobal.AppRootPath + @"FileStore\filebuffer\";//缓存文件路径
+        public static string clientupgradepath= AppGlobal.AppRootPath + @"FileStore\ClientUpgrade\";//客户端升级包路径
+        public static string serverupgradepath = AppGlobal.AppRootPath + @"FileStore\ClientUpgrade\";//服务端升级包路径
 
         private static void getprogress(long filesize, long readnum, ref int progressnum)
         {
@@ -285,6 +287,26 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             DownFileResult result = new DownFileResult();
             if (ms == null)
                 ms = new MemoryStream();
+
+            string path = clientupgradepath + filedata.FileName;
+            if (!File.Exists(path))
+            {
+                result.IsSuccess = false;
+                result.FileSize = 0;
+                result.Message = "服务器不存在此文件";
+                result.FileStream = ms;
+                return result;
+            }
+
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+            fs.CopyTo(ms);
+
+            ms.Position = 0;  //重要，不为0的话，客户端读取有问题
+            result.IsSuccess = true;
+            result.FileSize = ms.Length;
+            result.FileStream = ms;
+            fs.Flush();
+            fs.Close();
 
             return result;
         }

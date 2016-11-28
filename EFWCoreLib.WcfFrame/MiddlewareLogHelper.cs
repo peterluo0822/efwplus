@@ -53,7 +53,7 @@ namespace EFWCoreLib.CoreFrame.Common
                 }
                 if (string.IsNullOrEmpty(info) == false)
                 {
-                    string filepath = AppGlobal.AppRootPath + LogNameDic[item.Key] + "\\" + DateTime.Now.ToString("yyyyMM") + ".txt";
+                    string filepath = AppGlobal.AppRootPath +"ServerLog\\"+ LogNameDic[item.Key] + "\\" + DateTime.Now.ToString("yyyyMM") + ".txt";
                     if (System.IO.Directory.Exists(AppGlobal.AppRootPath + LogNameDic[item.Key]) == false)
                     {
                         System.IO.Directory.CreateDirectory(AppGlobal.AppRootPath + LogNameDic[item.Key]);

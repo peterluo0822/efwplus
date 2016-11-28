@@ -30,9 +30,9 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                     }
                 }), null);
             }
-            catch
+            catch (Exception e)
             {
-                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "连接上级中间件失败！");
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "连接上级中间件失败！" + e.Message);
             }
         }
 

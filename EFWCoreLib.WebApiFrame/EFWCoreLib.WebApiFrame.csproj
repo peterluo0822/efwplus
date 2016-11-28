@@ -92,6 +92,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApiGlobal.cs" />
     <Compile Include="WebAPI\FileController.cs" />
+    <Compile Include="WebAPI\HttpController.cs" />
     <Compile Include="WebAPI\LoginController.cs" />
     <Compile Include="WebAPI\PluginAssembliesResolver.cs" />
     <Compile Include="WebAPI\PluginHttpControllerActivator.cs" />

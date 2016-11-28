@@ -122,7 +122,12 @@ namespace EFWCoreLib.CoreFrame.Common
             des.DesEncrypt();
             return des.OutString;
         }
-		
+		/// <summary>
+        /// 转换字符串
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="defaultVal"></param>
+        /// <returns></returns>
 		public static string ToString(object val, string defaultVal)
         {
             if (val == null || val.Equals(DBNull.Value))

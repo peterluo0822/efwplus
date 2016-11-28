@@ -94,6 +94,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientProxy\BaseServiceClient.cs" />
+    <Compile Include="ClientProxy\FileServiceClient.cs" />
     <Compile Include="Controller\WcfClientController.cs" />
     <Compile Include="ClientProxy\CHDEPConnection.cs" />
     <Compile Include="ClientProxy\ClientLink.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Utility\SSO\TokenInfo.cs" />
     <Compile Include="Utility\SSO\TokenManager.cs" />
     <Compile Include="Utility\SSO\Utility.cs" />
+    <Compile Include="Utility\Upgrade\ClientUpgradeManager.cs" />
     <Compile Include="WcfGlobal.cs" />
     <Compile Include="WcfHandler\BaseService.cs" />
     <Compile Include="WcfHandler\Callback\ReplyDataCallback.cs" />
@@ -153,7 +156,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utility\Mongodb\" />
-    <Folder Include="Utility\Upgrade\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

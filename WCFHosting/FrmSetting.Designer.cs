@@ -70,13 +70,14 @@
             this.txtconnstr = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.txtlocalurl = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.txtfileurl = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtwcfurl = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.txtlocalurl = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
+            this.btnSvcConfig = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -547,6 +548,24 @@
             this.tabPage4.Text = "通讯连接地址";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // txtlocalurl
+            // 
+            this.txtlocalurl.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtlocalurl.Location = new System.Drawing.Point(9, 141);
+            this.txtlocalurl.Name = "txtlocalurl";
+            this.txtlocalurl.Size = new System.Drawing.Size(405, 23);
+            this.txtlocalurl.TabIndex = 10;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label14.Location = new System.Drawing.Point(6, 121);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(152, 17);
+            this.label14.TabIndex = 9;
+            this.label14.Text = "本地中间件业务请求地址：";
+            // 
             // txtfileurl
             // 
             this.txtfileurl.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -586,6 +605,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.btnSvcConfig);
             this.panel1.Controls.Add(this.btnOk);
             this.panel1.Controls.Add(this.btnCancel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -594,23 +614,15 @@
             this.panel1.Size = new System.Drawing.Size(430, 61);
             this.panel1.TabIndex = 19;
             // 
-            // txtlocalurl
+            // btnSvcConfig
             // 
-            this.txtlocalurl.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtlocalurl.Location = new System.Drawing.Point(9, 141);
-            this.txtlocalurl.Name = "txtlocalurl";
-            this.txtlocalurl.Size = new System.Drawing.Size(405, 23);
-            this.txtlocalurl.TabIndex = 10;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label14.Location = new System.Drawing.Point(6, 121);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(152, 17);
-            this.label14.TabIndex = 9;
-            this.label14.Text = "本地中间件业务请求地址：";
+            this.btnSvcConfig.Location = new System.Drawing.Point(15, 21);
+            this.btnSvcConfig.Name = "btnSvcConfig";
+            this.btnSvcConfig.Size = new System.Drawing.Size(90, 28);
+            this.btnSvcConfig.TabIndex = 3;
+            this.btnSvcConfig.Text = "WCF服务配置";
+            this.btnSvcConfig.UseVisualStyleBackColor = true;
+            this.btnSvcConfig.Click += new System.EventHandler(this.btnSvcConfig_Click);
             // 
             // FrmSetting
             // 
@@ -692,5 +704,6 @@
         private System.Windows.Forms.CheckBox cktask;
         private System.Windows.Forms.TextBox txtlocalurl;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button btnSvcConfig;
     }
 }

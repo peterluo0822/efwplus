@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.SelfHost;
 using EFWCoreLib.CoreFrame.Common;
+using EFWCoreLib.CoreFrame.Init;
 
 namespace EFWCoreLib.WebFrame.WebAPI
 {
@@ -48,8 +49,8 @@ namespace EFWCoreLib.WebFrame.WebAPI
                        DateTimeFormat = "yyyy-MM-dd HH:mm:ss"
                    }
                );
-
-            //(config as HttpConfiguration).MapHttpAttributeRoutes();
+            //config.VirtualPathRoot= AppGlobal.AppRootPath + @"Http\";
+           // (config as HttpConfiguration).MapHttpAttributeRoutes();
             config.MaxBufferSize = 2097152;//最大缓存值2M
             config.MaxReceivedMessageSize = 2097152;
             //config.TransferMode = System.ServiceModel.TransferMode.Buffered;
@@ -58,6 +59,11 @@ namespace EFWCoreLib.WebFrame.WebAPI
                 "efwplusApi",
                 "efwplusApi/{plugin}/{controller}/{action}/{id}",
                 new { id = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+                "Http",
+                "HttpEP/{id}",
+                new { plugin= "coresys", controller = "http", action = "html",id= RouteParameter.Optional });
 
 
             //指定插件的程序集

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EFWCoreLib.WcfFrame.ClientProxy;
 using EFWCoreLib.WcfFrame.WcfHandler;
 
 namespace EFWCoreLib.WcfFrame
@@ -16,7 +17,7 @@ namespace EFWCoreLib.WcfFrame
         /// <summary>
         /// 业务数据服务
         /// </summary>
-        public IClientHandler WcfService { get; set; }
+        public DuplexBaseServiceClient WcfService { get; set; }
         /// <summary>
         /// 客户端回调服务
         /// </summary>

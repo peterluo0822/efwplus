@@ -19,7 +19,10 @@ namespace EFWCoreLib.WebFrame.WebAPI
             {
                 list.AddRange(p.Value.DllList);
             }
-            list.Add(System.Reflection.Assembly.Load("EFWCoreLib"));
+            list.Add(System.Reflection.Assembly.Load("EFWCoreLib.CoreFrame"));
+            list.Add(System.Reflection.Assembly.Load("EFWCoreLib.WinformFrame"));
+            list.Add(System.Reflection.Assembly.Load("EFWCoreLib.WcfFrame"));
+            list.Add(System.Reflection.Assembly.Load("EFWCoreLib.WebApiFrame"));
             return list;
         }
 

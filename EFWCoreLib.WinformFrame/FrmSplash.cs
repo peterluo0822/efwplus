@@ -145,7 +145,7 @@ namespace EFWCoreLib.WinformFrame
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(347, 167);
+            this.pictureBox1.Size = new System.Drawing.Size(620, 350);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
@@ -153,11 +153,11 @@ namespace EFWCoreLib.WinformFrame
             // btnConfig
             // 
             this.btnConfig.AutoSize = true;
-            this.btnConfig.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnConfig.BackColor = System.Drawing.Color.White;
             this.btnConfig.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.btnConfig.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnConfig.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.btnConfig.Location = new System.Drawing.Point(12, 138);
+            this.btnConfig.Location = new System.Drawing.Point(12, 327);
             this.btnConfig.Name = "btnConfig";
             this.btnConfig.Size = new System.Drawing.Size(106, 18);
             this.btnConfig.TabIndex = 2;
@@ -168,11 +168,11 @@ namespace EFWCoreLib.WinformFrame
             // btnclose
             // 
             this.btnclose.AutoSize = true;
-            this.btnclose.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnclose.BackColor = System.Drawing.Color.White;
             this.btnclose.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.btnclose.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnclose.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.btnclose.Location = new System.Drawing.Point(277, 138);
+            this.btnclose.Location = new System.Drawing.Point(550, 327);
             this.btnclose.Name = "btnclose";
             this.btnclose.Size = new System.Drawing.Size(58, 18);
             this.btnclose.TabIndex = 3;
@@ -182,8 +182,10 @@ namespace EFWCoreLib.WinformFrame
             // 
             // FrmSplash
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.AliceBlue;
-            this.ClientSize = new System.Drawing.Size(347, 167);
+            this.ClientSize = new System.Drawing.Size(620, 350);
             this.ControlBox = false;
             this.Controls.Add(this.btnclose);
             this.Controls.Add(this.btnConfig);

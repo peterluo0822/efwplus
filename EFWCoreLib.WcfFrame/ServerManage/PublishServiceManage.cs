@@ -9,6 +9,7 @@ using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.WcfFrame.ClientController;
 using EFWCoreLib.WcfFrame.DataSerialize;
 using EFWCoreLib.WcfFrame.ServerController;
+using EFWCoreLib.WcfFrame.Utility.Upgrade;
 using EFWCoreLib.WcfFrame.WcfHandler;
 
 namespace EFWCoreLib.WcfFrame.ServerManage
@@ -29,6 +30,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             subscriberList = new List<Subscriber>();//订阅者列表
             serviceDic = new Dictionary<string, PublishServiceObject>();
 
+            //考虑从订阅服务配置文件读取订阅服务
             PublishServiceObject serviceObj = new PublishServiceObject();
             serviceObj.publishServiceName = "DistributedCache";//分布式缓存服务
             serviceDic.Add("DistributedCache", serviceObj);
@@ -38,8 +40,8 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             serviceDic.Add("RemotePlugin", serviceObj);
 
             serviceObj = new PublishServiceObject();
-            serviceObj.publishServiceName = "Upgrade";//文件升级服务
-            serviceDic.Add("Upgrade", serviceObj);
+            serviceObj.publishServiceName = "UpgradeClient";//文件升级服务
+            serviceDic.Add("UpgradeClient", serviceObj);
 
             serviceObj = new PublishServiceObject();
             serviceObj.publishServiceName = "MongodbSync";//Mongodb数据同步
@@ -169,6 +171,9 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                     LocalPlugin localPlugin = RemotePluginManage.GetLocalPlugin();
                     if (localPlugin.PluginDic.Count > 0)
                         _clientLink.RegisterRemotePlugin(WcfGlobal.Identify, localPlugin.PluginDic.Keys.ToArray());
+                    break;
+                case "UpgradeClient"://客户端升级
+                    ClientUpgradeManager.DownLoadUpgrade();
                     break;
                 default://
                     ICustomSubscriber sub = new CustomSubscriber();

@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EFWCoreLib.CoreFrame.Business;
 using EFWCoreLib.CoreFrame.Common;
+using EFWCoreLib.WcfFrame.ClientProxy;
 using EFWCoreLib.WcfFrame.DataSerialize;
 using EFWCoreLib.WcfFrame.SDMessageHeader;
 using EFWCoreLib.WcfFrame.WcfHandler;
@@ -37,9 +38,9 @@ namespace EFWCoreLib.WcfFrame
         /// 文件下载存放路径
         /// </summary>
         private string filebufferpath = System.Windows.Forms.Application.StartupPath + "\\filebuffer\\";
-        private readonly string myNamespace = "http://www.efwplus.cn/";
-        private DuplexChannelFactory<IClientHandler> mClientChannelFactory;
-        private ChannelFactory<IFileHandler> mfileChannelFactory = null;
+        //private readonly string myNamespace = "http://www.efwplus.cn/";
+        private DuplexBaseServiceClient baseServiceClient;
+        private FileServiceClient fileServiceClient = null;
         private Action<bool, int> backConfig = null;//参数配置回调
         private Action createconnAction = null;//创建连接后回调
         private string wcfendpoint = "wcfendpoint";//服务地址
@@ -92,10 +93,10 @@ namespace EFWCoreLib.WcfFrame
             clientObj.PluginName = pluginname;
             clientObj.ReplyService = new ReplyDataCallback(this);
 
-            if (mClientChannelFactory == null)
-                mClientChannelFactory = new DuplexChannelFactory<IClientHandler>(clientObj.ReplyService, wcfendpoint);
-            if (mfileChannelFactory == null)
-                mfileChannelFactory = new ChannelFactory<IFileHandler>(fileendpoint);
+            if (baseServiceClient == null)
+                baseServiceClient = new DuplexBaseServiceClient(clientObj.ReplyService, wcfendpoint);
+            if (fileServiceClient == null)
+                fileServiceClient = new FileServiceClient(fileendpoint);
         }
         #endregion
 
@@ -116,17 +117,17 @@ namespace EFWCoreLib.WcfFrame
 
             try
             {
-                if (mClientChannelFactory != null)
-                    mClientChannelFactory.Close();
-                if (mfileChannelFactory != null)
-                    mfileChannelFactory.Close();
+                if (baseServiceClient != null)
+                    baseServiceClient.Close();
+                if (fileServiceClient != null)
+                    fileServiceClient.Close();
             }
             catch
             {
-                if (mClientChannelFactory != null)
-                    mClientChannelFactory.Abort();
-                if (mfileChannelFactory != null)
-                    mfileChannelFactory.Abort();
+                if (baseServiceClient != null)
+                    baseServiceClient.Abort();
+                if (fileServiceClient != null)
+                    fileServiceClient.Abort();
             }
         }
 
@@ -184,7 +185,7 @@ namespace EFWCoreLib.WcfFrame
 
         public CommunicationState State
         {
-            get { return mClientChannelFactory.State; }
+            get { return baseServiceClient.State; }
         }
         #endregion
 
@@ -205,18 +206,18 @@ namespace EFWCoreLib.WcfFrame
         /// </summary>
         public void CreateConnection()
         {
-            IClientHandler wcfHandlerService = mClientChannelFactory.CreateChannel();
-            clientObj.WcfService = wcfHandlerService;
+            baseServiceClient.Open();
+            clientObj.WcfService = baseServiceClient;
             string serverConfig = null;
 
-            AddMessageHeader(wcfHandlerService as IContextChannel, "", (() =>
+            AddMessageHeader(baseServiceClient.InnerDuplexChannel as IContextChannel, "", (() =>
             {
 
-                clientObj.ClientID = wcfHandlerService.CreateClient(clientObj.ClientName);//创建连接获取ClientID
+                clientObj.ClientID = baseServiceClient.CreateClient(clientObj.ClientName);//创建连接获取ClientID
                 if (ServerConfigRequestState == false)
                 {
                     //重新获取服务端配置，如：是否压缩Json、是否加密Json
-                    serverConfig = wcfHandlerService.MiddlewareConfig();
+                    serverConfig = baseServiceClient.MiddlewareConfig();
                     ServerConfigRequestState = true;
                 }
             }));
@@ -299,10 +300,10 @@ namespace EFWCoreLib.WcfFrame
                     jsondata = des.OutString;
                 }
 
-                IClientHandler _wcfService = clientObj.WcfService;
+                DuplexBaseServiceClient _wcfService = clientObj.WcfService;
                 string retJson = "";
 
-                AddMessageHeader(_wcfService as IContextChannel, "", requestData.Iscompressjson, requestData.Isencryptionjson, requestData.Serializetype, requestData.LoginRight, (() =>
+                AddMessageHeader(_wcfService.InnerDuplexChannel as IContextChannel, "", requestData.Iscompressjson, requestData.Isencryptionjson, requestData.Serializetype, requestData.LoginRight, (() =>
                    {
                        retJson = _wcfService.ProcessRequest(clientObj.ClientID, clientObj.PluginName, controller, method, jsondata);
                    }));
@@ -390,10 +391,10 @@ namespace EFWCoreLib.WcfFrame
                     jsondata = des.OutString;
                 }
 
-                IClientHandler _wcfService = clientObj.WcfService;
+                DuplexBaseServiceClient _wcfService = clientObj.WcfService;
                 IAsyncResult result = null;
 
-                AddMessageHeader(_wcfService as IContextChannel, "", requestData.Iscompressjson, requestData.Isencryptionjson, requestData.Serializetype, requestData.LoginRight, (() =>
+                AddMessageHeader(_wcfService.InnerDuplexChannel as IContextChannel, "", requestData.Iscompressjson, requestData.Isencryptionjson, requestData.Serializetype, requestData.LoginRight, (() =>
                {
                    AsyncCallback callback = delegate (IAsyncResult r)
                    {
@@ -462,27 +463,27 @@ namespace EFWCoreLib.WcfFrame
         {
             if (clientObj == null) return;
             string mClientID = clientObj.ClientID;
-            IClientHandler mWcfService = clientObj.WcfService;
+            DuplexBaseServiceClient mWcfService = clientObj.WcfService;
             if (mClientID != null)
             {
                 try
                 {
-                    AddMessageHeader(mWcfService as IContextChannel, "Quit", (() =>
+                    AddMessageHeader(mWcfService.InnerDuplexChannel as IContextChannel, "Quit", (() =>
                        {
                            mWcfService.UnClient(mClientID);
                        }));
 
 
                     //mChannelFactory.Close();//关闭通道
-                    (mWcfService as IContextChannel).Close();
+                    mWcfService.Close();
 
                     if (timer != null)//关闭连接必须停止心跳
                         timer.Stop();
                 }
                 catch
                 {
-                    if ((mWcfService as IContextChannel) != null)
-                        (mWcfService as IContextChannel).Abort();
+                    if ((mWcfService as IDisposable) != null)
+                        (mWcfService as IDisposable).Dispose();
                 }
 
                 clientObj = null;
@@ -499,8 +500,8 @@ namespace EFWCoreLib.WcfFrame
         {
             try
             {
-                IClientHandler wcfHandlerService = mClientChannelFactory.CreateChannel();
-                clientObj.WcfService = wcfHandlerService;
+                baseServiceClient.Open();
+                clientObj.WcfService = baseServiceClient;
                 if (isRequest == true)//避免死循环
                     Heartbeat();//重连之后必须再次调用心跳
 
@@ -523,12 +524,12 @@ namespace EFWCoreLib.WcfFrame
         /// <returns></returns>
         private bool Heartbeat()
         {
-            IClientHandler _wcfService = clientObj.WcfService;
+            DuplexBaseServiceClient _wcfService = clientObj.WcfService;
             try
             {
                 bool ret = false;
                 string serverConfig = null;
-                AddMessageHeader(_wcfService as IContextChannel, "", (() =>
+                AddMessageHeader(_wcfService.InnerDuplexChannel as IContextChannel, "", (() =>
                {
                    ret = _wcfService.Heartbeat(clientObj.ClientID);
                    if (ServerConfigRequestState == false)
@@ -569,8 +570,7 @@ namespace EFWCoreLib.WcfFrame
 
                 if (ret == false)//表示服务主机关闭过，丢失了clientId，必须重新创建连接
                 {
-                    //mChannelFactory.Abort();//关闭原来通道
-                    (_wcfService as IContextChannel).Abort();
+                    _wcfService.Abort();
                     CreateConnection();
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "上级中间件已丢失客户端信息，重新创建客户端连接成功！");
                 }
@@ -658,9 +658,9 @@ namespace EFWCoreLib.WcfFrame
         /// <returns></returns>
         public List<ServerManage.dwPlugin> GetWcfServicesAllInfo()
         {
-            IClientHandler _wcfService = clientObj.WcfService;
+            DuplexBaseServiceClient _wcfService = clientObj.WcfService;
             List<ServerManage.dwPlugin> list = new List<ServerManage.dwPlugin>();
-            AddMessageHeader(_wcfService as IContextChannel, "", (() =>
+            AddMessageHeader(_wcfService.InnerDuplexChannel as IContextChannel, "", (() =>
             {
                 string ret = _wcfService.GetAllPluginInfo();
                 list = JsonConvert.DeserializeObject<List<ServerManage.dwPlugin>>(ret);
@@ -762,17 +762,14 @@ namespace EFWCoreLib.WcfFrame
         {
             if (uf == null) throw new Exception("上传文件对象不能为空！");
 
-            IFileHandler fileHandlerService = null;
             try
             {
-
-                fileHandlerService = mfileChannelFactory.CreateChannel();
 
                 if (action != null)
                     getupdownprogress(uf.FileStream, uf.FileSize, action);//获取进度条
 
                 UpFileResult result = new UpFileResult();
-                result = fileHandlerService.UpLoadFile(uf);
+                result = fileServiceClient.UpLoadFile(uf);
 
                 if (result.IsSuccess)
                     return result.Message;
@@ -785,10 +782,10 @@ namespace EFWCoreLib.WcfFrame
             }
             finally
             {
-                if (fileHandlerService != null)
-                {
-                    (fileHandlerService as IContextChannel).Abort();
-                }
+                //if (fileServiceClient != null)
+                //{
+                //    fileServiceClient.Close();
+                //}
             }
         }
         /// <summary>
@@ -801,14 +798,11 @@ namespace EFWCoreLib.WcfFrame
         {
             if (df == null) throw new Exception("下载文件对象不能为空！");
 
-            IFileHandler fileHandlerService = null;
             try
             {
-                fileHandlerService = mfileChannelFactory.CreateChannel();
-
                 DownFileResult result = new DownFileResult();
 
-                result = fileHandlerService.DownLoadFile(df);
+                result = fileServiceClient.DownLoadFile(df);
 
                 if (result.IsSuccess)
                 {
@@ -837,8 +831,10 @@ namespace EFWCoreLib.WcfFrame
             }
             finally
             {
-                if (fileHandlerService != null)
-                    (fileHandlerService as IContextChannel).Abort();
+                //if (fileServiceClient != null)
+                //{
+                //    fileServiceClient.Close();
+                //}
             }
         }
         /// <summary>
@@ -851,14 +847,12 @@ namespace EFWCoreLib.WcfFrame
         {
             if (df == null) throw new Exception("下载文件对象不能为空！");
 
-            IFileHandler fileHandlerService = null;
             try
             {
-                fileHandlerService = mfileChannelFactory.CreateChannel();
 
                 DownFileResult result = new DownFileResult();
 
-                result = fileHandlerService.DownLoadFile(df);
+                result = fileServiceClient.DownLoadFile(df);
 
                 if (result.IsSuccess)
                 {
@@ -891,8 +885,10 @@ namespace EFWCoreLib.WcfFrame
             }
             finally
             {
-                if (fileHandlerService != null)
-                    (fileHandlerService as IContextChannel).Abort();
+                //if (fileServiceClient != null)
+                //{
+                //    fileServiceClient.Close();
+                //}
             }
         }
         private void getprogress(long filesize, long readnum, ref int progressnum)
@@ -944,7 +940,7 @@ namespace EFWCoreLib.WcfFrame
             if (clientObj == null) throw new Exception("还没有创建连接！");
             try
             {
-                IClientHandler _wcfService = clientObj.WcfService;
+                DuplexBaseServiceClient _wcfService = clientObj.WcfService;
                 _wcfService.RegisterRemotePlugin(ServerIdentify, plugin);
             }
             catch (Exception e)
@@ -966,7 +962,7 @@ namespace EFWCoreLib.WcfFrame
             if (clientObj == null) throw new Exception("还没有创建连接！");
             try
             {
-                IClientHandler _wcfService = clientObj.WcfService;
+                DuplexBaseServiceClient _wcfService = clientObj.WcfService;
                 return _wcfService.GetDistributedCacheData(cacheIdList);
             }
             catch (Exception e)
@@ -982,7 +978,7 @@ namespace EFWCoreLib.WcfFrame
             if (clientObj == null) throw new Exception("还没有创建连接！");
             try
             {
-                IClientHandler _wcfService = clientObj.WcfService;
+                DuplexBaseServiceClient _wcfService = clientObj.WcfService;
                 _wcfService.Subscribe(WcfGlobal.Identify, clientObj.ClientID, publishServiceName);
             }
             catch (Exception e)
@@ -996,7 +992,7 @@ namespace EFWCoreLib.WcfFrame
             if (clientObj == null) throw new Exception("还没有创建连接！");
             try
             {
-                IClientHandler _wcfService = clientObj.WcfService;
+                DuplexBaseServiceClient _wcfService = clientObj.WcfService;
                 _wcfService.UnSubscribe(clientObj.ClientID, publishServiceName);
             }
             catch (Exception e)
