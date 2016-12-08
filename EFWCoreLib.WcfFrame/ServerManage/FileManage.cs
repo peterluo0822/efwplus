@@ -18,7 +18,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
     {
         public static string filebufferpath= AppGlobal.AppRootPath + @"FileStore\filebuffer\";//缓存文件路径
         public static string clientupgradepath= AppGlobal.AppRootPath + @"FileStore\ClientUpgrade\";//客户端升级包路径
-        public static string serverupgradepath = AppGlobal.AppRootPath + @"FileStore\ClientUpgrade\";//服务端升级包路径
+        public static string serverupgradepath = AppGlobal.AppRootPath + @"FileStore\ServerUpgrade\";//服务端升级包路径
 
         private static void getprogress(long filesize, long readnum, ref int progressnum)
         {
@@ -31,37 +31,39 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             decimal percent = Convert.ToDecimal(readnum) / Convert.ToDecimal(filesize) * 100;
             progressnum = Convert.ToInt32(Math.Ceiling(percent));
         }
-        private static void getupdownprogress(Stream file, Action<int> action)
+        private static void getupdownprogress(Stream file, long flength, Action<int> action)
         {
-            new Action<Stream, Action<int>>(delegate (Stream _file, Action<int> _action)
+            new Action<Stream,long, Action<int>>(delegate (Stream _file, long _flength, Action<int> _action)
             {
                 try
                 {
                     int oldnum = 0;
                     int num = 0;
 
-                    while (num != 100)
+                    while (num < 100)
                     {
                         if (_file == null || !_file.CanRead)
                             break;
 
-                        getprogress(_file.Length - 1, _file.Position, ref num);
+                        getprogress(_flength - 1, _file.Position, ref num);
                         if (oldnum < num)
                         {
                             oldnum = num;
-                            _action.BeginInvoke(num, null, null);
+                            if (num < 100)
+                                _action.BeginInvoke(num, null, null);
                         }
 
                         System.Threading.Thread.Sleep(100);
                     }
-                    //_action(100);
+
+                    _action(100);
                 }
                 catch (Exception e)
                 {
                     throw new Exception(e.Message + "\n获取文件进度失败！");
                 }
 
-            }).BeginInvoke(file, action, null, null);
+            }).BeginInvoke(file, flength, action, null, null);
         }
         /// <summary>
         /// 上传文件
@@ -76,7 +78,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                 {
                     ShowHostMsg(Color.Black, DateTime.Now, "客户端[" + filedata.clientId + "]准备上传文件...");
                     //获取进度
-                    getupdownprogress(filedata.FileStream, (delegate (int _num)
+                    getupdownprogress(filedata.FileStream,filedata.FileSize, (delegate (int _num)
                     {
                         ShowHostMsg(Color.Black, DateTime.Now, "客户端[" + filedata.clientId + "]上传文件进度：%" + _num);
                     }));
@@ -196,14 +198,6 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                     ShowHostMsg(Color.Black, DateTime.Now, "客户端[" + filedata.clientId + "]准备下载文件...");
 
                 MemoryStream ms = new MemoryStream();
-                if (WcfGlobal.IsDebug)
-                {
-                    //获取进度
-                    getupdownprogress(ms, (delegate (int _num)
-                    {
-                        ShowHostMsg(Color.Black, DateTime.Now, "客户端[" + filedata.clientId + "]下载文件进度：%" + _num);
-                    }));
-                }
 
                 DownFileResult result = new DownFileResult();
 
@@ -224,11 +218,20 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                     result = DownLoadfilebuffer(filedata, ref ms);
                 }
 
+                if (WcfGlobal.IsDebug)
+                {
+                    //获取进度
+                    getupdownprogress(ms, result.FileSize, (delegate (int _num)
+                    {
+                        ShowHostMsg(Color.Black, DateTime.Now, "客户端[" + filedata.clientId + "]下载文件进度：%" + _num);
+                    }));
+                }
+
 
                 if (WcfGlobal.IsDebug)
                     ShowHostMsg(Color.Green, DateTime.Now, "客户端[" + filedata.clientId + "]下载文件完成");
 
-                ms.Close();
+                //ms.Close();
                 return result;
             }
             catch (Exception err)

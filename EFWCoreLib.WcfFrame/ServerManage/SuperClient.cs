@@ -18,17 +18,19 @@ namespace EFWCoreLib.WcfFrame.ServerManage
         public static void CreateSuperClient()
         {
             //就算上级中间件重启了，下级中间件创建链接的时候会重新注册本地插件
-            superclient = new ClientLink(WcfGlobal.HostName);
+            superclient = new ClientLink(WcfGlobal.HostName,null);
             try
             {
                 superclient.CreateConnection((() =>
                 {
                     //以后可以做成配置方式
-                    foreach (var item in PublishServiceManage.serviceDic.Keys)
-                    {
-                        superclient.Subscribe(item);//订阅服务?
-                    }
+                    //foreach (var item in PublishServiceManage.serviceDic.Keys)
+                    //{
+                    //    superclient.Subscribe(item);//订阅服务?
+                    //}
                 }), null);
+
+                //EFWCoreLib.WcfFrame.Utility.Upgrade.ClientUpgradeManager.DownLoadUpgrade();
             }
             catch (Exception e)
             {

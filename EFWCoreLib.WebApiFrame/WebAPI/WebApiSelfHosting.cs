@@ -57,13 +57,18 @@ namespace EFWCoreLib.WebFrame.WebAPI
 
             config.Routes.MapHttpRoute(
                 "efwplusApi",
-                "efwplusApi/{plugin}/{controller}/{action}/{id}",
+                "HISApi/{plugin}/{controller}/{action}/{id}",
                 new { id = RouteParameter.Optional });
 
             config.Routes.MapHttpRoute(
-                "Http",
-                "HttpEP/{id}",
+                "MiniHttp",
+                "MiniHttp/{id}",
                 new { plugin= "coresys", controller = "http", action = "html",id= RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+               "Upgrade",
+               "Upgrade/{id}",
+               new { plugin = "coresys", controller = "ClientUpgrade", action = "Upgrade", id = RouteParameter.Optional });
 
 
             //指定插件的程序集

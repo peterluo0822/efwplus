@@ -28,7 +28,7 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
                 requestMessage.Headers.To = touri;
 
 
-                NetTcpBinding tbinding = new NetTcpBinding("NetTcpBinding_FileTransferHandlerService");
+                NetTcpBinding tbinding = new NetTcpBinding("NetTcpBinding_FileService");
                 using (ChannelFactory<IRouterFileHandler> factory = new ChannelFactory<IRouterFileHandler>(tbinding, endpointAddress))
                 {
 

@@ -85,6 +85,7 @@ namespace EFWCoreLib.CoreFrame.Common
                 {
                     TaskConfig taskconfig = new TaskConfig();
                     taskconfig.taskname = xe.Attributes["name"].Value;
+                    taskconfig.qswitch = xe.Attributes["switch"].Value == "1" ? true : false;
                     taskconfig.execfrequency = (TimingTaskType)Convert.ToInt32(xe.Attributes["execfrequency"].Value);
                     string[] vals = xe.Attributes["shorttime"].Value.Split(':');
                     taskconfig.shorttime = new ShortTime(Convert.ToInt32(vals[0]), Convert.ToInt32(vals[1]), Convert.ToInt32(vals[2]));
@@ -114,12 +115,27 @@ namespace EFWCoreLib.CoreFrame.Common
             return taskConfigList;
         }
 
+        /// <summary>
+        /// 设置开始或关闭任务
+        /// </summary>
+        public static void SettingTask(TaskConfig _taskconfig)
+        {
+            XmlDocument xmlDoc = new System.Xml.XmlDocument();
+            xmlDoc.Load(MiddlewareTask.taskfile);
+            XmlNode xn = xmlDoc.DocumentElement.SelectSingleNode("task[@name='"+_taskconfig.taskname+"']");
+            if (xn != null)
+            {
+                xn.Attributes["switch"].Value = _taskconfig.qswitch ? "1" : "0";
+            }
+            xmlDoc.Save(MiddlewareTask.taskfile);
+        }
+     
         public static void ExecuteTask(TaskConfig _taskConfig)
         {
             TaskContent task = new TaskContent(_taskConfig);
             new Task(() =>
             {
-                task.ExcuteOnTime(DateTime.Now);
+                task.Excute(true);
             }).Start();
         }
     }
@@ -157,7 +173,15 @@ namespace EFWCoreLib.CoreFrame.Common
 
         public void ExcuteOnTime(DateTime dt)
         {
-            if (taskConfig != null)
+            Excute(false);
+        }
+        /// <summary>
+        /// 执行
+        /// </summary>
+        /// <param name="isimmediately">是否马上</param>
+        public void Excute(bool isimmediately)
+        {
+            if (taskConfig != null && (isimmediately == true || taskConfig.qswitch == true))
             {
                 try
                 {
@@ -216,7 +240,7 @@ namespace EFWCoreLib.CoreFrame.Common
                     MiddlewareLogHelper.WriterLog(LogType.TimingTaskLog, true, System.Drawing.Color.Red, err.Message);
                 }
             }
-        }
+        } 
     }
 
 
@@ -229,6 +253,10 @@ namespace EFWCoreLib.CoreFrame.Common
         /// 任务名称
         /// </summary>
         public string taskname { get; set; }
+        /// <summary>
+        /// 开关
+        /// </summary>
+        public bool qswitch{get;set;}
         /// <summary>
         /// 执行频次
         /// </summary>

@@ -19,6 +19,8 @@ namespace EFWCoreLib.WcfFrame.Utility.Upgrade
     /// 
     /// 下载升级包之前先下载升级配置文件，判断升级包的版本是否有更新
     /// 如果中心的版本要高，就从中心下载最新版本
+    /// 
+    /// 客户端配置更新地址：http://localhost:8021/upgrade/update.xml
     /// </summary>
     public class ClientUpgradeManager
     {

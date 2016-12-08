@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHosting));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnStart = new System.Windows.Forms.ToolStripButton();
             this.btnStop = new System.Windows.Forms.ToolStripButton();
@@ -46,6 +46,8 @@
             this.注册ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnPublishService = new System.Windows.Forms.ToolStripButton();
+            this.btnSubscibe = new System.Windows.Forms.ToolStripButton();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.richTextMsg = new System.Windows.Forms.ListBox();
@@ -55,6 +57,14 @@
             this.暂停日志ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.gridClientList = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column9 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.gridRouter = new System.Windows.Forms.DataGridView();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -80,14 +90,6 @@
             this.lbRunTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.timerRun = new System.Windows.Forms.Timer(this.components);
             this.timermsg = new System.Windows.Forms.Timer(this.components);
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             this.tabMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -110,6 +112,8 @@
             this.btnSetting,
             this.btnrouter,
             this.btnplugin,
+            this.btnPublishService,
+            this.btnSubscibe,
             this.btntask,
             this.btnInfo,
             this.toolStripDropDownButton1});
@@ -236,6 +240,24 @@
             this.关于ToolStripMenuItem.Text = "关于";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
+            // btnPublishService
+            // 
+            this.btnPublishService.Image = ((System.Drawing.Image)(resources.GetObject("btnPublishService.Image")));
+            this.btnPublishService.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPublishService.Name = "btnPublishService";
+            this.btnPublishService.Size = new System.Drawing.Size(76, 22);
+            this.btnPublishService.Text = "发布订阅";
+            this.btnPublishService.Click += new System.EventHandler(this.btnPublishService_Click);
+            // 
+            // btnSubscibe
+            // 
+            this.btnSubscibe.Image = ((System.Drawing.Image)(resources.GetObject("btnSubscibe.Image")));
+            this.btnSubscibe.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSubscibe.Name = "btnSubscibe";
+            this.btnSubscibe.Size = new System.Drawing.Size(76, 22);
+            this.btnSubscibe.Text = "订阅服务";
+            this.btnSubscibe.Click += new System.EventHandler(this.btnSubscibe_Click);
+            // 
             // tabMain
             // 
             this.tabMain.Controls.Add(this.tabPage1);
@@ -342,6 +364,71 @@
             this.gridClientList.RowTemplate.Height = 23;
             this.gridClientList.Size = new System.Drawing.Size(921, 485);
             this.gridClientList.TabIndex = 0;
+            // 
+            // Column1
+            // 
+            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column1.DataPropertyName = "clientId";
+            this.Column1.HeaderText = "客户端编码";
+            this.Column1.MinimumWidth = 200;
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            // 
+            // Column9
+            // 
+            this.Column9.DataPropertyName = "IsConnect";
+            this.Column9.HeaderText = "连接/断开";
+            this.Column9.Name = "Column9";
+            this.Column9.ReadOnly = true;
+            this.Column9.Width = 80;
+            // 
+            // Column2
+            // 
+            this.Column2.DataPropertyName = "clientName";
+            this.Column2.HeaderText = "客户端名称";
+            this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
+            this.Column2.Width = 150;
+            // 
+            // Column4
+            // 
+            this.Column4.DataPropertyName = "HeartbeatCount";
+            this.Column4.HeaderText = "心跳数";
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            this.Column4.Width = 70;
+            // 
+            // Column3
+            // 
+            this.Column3.DataPropertyName = "startTime";
+            dataGridViewCellStyle2.Format = "G";
+            dataGridViewCellStyle2.NullValue = null;
+            this.Column3.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Column3.HeaderText = "连接时间";
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
+            this.Column3.Width = 150;
+            // 
+            // Column10
+            // 
+            this.Column10.DataPropertyName = "RequestCount";
+            this.Column10.HeaderText = "请求次数";
+            this.Column10.Name = "Column10";
+            this.Column10.ReadOnly = true;
+            // 
+            // Column11
+            // 
+            this.Column11.DataPropertyName = "receiveData";
+            this.Column11.HeaderText = "接收数据";
+            this.Column11.Name = "Column11";
+            this.Column11.ReadOnly = true;
+            // 
+            // Column12
+            // 
+            this.Column12.DataPropertyName = "sendData";
+            this.Column12.HeaderText = "发送数据";
+            this.Column12.Name = "Column12";
+            this.Column12.ReadOnly = true;
             // 
             // tabPage3
             // 
@@ -568,71 +655,6 @@
             // 
             this.timermsg.Tick += new System.EventHandler(this.timermsg_Tick);
             // 
-            // Column1
-            // 
-            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column1.DataPropertyName = "clientId";
-            this.Column1.HeaderText = "客户端编码";
-            this.Column1.MinimumWidth = 200;
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            // 
-            // Column9
-            // 
-            this.Column9.DataPropertyName = "IsConnect";
-            this.Column9.HeaderText = "连接/断开";
-            this.Column9.Name = "Column9";
-            this.Column9.ReadOnly = true;
-            this.Column9.Width = 80;
-            // 
-            // Column2
-            // 
-            this.Column2.DataPropertyName = "clientName";
-            this.Column2.HeaderText = "客户端名称";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            this.Column2.Width = 150;
-            // 
-            // Column4
-            // 
-            this.Column4.DataPropertyName = "HeartbeatCount";
-            this.Column4.HeaderText = "心跳数";
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            this.Column4.Width = 70;
-            // 
-            // Column3
-            // 
-            this.Column3.DataPropertyName = "startTime";
-            dataGridViewCellStyle1.Format = "G";
-            dataGridViewCellStyle1.NullValue = null;
-            this.Column3.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Column3.HeaderText = "连接时间";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            this.Column3.Width = 150;
-            // 
-            // Column10
-            // 
-            this.Column10.DataPropertyName = "RequestCount";
-            this.Column10.HeaderText = "请求次数";
-            this.Column10.Name = "Column10";
-            this.Column10.ReadOnly = true;
-            // 
-            // Column11
-            // 
-            this.Column11.DataPropertyName = "receiveData";
-            this.Column11.HeaderText = "接收数据";
-            this.Column11.Name = "Column11";
-            this.Column11.ReadOnly = true;
-            // 
-            // Column12
-            // 
-            this.Column12.DataPropertyName = "sendData";
-            this.Column12.HeaderText = "发送数据";
-            this.Column12.Name = "Column12";
-            this.Column12.ReadOnly = true;
-            // 
             // FrmHosting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -727,6 +749,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column9;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.ToolStripButton btnPublishService;
+        private System.Windows.Forms.ToolStripButton btnSubscibe;
     }
 }
 

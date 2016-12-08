@@ -21,20 +21,21 @@ namespace TestWcfPerformance
         {
             try
             {
-                //TestWebClient();
+                TestWebClient();
                 //Console.Read();
                 //TestConcurrency();
 
 
                 //Application.Run(new frmClient());
 
-                Console.WriteLine("输入并发连接数(默认100)：");
-                connCount = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("输入每次请求间隔时间(默认100微秒)：");
-                time = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("#回车开始执行#");
-                Console.Read();
-                StartThread();
+                //Console.WriteLine("输入并发连接数(默认100)：");
+                //connCount = Convert.ToInt32(Console.ReadLine());
+                //Console.WriteLine("输入每次请求间隔时间(默认100微秒)：");
+                //time = Convert.ToInt32(Console.ReadLine());
+                //Console.WriteLine("#回车开始执行#");
+                //Console.Read();
+                //StartThread();
+
             }
             catch (Exception err)
             {
@@ -91,37 +92,37 @@ namespace TestWcfPerformance
             string num = "100";
             begintime();
 
-            Action<ClientRequestData> requestAction = ((ClientRequestData request) =>
-            {
-                //request.Iscompressjson = false;
-                //request.Isencryptionjson = false;
-                //request.Serializetype = WcfFrame.SDMessageHeader.SerializeType.Newtonsoft;
-                request.AddData(num);
-            });
-            //3.同步请求数据
-            clientlink.Request("Books.Service@bookWcfController", "Test191", requestAction);
-            Console.WriteLine("3.请求数据时间(毫秒)：" + endtime());
+            //Action<ClientRequestData> requestAction = ((ClientRequestData request) =>
+            //{
+            //    //request.Iscompressjson = false;
+            //    //request.Isencryptionjson = false;
+            //    //request.Serializetype = WcfFrame.SDMessageHeader.SerializeType.Newtonsoft;
+            //    request.AddData(num);
+            //});
+            ////3.同步请求数据
+            //clientlink.Request("Books.Service@bookWcfController", "Test191", requestAction);
+            //Console.WriteLine("3.请求数据时间(毫秒)：" + endtime());
 
-            begintime();
-            //3.同步请求数据
-            clientlink.Request("Books.Service@bookWcfController", "Test191", requestAction);
-            Console.WriteLine("3.请求数据时间(毫秒)：" + endtime());
+            //begintime();
+            ////3.同步请求数据
+            //clientlink.Request("Books.Service@bookWcfController", "Test191", requestAction);
+            //Console.WriteLine("3.请求数据时间(毫秒)：" + endtime());
 
             Console.Read();
+            string s;
+            begintime();
+            s = clientlink.UpLoadFile(@"D:\DCWriter.rar", (delegate (int _num)
+            {
+                Console.WriteLine("4.文件上传进度：%" + _num);
+            }));
+            Console.WriteLine("4.文件上传时间(毫秒)：" + endtime() + "|" + s);
 
-            //begintime();
-            //string s = clientlink.UpLoadFile(@"D:\工具\PowerDesigner15_Evaluation1.exe", (delegate(int _num)
-            //{
-            //    Console.WriteLine("4.文件上传进度：%" + _num);
-            //}));
-            //Console.WriteLine("4.文件上传时间(毫秒)：" + endtime() + "|" + s);
-
-            //begintime();
-            //s = clientlink.DownLoadFile("PowerDesigner15_Evaluation.exe", (delegate(int _num)
-            //{
-            //    Console.WriteLine("5.文件下载进度：%" + _num);
-            //}));
-            //Console.WriteLine("5.文件下载时间(毫秒)：" + endtime() + "|" + s);
+            begintime();
+            s = clientlink.DownLoadFile("DCWriter.rar", (delegate (int _num)
+            {
+                Console.WriteLine("5.文件下载进度：%" + _num);
+            }));
+            Console.WriteLine("5.文件下载时间(毫秒)：" + endtime() + "|" + s);
 
             begintime();
             //5.关闭连接
@@ -176,7 +177,7 @@ namespace TestWcfPerformance
             //    ));
 
             begintime();
-            string s = WcfClientManage.UpLoadFile(@"D:\工具\PowerDesigner15_Evaluation.exe", (delegate(int _num)
+            string s = WcfClientManage.UpLoadFile(@"D:\CloudHISDB.rar", (delegate(int _num)
             {
                 Console.WriteLine("4.文件上传进度：%" + _num);
             }));

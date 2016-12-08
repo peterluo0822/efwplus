@@ -39,7 +39,7 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
                     requestMessage.Headers.To = touri;
 
                     IRouterBaseReply callback = OperationContext.Current.GetCallbackChannel<IRouterBaseReply>();
-                    NetTcpBinding tbinding = new NetTcpBinding("NetTcpBinding_RouterHandlerClient");
+                    NetTcpBinding tbinding = new NetTcpBinding("NetTcpBinding_BaseService");
                     DuplexChannelFactory<IRouterBaseHandler> factory = new DuplexChannelFactory<IRouterBaseHandler>(new InstanceContext(new ReplyRouterBaseCallback(callback)), tbinding, endpointAddress);
                     proxy = factory.CreateChannel();
 

@@ -37,7 +37,7 @@ namespace EFWCoreLib.WcfFrame
         /// <summary>
         /// 文件下载存放路径
         /// </summary>
-        private string filebufferpath = System.Windows.Forms.Application.StartupPath + "\\filebuffer\\";
+        private string filebufferpath = System.Windows.Forms.Application.StartupPath + "\\FileStore\\clientbuffer\\";
         //private readonly string myNamespace = "http://www.efwplus.cn/";
         private DuplexBaseServiceClient baseServiceClient;
         private FileServiceClient fileServiceClient = null;
@@ -534,8 +534,8 @@ namespace EFWCoreLib.WcfFrame
                    ret = _wcfService.Heartbeat(clientObj.ClientID);
                    if (ServerConfigRequestState == false)
                    {
-                        //重新获取服务端配置，如：是否压缩Json、是否加密Json
-                        serverConfig = _wcfService.MiddlewareConfig();
+                       //重新获取服务端配置，如：是否压缩Json、是否加密Json
+                       serverConfig = _wcfService.MiddlewareConfig();
                        ServerConfigRequestState = true;
                    }
                }));
@@ -576,9 +576,9 @@ namespace EFWCoreLib.WcfFrame
                 }
                 return ret;
             }
-            catch
+            catch (Exception err)
             {
-                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "上级中间件失去连接！");
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "上级中间件失去连接！\n" + clientObj.PluginName + "\n" + err.Message);
                 ServerConfigRequestState = false;
                 ReConnection(false);//连接服务主机失败，重连
                 return false;
@@ -719,6 +719,7 @@ namespace EFWCoreLib.WcfFrame
         /// <param name="filename">下载文件名</param>
         /// <param name="action">进度0-100</param>
         /// <returns>下载成功后返回存储在本地文件路径</returns>
+       
         public string DownLoadFile(string filename, Action<int> action)
         {
             if (string.IsNullOrEmpty(filename))
@@ -751,7 +752,7 @@ namespace EFWCoreLib.WcfFrame
 
             return filepath;
         }
-
+        
         /// <summary>
         /// 上传文件
         /// </summary>

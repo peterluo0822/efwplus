@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApiGlobal.cs" />
+    <Compile Include="WebAPI\ClientUpgradeController.cs" />
     <Compile Include="WebAPI\FileController.cs" />
     <Compile Include="WebAPI\HttpController.cs" />
     <Compile Include="WebAPI\LoginController.cs" />

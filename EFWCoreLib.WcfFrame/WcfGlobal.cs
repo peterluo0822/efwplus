@@ -104,6 +104,7 @@ namespace EFWCoreLib.WcfFrame
 
         public static void Exit(StartType type)
         {
+            ClientLinkManage.UnAllConnection();//关闭所有连接
             switch (type)
             {
                 case StartType.BaseService:

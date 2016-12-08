@@ -394,6 +394,16 @@ namespace WCFHosting
             FrmTimingTask frmtask = new FrmTimingTask();
             frmtask.ShowDialog();
         }
+        //发布服务
+        private void btnPublishService_Click(object sender, EventArgs e)
+        {
+
+        }
+        //订阅服务
+        private void btnSubscibe_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public enum HostState
