@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using EFWCoreLib.WcfFrame.DataSerialize;
+using EFWCoreLib.WcfFrame.ServerManage;
 using EFWCoreLib.WcfFrame.WcfHandler;
 
 namespace EFWCoreLib.WcfFrame.ClientProxy
@@ -76,6 +77,11 @@ namespace EFWCoreLib.WcfFrame.ClientProxy
         {
             this.Channel.UnSubscribe(clientId, publishServiceName);
         }
+
+        public List<PublishServiceObject> GetPublishServiceList()
+        {
+            return this.Channel.GetPublishServiceList();
+        }
     }
 
     public class DuplexBaseServiceClient : DuplexClientBase<IClientHandler>, IClientHandler
@@ -144,6 +150,11 @@ namespace EFWCoreLib.WcfFrame.ClientProxy
         public void UnSubscribe(string clientId, string publishServiceName)
         {
             this.Channel.UnSubscribe(clientId, publishServiceName);
+        }
+
+        public List<PublishServiceObject> GetPublishServiceList()
+        {
+            return this.Channel.GetPublishServiceList();
         }
     }
 }

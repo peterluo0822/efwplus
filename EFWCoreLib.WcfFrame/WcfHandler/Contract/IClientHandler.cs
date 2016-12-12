@@ -106,9 +106,14 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
 
         #region 发布订阅
         /// <summary>
+        /// 获取发布服务列表
+        /// </summary>
+        [OperationContract(IsOneWay = false)]
+        List<ServerManage.PublishServiceObject> GetPublishServiceList();
+        /// <summary>
         /// 订阅
         /// </summary>
-        /// <param name="ServerIdentify">中间件标识</param>
+        /// <param name="ServerIdentify">中间件标识，判断自己不能订阅自己</param>
         /// <param name="clientId"></param>
         /// <param name="publishServiceName">发布服务名称</param>
         [OperationContract(IsOneWay = true)]

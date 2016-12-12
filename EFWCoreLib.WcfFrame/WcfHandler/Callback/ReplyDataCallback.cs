@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EFWCoreLib.WcfFrame.DataSerialize;
 using EFWCoreLib.WcfFrame.SDMessageHeader;
 using EFWCoreLib.WcfFrame.ServerManage;
+using EFWCoreLib.WcfFrame.Utility;
 
 namespace EFWCoreLib.WcfFrame.WcfHandler
 {
@@ -26,7 +27,7 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
 
         public void Notify(string publishServiceName)
         {
-            PublishServiceManage.ReceiveNotify(publishServiceName, clientLink);
+            PublishSubManager.ReceiveNotify(publishServiceName, clientLink);
         }
     }
 }

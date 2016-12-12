@@ -974,6 +974,19 @@ namespace EFWCoreLib.WcfFrame
         #endregion
 
         #region 订阅
+        public List<ServerManage.PublishServiceObject> GetPublishServiceList()
+        {
+            if (clientObj == null) throw new Exception("还没有创建连接！");
+            try
+            {
+                DuplexBaseServiceClient _wcfService = clientObj.WcfService;
+                return _wcfService.GetPublishServiceList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message + "\n连接服务主机失败，请联系管理员！");
+            }
+        }
         public void Subscribe(string publishServiceName)
         {
             if (clientObj == null) throw new Exception("还没有创建连接！");

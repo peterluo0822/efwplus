@@ -131,6 +131,12 @@
     <Compile Include="PluginManage\PluginSysManage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublishSubscibe\FrmPublishSub.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PublishSubscibe\FrmPublishSub.Designer.cs">
+      <DependentUpon>FrmPublishSub.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReadConfig.cs" />
     <Compile Include="RouterManage\FrmRouterXML.cs">
       <SubType>Form</SubType>
@@ -176,6 +182,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="PublishSubscibe\FrmPublishSub.resx">
+      <DependentUpon>FrmPublishSub.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RouterManage\FrmRouterXML.resx">
       <DependentUpon>FrmRouterXML.cs</DependentUpon>
     </EmbeddedResource>
@@ -224,9 +233,7 @@
       <Name>EFWCoreLib.WebApiFrame</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PublishSubscibe\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>Copy "$(TargetDir)\$(TargetFileName)" "$(SolutionDir)Output"</PostBuildEvent>

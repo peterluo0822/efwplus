@@ -125,6 +125,7 @@
     <Compile Include="ServerManage\RemotePluginManage.cs" />
     <Compile Include="ServerManage\RouterManage.cs" />
     <Compile Include="ServerManage\SuperClient.cs" />
+    <Compile Include="Utility\PublishSubManager.cs" />
     <Compile Include="Utility\SSO\AuthResult.cs" />
     <Compile Include="Utility\SSO\ConvertHelper.cs" />
     <Compile Include="Utility\SSO\SsoHelper.cs" />

@@ -92,6 +92,9 @@ namespace EFWCoreLib.WcfFrame.WcfHandler
             PublishServiceManage.UnSubscribe(clientId, publishServiceName);
         }
 
-        
+        public List<PublishServiceObject> GetPublishServiceList()
+        {
+            return PublishServiceManage.GetPublishServiceList();
+        }
     }
 }

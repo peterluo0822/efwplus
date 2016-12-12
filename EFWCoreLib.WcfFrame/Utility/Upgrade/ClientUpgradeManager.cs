@@ -85,7 +85,10 @@ namespace EFWCoreLib.WcfFrame.Utility.Upgrade
             df.DownKey = Guid.NewGuid().ToString();
             df.FileName = "update.zip";
             df.FileType = 1;
-            SuperClient.superclient.DownLoadFile(df, updatezip, null);
+            SuperClient.superclient.DownLoadFile(df, updatezip, (delegate (int _num)
+            {
+                MiddlewareLogHelper.WriterLog(LogType.MidLog, true, System.Drawing.Color.Black, "客户端升级包下载进度：%" + _num);
+            }));
         }
 
         private static Version readLocalUpdateXml()
@@ -104,10 +107,14 @@ namespace EFWCoreLib.WcfFrame.Utility.Upgrade
             df.DownKey = Guid.NewGuid().ToString();
             df.FileName = "update.xml";
             df.FileType = 1;
+            //MemoryStream update_ms = new MemoryStream();
             MemoryStream ms = new MemoryStream();
             SuperClient.superclient.DownLoadFile(df, ms, null);
+            //ms.CopyTo(update_ms);
+            String str = System.Text.Encoding.Default.GetString(ms.ToArray());
+            ms.Close();
             System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
-            xmlDoc.Load(ms);
+            xmlDoc.LoadXml(str);
             System.Xml.XmlNode xn = xmlDoc.DocumentElement.SelectSingleNode("AppVersion");
             Version ver = new Version(xn.InnerText);
             return ver;

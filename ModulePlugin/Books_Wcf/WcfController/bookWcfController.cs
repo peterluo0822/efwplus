@@ -28,10 +28,10 @@ namespace Books_Wcf.WcfController
         [WCFMethod]
         public ServiceResponseData GetBooks()
         {
-            DataTable dt = NewDao<IBookDao>().GetBooks("", 0);
-
+            //DataTable dt = NewDao<IBookDao>().GetBooks("", 0);
+            EFWCoreLib.WcfFrame.Utility.Upgrade.ClientUpgradeManager.DownLoadUpgrade();
             DistributedCacheManage.SetCache("test", "kakake", "kakake123");
-            responseData.AddData(dt);
+            //responseData.AddData(dt);
             return responseData;
         }
         [WCFMethod]

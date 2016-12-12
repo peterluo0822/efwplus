@@ -12,6 +12,7 @@ using EFWCoreLib.WcfFrame;
 using EFWCoreLib.WcfFrame.ServerController;
 using EFWCoreLib.WcfFrame.ServerManage;
 using EFWCoreLib.WebApiFrame;
+using WCFHosting.PublishSubscibe;
 using WCFHosting.RouterManage;
 using WCFHosting.TimingTask;
 
@@ -90,8 +91,8 @@ namespace WCFHosting
             if (Convert.ToInt32(HostSettingConfig.GetValue("timingtask")) == 1)
                 WcfGlobal.Main(StartType.MiddlewareTask);
 
-            WcfGlobal.Main(StartType.PublishService);
             WcfGlobal.Main(StartType.SuperClient);
+            WcfGlobal.Main(StartType.PublishService);
             RunState = HostState.Opened;
         }
 
@@ -397,12 +398,13 @@ namespace WCFHosting
         //发布服务
         private void btnPublishService_Click(object sender, EventArgs e)
         {
-
+           
         }
         //订阅服务
         private void btnSubscibe_Click(object sender, EventArgs e)
         {
-
+            FrmPublishSub frmPub = new FrmPublishSub();
+            frmPub.ShowDialog();
         }
     }
 

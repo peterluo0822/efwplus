@@ -66,4 +66,7 @@ namespace EFWCoreLib.WcfFrame.DataSerialize
         [DataMember]
         public IDictionary<string, double> keytimestamps { get; set; }
     }
+
+
+
 }

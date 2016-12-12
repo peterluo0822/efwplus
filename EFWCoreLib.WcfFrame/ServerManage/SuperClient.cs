@@ -30,7 +30,8 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                     //}
                 }), null);
 
-                //EFWCoreLib.WcfFrame.Utility.Upgrade.ClientUpgradeManager.DownLoadUpgrade();
+                
+
             }
             catch (Exception e)
             {

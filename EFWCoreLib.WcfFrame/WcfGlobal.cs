@@ -9,6 +9,7 @@ using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.CoreFrame.Init;
 using EFWCoreLib.WcfFrame.DataSerialize;
 using EFWCoreLib.WcfFrame.ServerManage;
+using EFWCoreLib.WcfFrame.Utility;
 using EFWCoreLib.WcfFrame.WcfHandler;
 
 namespace EFWCoreLib.WcfFrame
@@ -96,6 +97,7 @@ namespace EFWCoreLib.WcfFrame
                     break;
                 case StartType.PublishService://订阅
                     PublishServiceManage.InitPublishService();
+                    PublishSubManager.StartPublish();
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "发布订阅服务完成");
                     break;
             }
