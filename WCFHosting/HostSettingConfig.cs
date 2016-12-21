@@ -314,4 +314,43 @@ namespace WCFHosting
             return false;
         }
     }
+    /// <summary>
+    /// MongoDB配置文件
+    /// </summary>
+    public class HostMongoDBConfig
+    {
+        private static string mongoconf = System.Windows.Forms.Application.StartupPath + "\\Config\\mongo.conf";
+
+        public static string GetConfig()
+        {
+            string conf = null;
+            FileInfo file = new FileInfo(mongoconf);
+            if (file.Exists)
+            {
+                using (FileStream fsteam = file.OpenRead())
+                {
+                    byte[] buff = new byte[fsteam.Length];
+                    fsteam.Read(buff, 0, buff.Length);
+                    conf = Encoding.GetEncoding("gb2312").GetString(buff);
+                }
+            }
+            return conf;
+        }
+
+        public static bool SetConfig(string conf)
+        {
+            FileInfo file = new FileInfo(mongoconf);
+            if (file.Exists)
+            {
+                file.Delete();
+                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(mongoconf, true, Encoding.Default))
+                {
+                    sw.Write(conf);//直接追加文件末尾，不换行 
+                }
+                return true;
+            }
+
+            return false;
+        }
+    }
 }

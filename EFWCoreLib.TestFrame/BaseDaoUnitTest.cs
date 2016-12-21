@@ -92,7 +92,7 @@ namespace EFWCoreLib.UnitTestFrame
             int ct = pl.Length <= vals.Length ? pl.Length : vals.Length;
             for (int i = 0; i < ct; i++)
             {
-                pl[i].SetValue(t, convertVal(pl[i].PropertyType, vals[i]));
+                pl[i].SetValue(t, convertVal(pl[i].PropertyType, vals[i]),null);
             }
 
             list.Add(t);
@@ -106,7 +106,7 @@ namespace EFWCoreLib.UnitTestFrame
             int ct = pl.Length <= vals.Length ? pl.Length : vals.Length;
             for (int i = 0; i < ct; i++)
             {
-                pl[i].SetValue(obj, convertVal(pl[i].PropertyType, vals[i]));
+                pl[i].SetValue(obj, convertVal(pl[i].PropertyType, vals[i]),null);
             }
         }
     }

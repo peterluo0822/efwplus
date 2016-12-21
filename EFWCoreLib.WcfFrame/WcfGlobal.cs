@@ -10,6 +10,7 @@ using EFWCoreLib.CoreFrame.Init;
 using EFWCoreLib.WcfFrame.DataSerialize;
 using EFWCoreLib.WcfFrame.ServerManage;
 using EFWCoreLib.WcfFrame.Utility;
+using EFWCoreLib.WcfFrame.Utility.Mongodb;
 using EFWCoreLib.WcfFrame.WcfHandler;
 
 namespace EFWCoreLib.WcfFrame
@@ -97,8 +98,12 @@ namespace EFWCoreLib.WcfFrame
                     break;
                 case StartType.PublishService://订阅
                     PublishServiceManage.InitPublishService();
-                    PublishSubManager.StartPublish();
+                    //PublishSubManager.StartPublish();
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "发布订阅服务完成");
+                    break;
+                case StartType.MongoDB:
+                    MongodbManager.StartDB();//开启MongoDB
+                    MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "MongoDB启动完成");
                     break;
             }
 
@@ -183,12 +188,16 @@ namespace EFWCoreLib.WcfFrame
                 case StartType.PublishService://订阅
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "订阅服务已停止");
                     break;
+                case StartType.MongoDB:
+                    MongodbManager.StopDB();//停止MongoDB
+                    MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "MongoDB已停止");
+                    break;
             }
         }
     }
 
     public enum StartType
     {
-        BaseService, FileService, RouterBaseService, RouterFileService, MiddlewareTask, SuperClient, PublishService
+        BaseService, FileService, RouterBaseService, RouterFileService, MiddlewareTask, SuperClient, PublishService,MongoDB
     }
 }

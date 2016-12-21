@@ -36,4 +36,8 @@
   </overtime>
   <overtimetime value="1">
   </overtimetime>
+  <mongodb value="1">
+  </mongodb>
+  <mongodb_binpath value="C:\MongoDB\Server\3.2\bin">
+  </mongodb_binpath>
 </root>

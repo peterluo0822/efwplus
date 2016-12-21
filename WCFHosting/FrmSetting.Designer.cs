@@ -78,19 +78,26 @@
             this.label12 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnSvcConfig = new System.Windows.Forms.Button();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.txtMongodb = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txtmongobinpath = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.ckmongo = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // ckdebug
             // 
             this.ckdebug.AutoSize = true;
             this.ckdebug.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ckdebug.Location = new System.Drawing.Point(87, 51);
+            this.ckdebug.Location = new System.Drawing.Point(87, 44);
             this.ckdebug.Name = "ckdebug";
             this.ckdebug.Size = new System.Drawing.Size(99, 21);
             this.ckdebug.TabIndex = 0;
@@ -125,7 +132,7 @@
             // 
             this.ckrouter.AutoSize = true;
             this.ckrouter.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ckrouter.Location = new System.Drawing.Point(238, 73);
+            this.ckrouter.Location = new System.Drawing.Point(238, 66);
             this.ckrouter.Name = "ckrouter";
             this.ckrouter.Size = new System.Drawing.Size(99, 21);
             this.ckrouter.TabIndex = 3;
@@ -155,7 +162,7 @@
             // 
             this.ckwcf.AutoSize = true;
             this.ckwcf.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ckwcf.Location = new System.Drawing.Point(87, 73);
+            this.ckwcf.Location = new System.Drawing.Point(87, 66);
             this.ckwcf.Name = "ckwcf";
             this.ckwcf.Size = new System.Drawing.Size(99, 21);
             this.ckwcf.TabIndex = 6;
@@ -280,6 +287,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -289,6 +297,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.ckmongo);
             this.tabPage1.Controls.Add(this.cktask);
             this.tabPage1.Controls.Add(this.cktoken);
             this.tabPage1.Controls.Add(this.cbSerializeType);
@@ -323,7 +332,7 @@
             // 
             this.cktask.AutoSize = true;
             this.cktask.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.cktask.Location = new System.Drawing.Point(238, 51);
+            this.cktask.Location = new System.Drawing.Point(238, 44);
             this.cktask.Name = "cktask";
             this.cktask.Size = new System.Drawing.Size(99, 21);
             this.cktask.TabIndex = 23;
@@ -368,7 +377,7 @@
             // 
             this.ckWebapi.AutoSize = true;
             this.ckWebapi.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ckWebapi.Location = new System.Drawing.Point(238, 95);
+            this.ckWebapi.Location = new System.Drawing.Point(238, 88);
             this.ckWebapi.Name = "ckWebapi";
             this.ckWebapi.Size = new System.Drawing.Size(121, 21);
             this.ckWebapi.TabIndex = 19;
@@ -379,7 +388,7 @@
             // 
             this.ckfile.AutoSize = true;
             this.ckfile.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ckfile.Location = new System.Drawing.Point(87, 95);
+            this.ckfile.Location = new System.Drawing.Point(87, 88);
             this.ckfile.Name = "ckfile";
             this.ckfile.Size = new System.Drawing.Size(123, 21);
             this.ckfile.TabIndex = 18;
@@ -519,7 +528,7 @@
             this.txtconnstr.Location = new System.Drawing.Point(9, 36);
             this.txtconnstr.Multiline = true;
             this.txtconnstr.Name = "txtconnstr";
-            this.txtconnstr.Size = new System.Drawing.Size(404, 206);
+            this.txtconnstr.Size = new System.Drawing.Size(404, 235);
             this.txtconnstr.TabIndex = 3;
             // 
             // label9
@@ -624,6 +633,71 @@
             this.btnSvcConfig.UseVisualStyleBackColor = true;
             this.btnSvcConfig.Click += new System.EventHandler(this.btnSvcConfig_Click);
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.txtmongobinpath);
+            this.tabPage5.Controls.Add(this.label16);
+            this.tabPage5.Controls.Add(this.txtMongodb);
+            this.tabPage5.Controls.Add(this.label15);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(422, 288);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "MongoDB配置";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // txtMongodb
+            // 
+            this.txtMongodb.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtMongodb.ForeColor = System.Drawing.Color.Blue;
+            this.txtMongodb.Location = new System.Drawing.Point(9, 85);
+            this.txtMongodb.Multiline = true;
+            this.txtMongodb.Name = "txtMongodb";
+            this.txtMongodb.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtMongodb.Size = new System.Drawing.Size(404, 186);
+            this.txtMongodb.TabIndex = 5;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label15.Location = new System.Drawing.Point(6, 65);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(68, 17);
+            this.label15.TabIndex = 4;
+            this.label15.Text = "配置内容：";
+            // 
+            // txtmongobinpath
+            // 
+            this.txtmongobinpath.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtmongobinpath.ForeColor = System.Drawing.Color.Blue;
+            this.txtmongobinpath.Location = new System.Drawing.Point(8, 39);
+            this.txtmongobinpath.Name = "txtmongobinpath";
+            this.txtmongobinpath.Size = new System.Drawing.Size(404, 23);
+            this.txtmongobinpath.TabIndex = 7;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label16.Location = new System.Drawing.Point(5, 19);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(128, 17);
+            this.label16.TabIndex = 6;
+            this.label16.Text = "MongoDB程序目录：";
+            // 
+            // ckmongo
+            // 
+            this.ckmongo.AutoSize = true;
+            this.ckmongo.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ckmongo.Location = new System.Drawing.Point(238, 110);
+            this.ckmongo.Name = "ckmongo";
+            this.ckmongo.Size = new System.Drawing.Size(111, 21);
+            this.ckmongo.TabIndex = 24;
+            this.ckmongo.Text = "开启MongoDB";
+            this.ckmongo.UseVisualStyleBackColor = true;
+            // 
             // FrmSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -650,6 +724,8 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -705,5 +781,11 @@
         private System.Windows.Forms.TextBox txtlocalurl;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button btnSvcConfig;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TextBox txtMongodb;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txtmongobinpath;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.CheckBox ckmongo;
     }
 }

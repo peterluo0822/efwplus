@@ -99,8 +99,8 @@ namespace EFWCoreLib.CoreFrame.Common
             }
             catch (Exception err)
             {
-                WriterLog(LogType.MidLog, true, Color.Red, "写入日志文件失败，停止继续写入操作！");
-                timer.Stop();
+                WriterLog(LogType.MidLog, true, Color.Red, "写入日志文件失败！"+err.Message);
+                //timer.Stop();
             }
         }
         static string getLogName(LogType logtype)

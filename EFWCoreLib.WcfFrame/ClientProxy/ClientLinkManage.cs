@@ -44,7 +44,6 @@ namespace EFWCoreLib.WcfFrame
                     }
 
                     link = new ClientLink(null, pluginname);
-                    link.clientObj.Token = Token;//赋值令牌
                     ClientLinkDic.Add(pluginname, link);
                 }
                 link.CreateConnection(null, ((ism, met) =>
@@ -52,6 +51,7 @@ namespace EFWCoreLib.WcfFrame
                     IsMessage = ism;
                     MessageTime = met;
                 }));
+                link.clientObj.Token = Token;//赋值令牌
                 return link;
             }
             catch (Exception err)

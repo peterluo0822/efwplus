@@ -26,6 +26,10 @@ namespace EFWCoreLib.WcfFrame
     {
         #region 变量
         /// <summary>
+        /// 客户端名称
+        /// </summary>
+        public string ClientName { get; set; }
+        /// <summary>
         /// 服务插件名称
         /// </summary>
         public string PluginName { get; set; }
@@ -54,7 +58,9 @@ namespace EFWCoreLib.WcfFrame
         /// <param name="pluginname">插件名称</param>
         public ClientLink(string pluginname)
         {
-            InitComm(null, pluginname);
+            ClientName = null;
+            PluginName = pluginname;
+            //InitComm(null, pluginname);
         }
         /// <summary>
         /// 初始化通讯连接
@@ -63,7 +69,9 @@ namespace EFWCoreLib.WcfFrame
         /// <param name="pluginname">插件名称</param>
         public ClientLink(string clientname, string pluginname)
         {
-            InitComm(clientname, pluginname);
+            ClientName = clientname;
+            PluginName = pluginname;
+            //InitComm(clientname, pluginname);
         }
 
         /// <summary>
@@ -74,29 +82,31 @@ namespace EFWCoreLib.WcfFrame
         /// <param name="_wcfendpoint">终结结配置名称</param>
         public ClientLink(string clientname, string pluginname, string _wcfendpoint)
         {
+            ClientName = clientname;
+            PluginName = pluginname;
             wcfendpoint = _wcfendpoint;
-            InitComm(clientname, pluginname);
+            //InitComm(clientname, pluginname);
         }
 
-        private void InitComm(string clientname, string pluginname)
+        private void InitComm()
         {
-            if (string.IsNullOrEmpty(clientname))
-                clientname = getLocalIPAddress();
-            if (string.IsNullOrEmpty(pluginname))
-                pluginname = "SuperPlugin";
+            if (string.IsNullOrEmpty(ClientName))
+                ClientName = getLocalIPAddress();
+            if (string.IsNullOrEmpty(PluginName))
+                PluginName = "SuperPlugin";
 
-            PluginName = pluginname;
+            //PluginName = pluginname;
 
             clientObj = new ClientObject();
-            clientObj.ClientName = clientname;
+            clientObj.ClientName = ClientName;
             clientObj.RouterID = Guid.NewGuid().ToString();
-            clientObj.PluginName = pluginname;
+            clientObj.PluginName = PluginName;
             clientObj.ReplyService = new ReplyDataCallback(this);
 
-            if (baseServiceClient == null)
-                baseServiceClient = new DuplexBaseServiceClient(clientObj.ReplyService, wcfendpoint);
-            if (fileServiceClient == null)
-                fileServiceClient = new FileServiceClient(fileendpoint);
+            //if (baseServiceClient == null)
+            baseServiceClient = new DuplexBaseServiceClient(clientObj.ReplyService, wcfendpoint);
+            //if (fileServiceClient == null)
+            fileServiceClient = new FileServiceClient(fileendpoint);
         }
         #endregion
 
@@ -206,10 +216,11 @@ namespace EFWCoreLib.WcfFrame
         /// </summary>
         public void CreateConnection()
         {
-            baseServiceClient.Open();
+            InitComm();//初始化通信
+            
             clientObj.WcfService = baseServiceClient;
             string serverConfig = null;
-
+            baseServiceClient.Open();
             AddMessageHeader(baseServiceClient.InnerDuplexChannel as IContextChannel, "", (() =>
             {
 
@@ -276,9 +287,13 @@ namespace EFWCoreLib.WcfFrame
         public ServiceResponseData Request(string controller, string method, Action<ClientRequestData> requestAction)
         {
             if (clientObj == null) throw new Exception("还没有创建连接！");
-            while (clientObj.ClientID == null)//解决并发问题
+            while (baseServiceClient.State == CommunicationState.Opening)//解决并发问题
             {
                 Thread.Sleep(100);
+            }
+            if(baseServiceClient.State==CommunicationState.Closed || baseServiceClient.State == CommunicationState.Faulted)
+            {
+                ReConnection(true);//连接服务主机失败，重连
             }
             try
             {
@@ -353,7 +368,7 @@ namespace EFWCoreLib.WcfFrame
             catch (Exception e)
             {
                 ServerConfigRequestState = false;
-                ReConnection(true);//连接服务主机失败，重连
+                //ReConnection(true);//连接服务主机失败，重连
                 //throw new Exception(e.Message + "\n连接服务主机失败，请联系管理员！");
                 throw new Exception(e.Message);
             }
@@ -500,16 +515,21 @@ namespace EFWCoreLib.WcfFrame
         {
             try
             {
-                baseServiceClient.Open();
-                clientObj.WcfService = baseServiceClient;
+                if (baseServiceClient.State == CommunicationState.Closed || baseServiceClient.State == CommunicationState.Faulted)
+                {
+                    CreateConnection();
+                }
+                //else {
+                //    baseServiceClient.Open();
+                //    clientObj.WcfService = baseServiceClient;
+                    
+                //    if (createconnAction != null)
+                //    {
+                //        createconnAction();
+                //    }
+                //}
                 if (isRequest == true)//避免死循环
                     Heartbeat();//重连之后必须再次调用心跳
-
-                if (createconnAction != null)
-                {
-                    createconnAction();
-                }
-
                 MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "重新连接上级中间件成功！");
             }
             catch
@@ -525,6 +545,10 @@ namespace EFWCoreLib.WcfFrame
         private bool Heartbeat()
         {
             DuplexBaseServiceClient _wcfService = clientObj.WcfService;
+            if (_wcfService.State == CommunicationState.Closed || _wcfService.State == CommunicationState.Faulted)
+            {
+                ReConnection(false);//连接服务主机失败，重连
+            }
             try
             {
                 bool ret = false;
@@ -580,7 +604,7 @@ namespace EFWCoreLib.WcfFrame
             {
                 MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "上级中间件失去连接！\n" + clientObj.PluginName + "\n" + err.Message);
                 ServerConfigRequestState = false;
-                ReConnection(false);//连接服务主机失败，重连
+                //ReConnection(false);//连接服务主机失败，重连
                 return false;
             }
         }

@@ -88,6 +88,11 @@ namespace WCFHosting
                 WebApiGlobal.IsToken = HostSettingConfig.GetValue("token") == "1" ? true : false;
                 WebApiGlobal.Main();
             }
+
+            if (Convert.ToInt32(HostSettingConfig.GetValue("mongodb")) == 1)
+            {
+                WcfGlobal.Main(StartType.MongoDB);
+            }
             if (Convert.ToInt32(HostSettingConfig.GetValue("timingtask")) == 1)
                 WcfGlobal.Main(StartType.MiddlewareTask);
 
@@ -107,6 +112,7 @@ namespace WCFHosting
             WcfGlobal.Exit(StartType.FileService);
             WcfGlobal.Exit(StartType.RouterBaseService);
             WcfGlobal.Exit(StartType.RouterFileService);
+            WcfGlobal.Exit(StartType.MongoDB);
             WebApiGlobal.Exit();
     
             RunState = HostState.NoOpen;

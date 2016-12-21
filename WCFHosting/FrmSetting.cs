@@ -28,6 +28,8 @@ namespace WCFHosting
             HostSettingConfig.SetValue("router", ckrouter.Checked ? "1" : "0");
             HostSettingConfig.SetValue("filetransfer", ckfile.Checked ? "1" : "0");
             HostSettingConfig.SetValue("webapi", ckWebapi.Checked ? "1" : "0");
+            HostSettingConfig.SetValue("mongodb", ckmongo.Checked ? "1" : "0");
+            HostSettingConfig.SetValue("mongodb_binpath", txtmongobinpath.Text);
             HostSettingConfig.SetValue("heartbeat", ckheartbeat.Checked ? "1" : "0");
             HostSettingConfig.SetValue("heartbeattime", txtheartbeattime.Text);
             HostSettingConfig.SetValue("message", ckmessage.Checked ? "1" : "0");
@@ -55,6 +57,8 @@ namespace WCFHosting
             HostDataBaseConfig.SetConnString(txtconnstr.Text);
             HostDataBaseConfig.SaveConfig();
 
+            HostMongoDBConfig.SetConfig(txtMongodb.Text);//保存mongodb配置文件
+
             isOk = true;
             MessageBox.Show("保存参数后，需重启程序才会生效！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
@@ -74,6 +78,7 @@ namespace WCFHosting
             ckrouter.Checked = HostSettingConfig.GetValue("router") == "1" ? true : false;
             ckfile.Checked = HostSettingConfig.GetValue("filetransfer") == "1" ? true : false;
             ckWebapi.Checked = HostSettingConfig.GetValue("webapi") == "1" ? true : false;
+            ckmongo.Checked= HostSettingConfig.GetValue("mongodb") == "1" ? true : false;
             ckheartbeat.Checked = HostSettingConfig.GetValue("heartbeat") == "1" ? true : false;
             txtheartbeattime.Text = HostSettingConfig.GetValue("heartbeattime");
             ckmessage.Checked = HostSettingConfig.GetValue("message") == "1" ? true : false;
@@ -95,6 +100,8 @@ namespace WCFHosting
             txtweb.Text = HostAddressConfig.GetWebapiAddress();
 
             txtconnstr.Text = HostDataBaseConfig.GetConnString();
+            txtmongobinpath.Text = HostSettingConfig.GetValue("mongodb_binpath");
+            txtMongodb.Text = HostMongoDBConfig.GetConfig();
         }
 
         private void btnSvcConfig_Click(object sender, EventArgs e)

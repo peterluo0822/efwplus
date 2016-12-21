@@ -23,7 +23,8 @@ namespace EFWCoreLib.WcfFrame.Utility
         /// </summary>
         public static void StartPublish()
         {
-            psoList = ServerManage.SuperClient.superclient.GetPublishServiceList();
+            if (ServerManage.SuperClient.superclient != null)
+                psoList = ServerManage.SuperClient.superclient.GetPublishServiceList();
         }
 
         /// <summary>
