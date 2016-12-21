@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<UpdateInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <AppName>HIS</AppName>
+  <AppVersion>1.1.0.0</AppVersion>
+  <PublishUrl />
+  <FileExecuteBefore />
+  <ExecuteArgumentBefore />
+  <FileExecuteAfter>efwplusClient.exe</FileExecuteAfter>
+  <ExecuteArgumentAfter />
+  <ExecuteTimeout>0</ExecuteTimeout>
+  <Desc>程序升级到1.1版本</Desc>
+  <Package>update.zip</Package>
+  <MD5>9DBF9C55535689D87DD1F770CBD98354</MD5>
+  <DeleteFileLimits />
+  <DeleteMethod>None</DeleteMethod>
+  <RequiredMinVersion />
+  <PackageSize>10706483</PackageSize>
+  <PackagePassword />
+</UpdateInfo>

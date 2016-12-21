@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <Publish>
+	<service pluginname="Books.Service" controller="bookWcfController" method="GetBooks" argument=""></service>
+  </Publish>
+  <Subscibe name="????2" execfrequency="0" shorttime="00:15:00" serialorparallel="1">
+	<service pluginname="Books.Service" controller="bookWcfController" method="TestProc" argument=""></service>
+	<service pluginname="Books.Service" controller="bookWcfController" method="GetDiseaseData" argument=""></service>
+	<service pluginname="Books.Service" controller="bookWcfController" method="GetBooks" argument=""></service>
+  </Subscibe>
+</root>

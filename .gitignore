@@ -211,7 +211,13 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 
-*.dll
-Output/
+
+Output/MongoDB/
+Output/ServerLog/
+Output/FileStore/
+Output/CodeTemplate/
+Output/ModulePlugin/
+Output/Http/setup_*.exe
+Docs/
 Output_Client/
 *.png
