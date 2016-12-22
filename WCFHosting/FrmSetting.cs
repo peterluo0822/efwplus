@@ -30,6 +30,7 @@ namespace WCFHosting
             HostSettingConfig.SetValue("webapi", ckWebapi.Checked ? "1" : "0");
             HostSettingConfig.SetValue("mongodb", ckmongo.Checked ? "1" : "0");
             HostSettingConfig.SetValue("mongodb_binpath", txtmongobinpath.Text);
+            HostSettingConfig.SetValue("mongodb_conn", txtmongodb_conn.Text);
             HostSettingConfig.SetValue("heartbeat", ckheartbeat.Checked ? "1" : "0");
             HostSettingConfig.SetValue("heartbeattime", txtheartbeattime.Text);
             HostSettingConfig.SetValue("message", ckmessage.Checked ? "1" : "0");
@@ -101,6 +102,7 @@ namespace WCFHosting
 
             txtconnstr.Text = HostDataBaseConfig.GetConnString();
             txtmongobinpath.Text = HostSettingConfig.GetValue("mongodb_binpath");
+            txtmongodb_conn.Text= HostSettingConfig.GetValue("mongodb_conn");
             txtMongodb.Text = HostMongoDBConfig.GetConfig();
         }
 

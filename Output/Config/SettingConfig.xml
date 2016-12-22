@@ -40,4 +40,6 @@
   </mongodb>
   <mongodb_binpath value="C:\MongoDB\Server\3.2\bin">
   </mongodb_binpath>
+  <mongodb_conn value="mongodb://localhost:27017">
+  </mongodb_conn>
 </root>

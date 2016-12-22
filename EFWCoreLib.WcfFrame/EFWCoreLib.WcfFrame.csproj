@@ -70,6 +70,12 @@
     <Reference Include="Microsoft.Practices.Unity.Interception">
       <HintPath>..\Component\Microsoft.Practices.Unity.Interception.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\Component\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\Component\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Component\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -126,6 +132,7 @@
     <Compile Include="ServerManage\RouterManage.cs" />
     <Compile Include="ServerManage\SuperClient.cs" />
     <Compile Include="Utility\Mongodb\MongodbManager.cs" />
+    <Compile Include="Utility\Mongodb\MongoHelper.cs" />
     <Compile Include="Utility\PublishSubManager.cs" />
     <Compile Include="Utility\SSO\AuthResult.cs" />
     <Compile Include="Utility\SSO\ConvertHelper.cs" />
