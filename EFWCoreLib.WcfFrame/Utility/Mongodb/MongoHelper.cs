@@ -24,6 +24,14 @@ namespace EFWCoreLib.WcfFrame.Utility.Mongodb
             SetCollection();
         }
 
+        public MongoHelper()
+        {
+            conn = WcfGlobal.MongoConnStr;
+            dbName = "EMRStore";
+            collectionName = typeof(T).Name;
+            SetCollection();
+        }
+
         /// <summary>
         /// 设置你的collection
         /// </summary>
@@ -95,5 +103,12 @@ namespace EFWCoreLib.WcfFrame.Utility.Mongodb
         //public DateTime created_at { get; set; }
         //[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         //public DateTime updated_at { get; set; }
+
+        public string getstring_id()
+        {
+            if (id != null)
+                return id.ToString();
+            return null;
+        }
     }
 }

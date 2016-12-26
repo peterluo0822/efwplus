@@ -25,6 +25,7 @@ namespace EFWCoreLib.WcfFrame
         public static string HostName = "";//中间件显示名称
         public static bool IsToken = false;
         public static string ns = "http://www.efwplus.cn/";
+        public static string MongoConnStr = "";//mongo连接字符串
 
         static ServiceHost mAppHost = null;
         static ServiceHost mFileHost = null;
@@ -35,7 +36,7 @@ namespace EFWCoreLib.WcfFrame
             IsDebug = HostSettingConfig.GetValue("debug") == "1" ? true : false;
             HostName = HostSettingConfig.GetValue("hostname");
             IsToken = HostSettingConfig.GetValue("token") == "1" ? true : false;
-
+            MongoConnStr= HostSettingConfig.GetValue("mongodb_conn");
             switch (type)
             {
                 case StartType.BaseService:

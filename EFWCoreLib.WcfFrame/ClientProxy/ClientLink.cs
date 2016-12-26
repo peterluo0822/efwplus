@@ -287,10 +287,11 @@ namespace EFWCoreLib.WcfFrame
         public ServiceResponseData Request(string controller, string method, Action<ClientRequestData> requestAction)
         {
             if (clientObj == null) throw new Exception("还没有创建连接！");
-            while (baseServiceClient.State == CommunicationState.Opening)//解决并发问题
+            while (baseServiceClient.State == CommunicationState.Opening || clientObj.ClientID == null)//解决并发问题
             {
-                Thread.Sleep(100);
+                Thread.Sleep(400);
             }
+
             if(baseServiceClient.State==CommunicationState.Closed || baseServiceClient.State == CommunicationState.Faulted)
             {
                 ReConnection(true);//连接服务主机失败，重连

@@ -144,7 +144,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>Copy "$(TargetDir)\$(TargetFileName)" "$(SolutionDir)Output"</PostBuildEvent>
+    <PostBuildEvent>Copy "$(TargetDir)\$(TargetFileName)" "$(SolutionDir)Output"
+Copy "$(TargetDir)\$(TargetFileName)" "D:\SinoCloudHIS\cloudhospital\Component"
+Copy "$(TargetDir)\$(TargetFileName)" "D:\SinoCloudHIS\cloudhospital\Output"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
