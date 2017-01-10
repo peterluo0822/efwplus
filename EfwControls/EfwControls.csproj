@@ -207,31 +207,6 @@
     <Compile Include="CustomControl\TextBoxCard.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="HISControl\BedCard.Controls\BedCardControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="HISControl\BedCard.Controls\BedCardControl.Designer.cs">
-      <DependentUpon>BedCardControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HISControl\BedCard.Controls\BedInfo.cs" />
-    <Compile Include="HISControl\BedCard.Controls\BedItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="HISControl\UCPayMode\AsynPaymentCalculate.cs" />
-    <Compile Include="HISControl\UCPayMode\CostPayManager.cs" />
-    <Compile Include="HISControl\UCPayMode\FrmSettlementPanel2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="HISControl\UCPayMode\FrmSettlementPanel2.Designer.cs">
-      <DependentUpon>FrmSettlementPanel2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HISControl\UCPayMode\PAY_THREAD.cs" />
-    <Compile Include="HISControl\UCPayMode\UCPayMode2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="HISControl\UCPayMode\UCPayMode2.designer.cs">
-      <DependentUpon>UCPayMode2.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -279,15 +254,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControl\StatDateTime.resx">
       <DependentUpon>StatDateTime.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="HISControl\BedCard.Controls\BedCardControl.resx">
-      <DependentUpon>BedCardControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="HISControl\UCPayMode\FrmSettlementPanel2.resx">
-      <DependentUpon>FrmSettlementPanel2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="HISControl\UCPayMode\UCPayMode2.resx">
-      <DependentUpon>UCPayMode2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
