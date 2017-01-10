@@ -17,6 +17,7 @@ namespace WCFHosting.PublishSubscibe
         public FrmPublishSub()
         {
             InitializeComponent();
+            dataGridView1.AutoGenerateColumns = false;
         }
 
         private void FrmPublishSub_Load(object sender, EventArgs e)

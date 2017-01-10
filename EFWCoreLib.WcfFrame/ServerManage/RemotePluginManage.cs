@@ -12,7 +12,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
 {
     public class RemotePluginManage
     {
-        public static List<RemotePlugin> RemotePluginDic;//远程注册插件
+        private static List<RemotePlugin> RemotePluginDic = new List<RemotePlugin>();//远程注册插件
 
         public static LocalPlugin GetLocalPlugin()
         {
@@ -23,10 +23,16 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             return localPlugin;
         }
 
+        public static List<RemotePlugin> GetRemotePlugin()
+        {
+            return RemotePluginDic;
+        }
+
+        //在订阅中调用
         public static void RegisterRemotePlugin(IDataReply callback, string ServerIdentify, string[] plugin)
         {
             
-            RemotePluginDic = new List<RemotePlugin>();
+            //RemotePluginDic = new List<RemotePlugin>();
            
             //自己没必要注册自己
             if (ServerIdentify == WcfGlobal.Identify) return;
@@ -73,6 +79,19 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                 //重新注册远程插件
                 //?
             }
+        }
+    }
+
+
+    public class RemotePluginClient
+    {
+        public static LocalPlugin GetLocalPlugin()
+        {
+            LocalPlugin localPlugin = new LocalPlugin();
+            localPlugin.ServerIdentify = WcfGlobal.Identify;
+            localPlugin.PluginDic = CoreFrame.Init.AppPluginManage.PluginDic;
+
+            return localPlugin;
         }
     }
 

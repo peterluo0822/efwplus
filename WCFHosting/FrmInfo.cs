@@ -86,9 +86,9 @@ namespace WCFHosting
 
             text.AppendLine();
             text.AppendLine("[远程插件]");
-            if (RemotePluginManage.RemotePluginDic != null)
+            if (RemotePluginManage.GetRemotePlugin() != null)
             {
-                foreach (var p in RemotePluginManage.RemotePluginDic)
+                foreach (var p in RemotePluginManage.GetRemotePlugin())
                 {
                     text.AppendLine(p.ServerIdentify + "\t" + String.Join(",", p.plugin));
                 }

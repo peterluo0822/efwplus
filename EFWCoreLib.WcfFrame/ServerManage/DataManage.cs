@@ -108,9 +108,9 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                 }
                 else//本地插件找不到，就执行远程插件
                 {
-                    if (RemotePluginManage.RemotePluginDic.FindIndex(x => x.ServerIdentify == para.replyidentify) > -1)
+                    if (RemotePluginManage.GetRemotePlugin().FindIndex(x => x.ServerIdentify == para.replyidentify) > -1)
                     {
-                        RemotePlugin rp = RemotePluginManage.RemotePluginDic.Find(x => x.ServerIdentify == para.replyidentify);
+                        RemotePlugin rp = RemotePluginManage.GetRemotePlugin().Find(x => x.ServerIdentify == para.replyidentify);
                         string[] ps = rp.plugin;
 
                         if (ps.ToList().FindIndex(x => x == plugin) > -1)
@@ -252,9 +252,9 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                 }
                 else//本地插件找不到，就执行远程插件
                 {
-                    if (RemotePluginManage.RemotePluginDic.FindIndex(x => x.ServerIdentify == para.replyidentify) > -1)
+                    if (RemotePluginManage.GetRemotePlugin().FindIndex(x => x.ServerIdentify == para.replyidentify) > -1)
                     {
-                        RemotePlugin rp = RemotePluginManage.RemotePluginDic.Find(x => x.ServerIdentify == para.replyidentify);
+                        RemotePlugin rp = RemotePluginManage.GetRemotePlugin().Find(x => x.ServerIdentify == para.replyidentify);
                         string[] ps = rp.plugin;
 
                         if (ps.ToList().FindIndex(x => x == plugin) > -1)

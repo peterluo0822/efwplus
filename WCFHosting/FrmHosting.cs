@@ -67,37 +67,18 @@ namespace WCFHosting
 
         private void StartAllHost()
         {
-            if (Convert.ToInt32(HostSettingConfig.GetValue("wcfservice")) == 1)
-            {
-                ClientManage.clientinfoList = new ClientInfoListHandler(BindGridClient);
-                WcfGlobal.Identify = identify;
-                WcfGlobal.Main(StartType.BaseService);
-            }
-            if (Convert.ToInt32(HostSettingConfig.GetValue("filetransfer")) == 1)
-            {
-                WcfGlobal.Main(StartType.FileService);
-            }
-            if (Convert.ToInt32(HostSettingConfig.GetValue("router")) == 1)
-            {
-                EFWCoreLib.WcfFrame.ServerManage.RouterManage.hostwcfRouter = new HostWCFRouterListHandler(BindGridRouter);
-                WcfGlobal.Main(StartType.RouterBaseService);
-                WcfGlobal.Main(StartType.RouterFileService);
-            }
+            WcfGlobal.Identify = identify;
+            EFWCoreLib.WcfFrame.ServerManage.ClientManage.clientinfoList = new ClientInfoListHandler(BindGridClient);
+            EFWCoreLib.WcfFrame.ServerManage.RouterManage.hostwcfRouter = new HostWCFRouterListHandler(BindGridRouter);
+
+            WcfGlobal.Main();
+
             if (Convert.ToInt32(HostSettingConfig.GetValue("webapi")) == 1)
             {
                 WebApiGlobal.IsToken = HostSettingConfig.GetValue("token") == "1" ? true : false;
                 WebApiGlobal.Main();
             }
 
-            if (Convert.ToInt32(HostSettingConfig.GetValue("mongodb")) == 1)
-            {
-                WcfGlobal.Main(StartType.MongoDB);
-            }
-            if (Convert.ToInt32(HostSettingConfig.GetValue("timingtask")) == 1)
-                WcfGlobal.Main(StartType.MiddlewareTask);
-
-            WcfGlobal.Main(StartType.SuperClient);
-            WcfGlobal.Main(StartType.PublishService);
             RunState = HostState.Opened;
         }
 
@@ -105,14 +86,7 @@ namespace WCFHosting
         {
             MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "正在准备关闭中间件服务，请等待...");
 
-            WcfGlobal.Exit(StartType.PublishService);
-            WcfGlobal.Exit(StartType.MiddlewareTask);
-            WcfGlobal.Exit(StartType.SuperClient);
-            WcfGlobal.Exit(StartType.BaseService);
-            WcfGlobal.Exit(StartType.FileService);
-            WcfGlobal.Exit(StartType.RouterBaseService);
-            WcfGlobal.Exit(StartType.RouterFileService);
-            WcfGlobal.Exit(StartType.MongoDB);
+            WcfGlobal.Exit();
             WebApiGlobal.Exit();
     
             RunState = HostState.NoOpen;
@@ -404,7 +378,9 @@ namespace WCFHosting
         //发布服务
         private void btnPublishService_Click(object sender, EventArgs e)
         {
-           
+            //FSLib.App.SimpleUpdater.Updater.CheckUpdateSimple("http://localhost:8088/{0}", "update.xml");
+            FrmPublishServer frmSer = new FrmPublishServer();
+            frmSer.ShowDialog();
         }
         //订阅服务
         private void btnSubscibe_Click(object sender, EventArgs e)

@@ -13,9 +13,12 @@ namespace efwplusWatcher
 {
     public partial class FrmMain : Form
     {
+        ProcessWatcher pwatcher;
         public FrmMain()
         {
             InitializeComponent();
+
+            AutoRun.SetAutoRun("PWatcher", Application.ExecutablePath);
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
@@ -32,12 +35,18 @@ namespace efwplusWatcher
                 foreach( var s in strProcessAddress.Split(','))
                 {
                     WatcherFile wf = new WatcherFile();
-                    wf.fileName = s;
+                    wf.fileName = s.Trim();
                     wflist.Add(wf);
                 }
             }
 
             dataGridView1.DataSource = wflist;
+
+
+            pwatcher = new ProcessWatcher();
+            pwatcher.OnStart();
+
+           
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -52,7 +61,8 @@ namespace efwplusWatcher
 
         private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            pwatcher.OnStop();
+            this.Dispose();
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)

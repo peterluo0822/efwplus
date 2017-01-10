@@ -236,6 +236,27 @@ namespace WCFHosting
             }
         }
 
+        public static string GetUpdaterUrl()
+        {
+            if (xmldoc_app == null) InitConfig();
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("appSettings/add[@key='UpdaterUrl']");
+            if (node != null)
+            {
+                return node.Attributes["value"].Value;
+            }
+            return null;
+        }
+
+        public static void SetUpdaterUrl(string url)
+        {
+            if (xmldoc_app == null) InitConfig();
+            XmlNode node = xmldoc_app.DocumentElement.SelectSingleNode("appSettings/add[@key='UpdaterUrl']");
+            if (node != null)
+            {
+                node.Attributes["value"].Value = url;
+            }
+        }
+
 
         public static void SaveConfig()
         {

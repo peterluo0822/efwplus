@@ -16,7 +16,7 @@ namespace efwplusWatcher
         private string[] _processAddress;
         private object _lockerForLog = new object();
         private string _logPath = string.Empty;
-
+        private List<Thread> threadList;
 
         /// <summary>
         /// 构造函数
@@ -58,6 +58,7 @@ namespace efwplusWatcher
         {
             try
             {
+                threadList = new List<Thread>();
                 this.StartWatch();
             }
             catch (Exception ex)
@@ -74,7 +75,13 @@ namespace efwplusWatcher
         {
             try
             {
-
+                if (threadList != null)
+                {
+                    foreach(var t in threadList)
+                    {
+                        t.Abort();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -157,6 +164,8 @@ namespace efwplusWatcher
             ProcessRestart objProcessRestart = new ProcessRestart(process, address);
             Thread thread = new Thread(new ThreadStart(objProcessRestart.RestartProcess));
             thread.Start();
+
+            threadList.Add(thread);
         }
 
 

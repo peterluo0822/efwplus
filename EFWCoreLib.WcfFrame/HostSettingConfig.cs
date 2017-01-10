@@ -23,13 +23,19 @@ namespace EFWCoreLib.WcfFrame
         public static string GetValue(string keyname)
         {
             if (xmlDoc == null) InitConfig();
-            return xmlDoc.DocumentElement.SelectNodes(keyname)[0].Attributes["value"].Value.ToString();
+            if (xmlDoc.DocumentElement.SelectNodes(keyname).Count > 0)
+                return xmlDoc.DocumentElement.SelectNodes(keyname)[0].Attributes["value"].Value.ToString();
+            else
+                return "0";
         }
 
         public static string GetValue(string keyname, string attrname)
         {
             if (xmlDoc == null) InitConfig();
-            return xmlDoc.DocumentElement.SelectNodes(keyname)[0].Attributes[attrname].Value.ToString();
+            if (xmlDoc.DocumentElement.SelectNodes(keyname).Count > 0)
+                return xmlDoc.DocumentElement.SelectNodes(keyname)[0].Attributes[attrname].Value.ToString();
+            else
+                return "0";
         }
 
         public static void SetValue(string keyname, string value)

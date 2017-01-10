@@ -40,6 +40,12 @@ namespace EFWCoreLib.CoreFrame.Common
             }
         }
 
+
+        public static void WriterLog(string text)
+        {
+            WriterLog(LogType.MidLog, true, Color.Black, text);
+        }
+
         private static void WriterFile()
         {
             foreach (var item in LogNameDic)

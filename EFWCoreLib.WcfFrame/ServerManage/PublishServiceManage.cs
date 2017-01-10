@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using EFWCoreLib.CoreFrame.Business.AttributeInfo;
 using EFWCoreLib.CoreFrame.Common;
 using EFWCoreLib.WcfFrame.ClientController;
@@ -20,6 +21,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
     /// </summary>
     public class PublishServiceManage
     {
+        public static string publishSubscibefile = System.Windows.Forms.Application.StartupPath + "\\Config\\PublishSubscibe.xml";
         private static Object syncObj = new Object();//定义一个静态对象用于线程部份代码块的锁定，用于lock操作
         public static List<Subscriber> subscriberList;//订阅者列表
         public static List<PublishServiceObject> serviceList;//服务列表
@@ -29,28 +31,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
         public static void InitPublishService()
         {
             subscriberList = new List<Subscriber>();//订阅者列表
-            serviceList = new List<PublishServiceObject>();
-
-            //考虑从订阅服务配置文件读取订阅服务
-            PublishServiceObject serviceObj = new PublishServiceObject();
-            serviceObj.publishServiceName = "DistributedCache";//分布式缓存服务
-            serviceObj.explain = "分布式缓存服务";
-            serviceList.Add(serviceObj);
-
-            serviceObj = new PublishServiceObject();
-            serviceObj.publishServiceName = "RemotePlugin";//远程插件服务
-            serviceObj.explain = "远程插件服务";
-            serviceList.Add( serviceObj);
-
-            serviceObj = new PublishServiceObject();
-            serviceObj.publishServiceName = "UpgradeClient";//文件升级服务
-            serviceObj.explain = "客户端程序升级服务";
-            serviceList.Add(serviceObj);
-
-            serviceObj = new PublishServiceObject();
-            serviceObj.publishServiceName = "MongodbSync";//Mongodb数据同步
-            serviceObj.explain = "Mongodb数据同步服务";
-            serviceList.Add(serviceObj);
+            serviceList = LoadXML();
         }
         /// <summary>
         /// 服务端发布订阅服务列表
@@ -58,7 +39,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
         /// <returns></returns>
         public static List<PublishServiceObject> GetPublishServiceList()
         {
-            return serviceList;
+            return serviceList.FindAll(x => x.whether == true);
         }
         /// <summary>
         /// 客户端订阅
@@ -80,11 +61,11 @@ namespace EFWCoreLib.WcfFrame.ServerManage
                     sub.clientId = clientId;
                     sub.publishServiceName = publishServiceName;
                     sub.callback = callback;
-
+                    sub.ServerIdentify = ServerIdentify;
                     subscriberList.Add(sub);
                 }
                 ShowHostMsg(Color.Blue, DateTime.Now, "客户端[" + clientId + "]订阅“" + publishServiceName + "”服务成功！");
-                SendNotify(sub);
+                //SendNotify(sub);
             }
         }
         /// <summary>
@@ -129,7 +110,36 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             }
         }
 
-        
+        private static List<PublishServiceObject> LoadXML()
+        {
+            List<PublishServiceObject> _serviceList = new List<PublishServiceObject>();
+            try
+            {
+                XmlDocument xmlDoc = new System.Xml.XmlDocument();
+                xmlDoc.Load(publishSubscibefile);
+
+                XmlNodeList pubservicelist = xmlDoc.DocumentElement.SelectNodes("Publish/service");
+                foreach (XmlNode xe in pubservicelist)
+                {
+                    PublishServiceObject serviceObj = new PublishServiceObject();
+                    serviceObj.whether = xe.Attributes["switch"].Value == "1" ? true : false;
+                    serviceObj.publishServiceName = xe.Attributes["servicename"].Value;
+                    serviceObj.explain = xe.Attributes["explain"].Value;
+                    serviceObj.pluginname = xe.Attributes["pluginname"].Value;
+                    serviceObj.controller = xe.Attributes["controller"].Value;
+                    serviceObj.method = xe.Attributes["method"].Value;
+                    serviceObj.argument = xe.Attributes["argument"].Value;
+                    _serviceList.Add(serviceObj);
+                }
+            }
+            catch (Exception e)
+            {
+                MiddlewareLogHelper.WriterLog(LogType.TimingTaskLog, true, System.Drawing.Color.Red, "加载定时任务配置文件错误！");
+                MiddlewareLogHelper.WriterLog(LogType.TimingTaskLog, true, System.Drawing.Color.Red, e.Message);
+            }
+
+            return _serviceList;
+        }
         private static void ShowHostMsg(Color clr, DateTime time, string text)
         {
             MiddlewareLogHelper.WriterLog(LogType.MidLog, true, clr, text);
@@ -163,6 +173,10 @@ namespace EFWCoreLib.WcfFrame.ServerManage
     [DataContract]
     public class PublishServiceObject
     {
+        /// <summary>
+        /// 是否发布
+        /// </summary>
+        public bool whether { get; set; }
         /// <summary>
         /// 发布服务名称标识
         /// </summary>

@@ -42,4 +42,6 @@
   </mongodb_binpath>
   <mongodb_conn value="mongodb://localhost:27017">
   </mongodb_conn>
+  <nginx value="1">
+  </nginx>
 </root>

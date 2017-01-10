@@ -21,20 +21,20 @@ namespace TestWcfPerformance
         {
             try
             {
-                TestWebClient();
+                //TestWebClient();
                 //Console.Read();
                 //TestConcurrency();
 
 
                 //Application.Run(new frmClient());
 
-                //Console.WriteLine("输入并发连接数(默认100)：");
-                //connCount = Convert.ToInt32(Console.ReadLine());
-                //Console.WriteLine("输入每次请求间隔时间(默认100微秒)：");
-                //time = Convert.ToInt32(Console.ReadLine());
-                //Console.WriteLine("#回车开始执行#");
-                //Console.Read();
-                //StartThread();
+                Console.WriteLine("输入并发连接数(默认100)：");
+                connCount = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("输入每次请求间隔时间(默认100微秒)：");
+                time = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("#回车开始执行#");
+                Console.Read();
+                StartThread();
 
             }
             catch (Exception err)
@@ -64,7 +64,7 @@ namespace TestWcfPerformance
                 while (num > 0)
                 {
                     //num -= 1;
-                    clientlink.Request("bookWcfController", "GetBooks",null);
+                    clientlink.Request("bookWcfController", "GetDiseaseData", null);
                     Thread.Sleep(time);
                 }
                 clientlink.Dispose();

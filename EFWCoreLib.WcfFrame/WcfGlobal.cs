@@ -11,6 +11,7 @@ using EFWCoreLib.WcfFrame.DataSerialize;
 using EFWCoreLib.WcfFrame.ServerManage;
 using EFWCoreLib.WcfFrame.Utility;
 using EFWCoreLib.WcfFrame.Utility.Mongodb;
+using EFWCoreLib.WcfFrame.Utility.Nginx;
 using EFWCoreLib.WcfFrame.WcfHandler;
 
 namespace EFWCoreLib.WcfFrame
@@ -31,12 +32,65 @@ namespace EFWCoreLib.WcfFrame
         static ServiceHost mFileHost = null;
         static ServiceHost mRouterHost = null;
         static ServiceHost mFileRouterHost = null;
-        public static void Main(StartType type)
+
+        public static void Main()
         {
             IsDebug = HostSettingConfig.GetValue("debug") == "1" ? true : false;
             HostName = HostSettingConfig.GetValue("hostname");
             IsToken = HostSettingConfig.GetValue("token") == "1" ? true : false;
-            MongoConnStr= HostSettingConfig.GetValue("mongodb_conn");
+            MongoConnStr = HostSettingConfig.GetValue("mongodb_conn");
+
+            WcfGlobal.Run(StartType.KillAllProcess);
+            if (Convert.ToInt32(HostSettingConfig.GetValue("wcfservice")) == 1)
+            {
+                WcfGlobal.Run(StartType.BaseService);
+            }
+            if (Convert.ToInt32(HostSettingConfig.GetValue("filetransfer")) == 1)
+            {
+                WcfGlobal.Run(StartType.FileService);
+            }
+
+            if (Convert.ToInt32(HostSettingConfig.GetValue("router")) == 1)
+            {
+                WcfGlobal.Run(StartType.RouterBaseService);
+                WcfGlobal.Run(StartType.RouterFileService);
+            }
+
+            WcfGlobal.Run(StartType.SuperClient);
+
+            if (Convert.ToInt32(HostSettingConfig.GetValue("mongodb")) == 1)
+            {
+                WcfGlobal.Run(StartType.MongoDB);
+            }
+
+            if (Convert.ToInt32(HostSettingConfig.GetValue("timingtask")) == 1)
+            {
+                WcfGlobal.Run(StartType.MiddlewareTask);
+            }
+            
+            WcfGlobal.Run(StartType.PublishService);
+            if (Convert.ToInt32(HostSettingConfig.GetValue("nginx")) == 1)
+            {
+                WcfGlobal.Run(StartType.Nginx);
+            }
+        }
+
+        public static void Exit()
+        {
+            WcfGlobal.Quit(StartType.PublishService);
+            WcfGlobal.Quit(StartType.MiddlewareTask);
+            WcfGlobal.Quit(StartType.SuperClient);
+            WcfGlobal.Quit(StartType.BaseService);
+            WcfGlobal.Quit(StartType.FileService);
+            WcfGlobal.Quit(StartType.RouterBaseService);
+            WcfGlobal.Quit(StartType.RouterFileService);
+            WcfGlobal.Quit(StartType.MongoDB);
+            WcfGlobal.Quit(StartType.Nginx);
+        }
+
+        public static void Run(StartType type)
+        {
+            
             switch (type)
             {
                 case StartType.BaseService:
@@ -90,7 +144,6 @@ namespace EFWCoreLib.WcfFrame
                     break;
                 case StartType.SuperClient:
                     SuperClient.CreateSuperClient();
-
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "超级客户端启动完成");
                     break;
                 case StartType.MiddlewareTask:
@@ -99,18 +152,27 @@ namespace EFWCoreLib.WcfFrame
                     break;
                 case StartType.PublishService://订阅
                     PublishServiceManage.InitPublishService();
-                    //PublishSubManager.StartPublish();
+                    PublishSubManager.StartPublish();
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "发布订阅服务完成");
                     break;
                 case StartType.MongoDB:
                     MongodbManager.StartDB();//开启MongoDB
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "MongoDB启动完成");
                     break;
+
+                case StartType.Nginx:
+                    NginxManager.StartWeb();//开启Nginx
+                    MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Blue, "Nginx启动完成");
+                    break;
+                case StartType.KillAllProcess:
+                    MongodbManager.StopDB();//停止MongoDB  清理掉所有子进程，因为主进程关闭子进程不关闭的话，占用的端口号一样不会释放
+                    NginxManager.StopWeb();
+                    break;
             }
 
         }
 
-        public static void Exit(StartType type)
+        public static void Quit(StartType type)
         {
             ClientLinkManage.UnAllConnection();//关闭所有连接
             switch (type)
@@ -193,12 +255,25 @@ namespace EFWCoreLib.WcfFrame
                     MongodbManager.StopDB();//停止MongoDB
                     MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "MongoDB已停止");
                     break;
+                case StartType.Nginx:
+                    NginxManager.StopWeb();
+                    MiddlewareLogHelper.WriterLog(LogType.MidLog, true, Color.Red, "Nginx已停止");
+                    break;
             }
         }
     }
 
     public enum StartType
     {
-        BaseService, FileService, RouterBaseService, RouterFileService, MiddlewareTask, SuperClient, PublishService,MongoDB
+        BaseService,
+        FileService,
+        RouterBaseService,
+        RouterFileService,
+        MiddlewareTask,
+        SuperClient,
+        PublishService,
+        MongoDB,
+        Nginx,
+        KillAllProcess
     }
 }

@@ -11,8 +11,8 @@ namespace UpgradePackage
 {
     public class iTreeNodeManager
     {
-        static Dictionary<string, bool> tplDic;
-        public static iTreeNode getTreefromPath(String path, Dictionary<string, bool> _tplDic)
+        static List<string> tplDic;
+        public static iTreeNode getTreefromPath(String path, List<string> _tplDic)
         {
             tplDic = _tplDic;
             iTreeNode itn = createNode(path, NodeType.DIR);
@@ -34,7 +34,7 @@ namespace UpgradePackage
                 iTreeNode n = createNode(p, NodeType.DIR);
                 n.SelectedImageIndex = 0;
                 n.ImageIndex = 0;
-                n.Checked = tplDic.ContainsKey(p) ? tplDic[p] : false;
+                n.Checked = tplDic.Contains(p) ? true : false;
                 n.Tag = p;
                 nodes.Add(n);
             }
@@ -45,7 +45,7 @@ namespace UpgradePackage
                 iTreeNode n = createNode(p, NodeType.FILE);
                 n.SelectedImageIndex = 1;
                 n.ImageIndex = 1;
-                n.Checked = tplDic.ContainsKey(p) ? tplDic[p] : false;
+                n.Checked = tplDic.Contains(p) ? true : false;
                 n.Tag = p;
                 nodes.Add(n);
             }

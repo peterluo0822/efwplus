@@ -14,9 +14,8 @@ using Microsoft.Practices.EnterpriseLibrary.Caching;
 namespace EFWCoreLib.WcfFrame.ServerManage
 {
     /// <summary>
-    /// 分布式缓存管理
-    /// 1.先下级中间件同步到上级中间件，然后上级中间件触发回调所有下级中间件
-    /// 2.缓存同步的时候先判断标识是否不同，然后再同步标识不同的缓存数据
+    /// 分布式缓存服务端管理
+    /// 上级缓存变更通知下级获取最新的缓存并同步到本地
     /// </summary>
     public class DistributedCacheManage
     {
@@ -118,60 +117,26 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             return _co;
         }
 
-        public static void SetCacheObjectList(List<CacheObject> coList)
-        {
-            foreach(var co in coList)
-            {
-
-                SyncLocalCache(co);
-            }
-        }
-
-
-        public static List<CacheIdentify> GetCacheIdentifyList()
-        {
-            List<CacheIdentify> ciList = new List<CacheIdentify>();
-
-            foreach (string cn in _cacheNameList)
-            {
-                ciList.Add(GetCacheIdentify(cn));
-            }
-
-            return ciList;
-        }
-
-
-
         public static List<CacheObject> GetCacheObjectList(List<CacheIdentify> ciList)
         {
             List<CacheObject> coList = new List<CacheObject>();
-            foreach(var ci in ciList)
+            //有变动的缓存对象
+            foreach (var ci in ciList)
             {
                 coList.Add(GetStayLocalCache(CompareCache(ci)));
+            }
+            //新增的缓存对象
+            foreach (var _name in _cacheNameList)
+            {
+                if (ciList.FindIndex(x => x.cachename == _name) == -1)
+                {
+                    coList.Add(GetLocalCache(_name));
+                }
             }
             return coList;
         }
 
-        /// <summary>
-        /// 获取本地缓存的标识
-        /// </summary>
-        private static CacheIdentify GetCacheIdentify(string cacheName)
-        {
-            CacheIdentify cacheId = new CacheIdentify();
-            if (_localCache.Contains(cacheName))
-            {
-                CacheObject co = _localCache.GetData(cacheName) as CacheObject;
-                cacheId.ServerIdentify = co.ServerIdentify;
-                cacheId.cachename = co.cachename;
-                cacheId.identify = co.identify;
-                cacheId.keytimestamps = new Dictionary<string, double>();
-                foreach (var cd in co.cacheValue)
-                {
-                    cacheId.keytimestamps.Add(cd.key, cd.timestamp);
-                }
-            }
-            return cacheId;
-        }
+       
         /// <summary>
         /// 比较后不同的标识（下级的CacheIdentify与上级的对比）
         /// </summary>
@@ -242,6 +207,111 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             return _co;
         }
 
+        /// <summary>
+        /// 获取本地缓存的标识
+        /// </summary>
+        private static CacheIdentify GetCacheIdentify(string cacheName)
+        {
+            CacheIdentify cacheId = new CacheIdentify();
+            if (_localCache.Contains(cacheName))
+            {
+                CacheObject co = _localCache.GetData(cacheName) as CacheObject;
+                cacheId.ServerIdentify = co.ServerIdentify;
+                cacheId.cachename = co.cachename;
+                cacheId.identify = co.identify;
+                cacheId.keytimestamps = new Dictionary<string, double>();
+                foreach (var cd in co.cacheValue)
+                {
+                    cacheId.keytimestamps.Add(cd.key, cd.timestamp);
+                }
+            }
+            return cacheId;
+        }
+
+        /// <summary>
+        /// 日期转换成时间戳
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        private static double DateTimeToTimestamp(DateTime dateTime)
+        {
+            var start = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToDouble((dateTime - start).TotalMilliseconds);
+        }
+
+        /// <summary>
+        /// 时间戳转换成日期
+        /// </summary>
+        /// <param name="timestamp">时间戳（秒）</param>
+        /// <returns></returns>
+        private static DateTime TimestampToDateTime(double timestamp)
+        {
+            var start = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return start.AddMilliseconds(timestamp);
+        }
+
+        private static void ShowHostMsg(Color clr, DateTime time, string text)
+        {
+            //hostwcfMsg.BeginInvoke(clr, time, text, null, null);//异步方式不影响后台数据请求
+            //hostwcfMsg(time, text);
+            MiddlewareLogHelper.WriterLog(LogType.MidLog, true, clr, text);
+        }
+    }
+
+    /// <summary>
+    /// 分布式缓存客户端
+    /// </summary>
+    public class DistributedCacheClient
+    {
+        //使用企业库中的缓存对象来进行分布式缓存管理
+        private static ICacheManager _localCache
+        {
+            get { return AppGlobal.cache; }
+        }
+        private static List<string> _cacheNameList = new List<string>();
+
+        public static List<CacheIdentify> GetCacheIdentifyList()
+        {
+            List<CacheIdentify> ciList = new List<CacheIdentify>();
+
+            foreach (string cn in _cacheNameList)
+            {
+                ciList.Add(GetCacheIdentify(cn));
+            }
+
+            return ciList;
+        }
+
+
+        public static void SetCacheObjectList(List<CacheObject> coList)
+        {
+            foreach (var co in coList)
+            {
+                SyncLocalCache(co);
+            }
+        }
+
+
+        /// <summary>
+        /// 获取本地缓存的标识
+        /// </summary>
+        private static CacheIdentify GetCacheIdentify(string cacheName)
+        {
+            CacheIdentify cacheId = new CacheIdentify();
+            if (_localCache.Contains(cacheName))
+            {
+                CacheObject co = _localCache.GetData(cacheName) as CacheObject;
+                cacheId.ServerIdentify = co.ServerIdentify;
+                cacheId.cachename = co.cachename;
+                cacheId.identify = co.identify;
+                cacheId.keytimestamps = new Dictionary<string, double>();
+                foreach (var cd in co.cacheValue)
+                {
+                    cacheId.keytimestamps.Add(cd.key, cd.timestamp);
+                }
+            }
+            return cacheId;
+        }
 
         /// <summary>
         /// 同步本地缓存
@@ -250,7 +320,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
         /// <returns></returns>
         private static bool SyncLocalCache(CacheObject cache)
         {
-            
+
             lock (_localCache)
             {
                 bool isChanged = false;
@@ -296,27 +366,7 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             }
             return true;
         }
-        /// <summary>
-        /// 日期转换成时间戳
-        /// </summary>
-        /// <param name="dateTime"></param>
-        /// <returns></returns>
-        private static double DateTimeToTimestamp(DateTime dateTime)
-        {
-            var start = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return Convert.ToDouble((dateTime - start).TotalMilliseconds);
-        }
 
-        /// <summary>
-        /// 时间戳转换成日期
-        /// </summary>
-        /// <param name="timestamp">时间戳（秒）</param>
-        /// <returns></returns>
-        private static DateTime TimestampToDateTime(double timestamp)
-        {
-            var start = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return start.AddMilliseconds(timestamp);
-        }
 
         private static void ShowHostMsg(Color clr, DateTime time, string text)
         {
@@ -325,5 +375,4 @@ namespace EFWCoreLib.WcfFrame.ServerManage
             MiddlewareLogHelper.WriterLog(LogType.MidLog, true, clr, text);
         }
     }
-    
 }

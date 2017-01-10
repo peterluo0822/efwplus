@@ -133,7 +133,8 @@
     <Compile Include="ServerManage\SuperClient.cs" />
     <Compile Include="Utility\Mongodb\MongodbManager.cs" />
     <Compile Include="Utility\Mongodb\MongoHelper.cs" />
-    <Compile Include="Utility\PublishSubManager.cs" />
+    <Compile Include="Utility\Nginx\NginxManager.cs" />
+    <Compile Include="ServerManage\PublishSubManager.cs" />
     <Compile Include="Utility\SSO\AuthResult.cs" />
     <Compile Include="Utility\SSO\ConvertHelper.cs" />
     <Compile Include="Utility\SSO\SsoHelper.cs" />

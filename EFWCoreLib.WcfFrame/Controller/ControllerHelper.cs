@@ -26,7 +26,11 @@ namespace EFWCoreLib.WcfFrame.ServerController
             WcfControllerAttributeInfo wattr = AppPluginManage.GetPluginWcfControllerAttributeInfo(pname, cname, out mp);
 
             WcfServerController iController = (WcfServerController)EFWCoreLib.CoreFrame.Business.FactoryModel.GetObject(wattr.wcfControllerType, mp.database, mp.container, mp.cache, mp.plugin.name, null);
-            iController.BindDb(mp.database, mp.container, mp.cache,mp.plugin.name);
+
+            //每次创建控制器的时候,重新创建db，防止并发操作数据
+            AbstractDatabase db= FactoryDatabase.GetDatabase(mp.plugin.defaultdbkey);
+            db.PluginName = mp.plugin.name;
+            iController.BindDb(db, mp.container, mp.cache,mp.plugin.name);
             iController.requestData = null;
             iController.responseData = null;
            
@@ -46,7 +50,7 @@ namespace EFWCoreLib.WcfFrame.ServerController
 
             if (mattr.dbkeys != null && mattr.dbkeys.Count > 0)
             {
-                controller.BindMoreDb(mp.database, "default");
+                controller.BindMoreDb(controller.oleDb, "default");
                 foreach (string dbkey in mattr.dbkeys)
                 {
                     EFWCoreLib.CoreFrame.DbProvider.AbstractDatabase _Rdb = EFWCoreLib.CoreFrame.DbProvider.FactoryDatabase.GetDatabase(dbkey);

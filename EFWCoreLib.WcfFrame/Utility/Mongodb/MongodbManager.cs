@@ -17,7 +17,6 @@ namespace EFWCoreLib.WcfFrame.Utility.Mongodb
         /// </summary>
         public static void StartDB()
         {
-            StopDB();
             string mongodExe = HostSettingConfig.GetValue("mongodb_binpath") + @"\mongod.exe";
             string mongoConf = CoreFrame.Init.AppGlobal.AppRootPath + @"Config\mongo.conf";
 

@@ -41,6 +41,7 @@ namespace WCFHosting
             HostSettingConfig.SetValue("overtime", ckovertime.Checked ? "1" : "0");
             HostSettingConfig.SetValue("overtimetime", txtovertime.Text);
             HostSettingConfig.SetValue("serializetype", cbSerializeType.SelectedIndex.ToString());
+            HostSettingConfig.SetValue("nginx", ckNginx.Checked ? "1" : "0");
             HostSettingConfig.SaveConfig();
 
 
@@ -52,6 +53,7 @@ namespace WCFHosting
             HostAddressConfig.SetClientFileAddress(txtfileurl.Text);
             HostAddressConfig.SetClientLocalAddress(txtlocalurl.Text);
             HostAddressConfig.SetWebapiAddress(txtweb.Text);
+            HostAddressConfig.SetUpdaterUrl(txtupdate.Text);
             HostAddressConfig.SaveConfig();
 
 
@@ -90,6 +92,7 @@ namespace WCFHosting
             ckovertime.Checked = HostSettingConfig.GetValue("overtime") == "1" ? true : false;
             txtovertime.Text = HostSettingConfig.GetValue("overtimetime");
             cbSerializeType.SelectedIndex = Convert.ToInt32(HostSettingConfig.GetValue("serializetype"));
+            ckNginx.Checked = HostSettingConfig.GetValue("nginx") == "1" ? true : false;
 
             txtwcf.Text = HostAddressConfig.GetWcfAddress();
             txtfile.Text = HostAddressConfig.GetFileAddress();
@@ -99,6 +102,7 @@ namespace WCFHosting
             txtfileurl.Text = HostAddressConfig.GetClientFileAddress();
             txtlocalurl.Text = HostAddressConfig.GetClientLocalAddress();
             txtweb.Text = HostAddressConfig.GetWebapiAddress();
+            txtupdate.Text = HostAddressConfig.GetUpdaterUrl();
 
             txtconnstr.Text = HostDataBaseConfig.GetConnString();
             txtmongobinpath.Text = HostSettingConfig.GetValue("mongodb_binpath");

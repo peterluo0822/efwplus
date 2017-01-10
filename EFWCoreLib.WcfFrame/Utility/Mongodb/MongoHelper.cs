@@ -50,7 +50,10 @@ namespace EFWCoreLib.WcfFrame.Utility.Mongodb
         /// <returns></returns>
         public T Find(IMongoQuery query)
         {
-            return this.collection.FindOne(query);
+            Object model = this.collection.FindOne(query);
+            if (model != null)
+                (model as AbstractMongoModel).id_string = (model as AbstractMongoModel).id.ToString();
+            return (T)model;
         }
 
         /**
@@ -58,7 +61,12 @@ namespace EFWCoreLib.WcfFrame.Utility.Mongodb
          * */
         public List<T> FindAll(IMongoQuery query)
         {
-            return this.collection.Find(query).ToList();
+            List<T> list= this.collection.Find(query).ToList();
+            foreach(Object model in list)
+            {
+                (model as AbstractMongoModel).id_string = (model as AbstractMongoModel).id.ToString();
+            }
+            return list;
         }
 
         /// <summary>
@@ -68,6 +76,8 @@ namespace EFWCoreLib.WcfFrame.Utility.Mongodb
         /// <returns></returns>
         public long Update(T model)
         {
+            if ((model as AbstractMongoModel).id_string != null)
+                (model as AbstractMongoModel).id = new ObjectId((model as AbstractMongoModel).id_string);
             BsonDocument doc = BsonExtensionMethods.ToBsonDocument(model);
             WriteConcernResult res = this.collection.Update(Query.EQ("_id", (model as AbstractMongoModel).id), new UpdateDocument(doc));
             return res.DocumentsAffected;
@@ -81,6 +91,7 @@ namespace EFWCoreLib.WcfFrame.Utility.Mongodb
         public bool Insert(T model)
         {
             WriteConcernResult res = this.collection.Insert(model);
+            (model as AbstractMongoModel).id_string = (model as AbstractMongoModel).id.ToString();
             return res.Ok;
         }
 
@@ -91,6 +102,8 @@ namespace EFWCoreLib.WcfFrame.Utility.Mongodb
         /// <returns></returns>
         public bool Delete(T model)
         {
+            if ((model as AbstractMongoModel).id_string != null)
+                (model as AbstractMongoModel).id = new ObjectId((model as AbstractMongoModel).id_string);
             WriteConcernResult res = this.collection.Remove(Query.EQ("_id", (model as AbstractMongoModel).id));
             return res.Ok;
         }
@@ -104,11 +117,17 @@ namespace EFWCoreLib.WcfFrame.Utility.Mongodb
         //[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         //public DateTime updated_at { get; set; }
 
-        public string getstring_id()
+        private string _id_string;
+        public string id_string
         {
-            if (id != null)
-                return id.ToString();
-            return null;
+            get
+            {
+                return _id_string;
+            }
+            set
+            {
+                _id_string = value;
+            }
         }
     }
 }

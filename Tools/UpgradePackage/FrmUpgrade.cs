@@ -16,22 +16,31 @@ namespace UpgradePackage
     {
         string tplconfig = Application.StartupPath + @"/TplConfig.xml";
         System.Xml.XmlDocument xmlDoc;
-        Dictionary<string, bool> tplDic = new Dictionary<string, bool>();
-
-        public FrmUpgrade()
+        List<string> tplDic = new List<string>();
+        string basepath = "";
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type">0客户端 1服务端</param>
+        /// <param name="clientpath"></param>
+        /// <param name="serverpath"></param>
+        public FrmUpgrade(string clientpath,string serverpath)
         {
             InitializeComponent();
+            txtClientPath.Text = clientpath;
+            txtServerPath.Text = serverpath;
+            //cbTpl.SelectedIndex = type;
         }
 
-        private void BindTree()
+        private void BindTree(string path)
         {
-            if (File.Exists(txtProgramPath.Text))
-            {
-                MessageBox.Show("程序目录不存在！");
-                return;
-            }
+            //if (File.Exists(txtClientPath.Text))
+            //{
+            //    MessageBox.Show("程序目录不存在！");
+            //    return;
+            //}
             treeProgram.Nodes.Clear();
-            iTreeNode itn = iTreeNodeManager.getTreefromPath(txtProgramPath.Text, tplDic);
+            iTreeNode itn = iTreeNodeManager.getTreefromPath(path, tplDic);
             itn.Expand();
             treeProgram.Nodes.Add(itn);
         }
@@ -40,9 +49,9 @@ namespace UpgradePackage
         {
             if (this.folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                txtProgramPath.Text = this.folderBrowserDialog1.SelectedPath;
+                txtClientPath.Text = this.folderBrowserDialog1.SelectedPath;
 
-                BindTree();
+                //BindTree();
             }
         }
 
@@ -50,7 +59,7 @@ namespace UpgradePackage
         {
             if (this.folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                txtOutputPath.Text = this.folderBrowserDialog1.SelectedPath;
+                txtServerPath.Text = this.folderBrowserDialog1.SelectedPath;
             }
         }
 
@@ -72,22 +81,28 @@ namespace UpgradePackage
 
         private void cbTpl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            XmlNode xmlnode = xmlDoc.SelectSingleNode("root/tplItem[@name='" + cbTpl.Text + "']");
-            txtProgramPath.Text = xmlnode.Attributes["ProgramPath"].Value;
-            txtOutputPath.Text = xmlnode.Attributes["OutputPath"].Value;
-            tplDic = new Dictionary<string, bool>();
+            //XmlNode xmlnode = xmlDoc.SelectSingleNode("root/tplItem[@name='" + cbTpl.Text + "']");
+            //txtProgramPath.Text = xmlnode.Attributes["ProgramPath"].Value;
+            //txtOutputPath.Text = xmlnode.Attributes["OutputPath"].Value;
+
+            if (cbTpl.SelectedIndex == 0)
+                basepath = txtClientPath.Text;
+            else
+                basepath = txtServerPath.Text;
+
+            tplDic = new List<string>();
             foreach (XmlNode item in xmlDoc.SelectNodes("root/tplItem[@name='" + cbTpl.Text + "']/Item"))
             {
-                tplDic.Add(item.Attributes["path"].Value, item.Attributes["checked"].Value == "1" ? true : false);
+                tplDic.Add(basepath + item.Attributes["path"].Value);
             }
 
-            BindTree();
+            BindTree(basepath);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (treeProgram.Nodes.Count == 0) return;
-            tplDic = new Dictionary<string, bool>();
+            tplDic = new List<string>();
             getTreeChecked(treeProgram.Nodes[0]);
 
             XmlNode xmlnode = xmlDoc.SelectSingleNode("root/tplItem[@name='" + cbTpl.Text + "']");
@@ -95,15 +110,15 @@ namespace UpgradePackage
             xmlnode.RemoveAll();
 
             (xmlnode as XmlElement).SetAttribute("name", cbTpl.Text);
-            (xmlnode as XmlElement).SetAttribute("ProgramPath", txtProgramPath.Text);
-            (xmlnode as XmlElement).SetAttribute("OutputPath", txtOutputPath.Text);
+            //(xmlnode as XmlElement).SetAttribute("ProgramPath", txtClientPath.Text);
+            //(xmlnode as XmlElement).SetAttribute("OutputPath", txtServerPath.Text);
 
 
             foreach (var v in tplDic)
             {
                 XmlElement xe1 = xmlDoc.CreateElement("Item");
-                xe1.SetAttribute("path", v.Key);
-                xe1.SetAttribute("checked", v.Value ? "1" : "0");
+                xe1.SetAttribute("path", v.Replace(basepath,""));
+                //xe1.SetAttribute("checked", v.Value ? "1" : "0");
                 xmlnode.AppendChild(xe1);
             }
             xmlDoc.Save(tplconfig);
@@ -114,7 +129,7 @@ namespace UpgradePackage
         private void getTreeChecked(TreeNode nodex)
         {
             if (nodex.Checked)
-                tplDic.Add(nodex.Tag.ToString(), nodex.Checked);
+                tplDic.Add(nodex.Tag.ToString());
             foreach (TreeNode tn in nodex.Nodes)
             {
                 getTreeChecked(tn);
@@ -151,7 +166,7 @@ namespace UpgradePackage
         /// <param name="sPath">源文件</param>
         private void CopyFile(string sPath)
         {
-            string dPath = sPath.Replace(txtProgramPath.Text, txtOutputPath.Text);
+            string dPath = sPath.Replace(txtClientPath.Text, txtServerPath.Text);
             if (IsDir(sPath))
             {
                 // 创建目的文件夹                  
@@ -168,21 +183,21 @@ namespace UpgradePackage
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (treeProgram.Nodes.Count == 0) return;
-            tplDic = new Dictionary<string, bool>();
-            getTreeChecked(treeProgram.Nodes[0]);
+            //if (treeProgram.Nodes.Count == 0) return;
+            //tplDic = new Dictionary<string, bool>();
+            //getTreeChecked(treeProgram.Nodes[0]);
 
-            if (Directory.Exists(txtOutputPath.Text))
-            {
-                Directory.Delete(txtOutputPath.Text, true);
-            }
+            //if (Directory.Exists(txtServerPath.Text))
+            //{
+            //    Directory.Delete(txtServerPath.Text, true);
+            //}
 
-            foreach (var v in tplDic)
-            {
-                CopyFile(v.Key);
-            }
+            //foreach (var v in tplDic)
+            //{
+            //    CopyFile(v.Key);
+            //}
 
-            MessageBox.Show("生成升级包成功！");
+            //MessageBox.Show("生成升级包成功！");
         }
     }
 }
